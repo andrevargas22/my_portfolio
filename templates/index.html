@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Personal Portfolio</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+<header>
+  <nav>
+    <ul>
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#toolbox">Toolbox</a></li>
+      <li><a href="#mlmodels">ML Models</a></li>
+      <li><a href="#resume">Resume</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="home">
+    <div class="intro">
+      <h1>Hi there, I'm <span>André</span></h1>
+      <p>I am Machine Learning Engineer and a Data Scientist!</p>
+      <!-- Social Links -->
+      <div class="social-links">
+        <!-- LinkedIn -->
+        <a href="https://www.linkedin.com/in/andrevargas22" target="_blank">
+          <img src="{{ url_for('static', filename='images/linkedin.png') }}" alt="LinkedIn">
+        </a>
+        <!-- GitHub -->
+        <a href="https://github.com/andrevargas22" target="_blank">
+          <img src="{{ url_for('static', filename='images/github.png') }}" alt="GitHub">
+        </a>
+        <!-- Medium -->
+        <a href="https://medium.com/@andrevargas22" target="_blank">
+          <img src="{{ url_for('static', filename='images/medium.png') }}" alt="Medium">
+        </a>
+        <!-- More social links -->
+      </div>
+    </div>
+    <div class="profile-pic">
+      <img src="{{ url_for('static', filename='images/profile.png') }}" alt="Profile Picture">
+    </div>
+  </main>
+  
+
+</body>
+</html>

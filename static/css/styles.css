@@ -1,0 +1,106 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Arial', sans-serif;
+    height: 100%;
+    margin: 0;
+    overflow-y: hidden; /* This will hide the vertical scrollbar if the content is not taller than the viewport */
+  }
+  
+  header {
+    background: #333;
+    color: white;
+    padding: 10px 0;
+  }
+  
+  nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: flex-end; 
+    padding-right: 20px; 
+}
+  
+  nav ul li {
+    margin: 0 20px;
+  }
+  
+  nav ul li a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  nav ul li a:hover {
+    color: #aaa;
+  }
+  
+  main {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    min-height: 100vh;
+    text-align: center;
+  }
+  
+  .intro {
+    max-width: 500px;
+  }
+  
+  .intro h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+  }
+  
+  .intro h1 span {
+    color: #007bff;
+  }
+  
+  .intro p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+  }
+    
+  .social-links img {
+    width: 40px;
+    margin: 0 10px;
+    text-decoration: none;
+  }
+  
+  .profile-pic {
+    flex-shrink: 0;
+  }
+  
+  .profile-pic img {
+    width: 400px;
+    border-radius: 50%;
+    border: 5px solid white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  @media (max-width: 768px) {
+    nav ul {
+      flex-direction: column;
+    }
+  
+    nav ul li {
+      margin: 10px 0;
+    }
+  
+    main {
+      flex-direction: column;
+      text-align: center;
+    }
+  
+    .profile-pic {
+      margin-top: 20px;
+    }
+  
+    .profile-pic img {
+      width: 150px;
+    }
+  }
+  
