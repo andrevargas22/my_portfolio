@@ -104,3 +104,70 @@
     }
   }
   
+  /* Dropdown Menu Styles */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.sentiment_description {
+  font-family: 'Hind Siliguri', sans-serif;
+  color: black;
+  font-size: 20px;
+  position: absolute;
+  top: 100px;
+  left: 60px;
+  right: 60px;
+  z-index: -1;
+}
+
+.sentiment_text{
+  width: 80%;
+  margin-left: 60px;
+  margin-right: 60px;
+  position: absolute;
+  top: 150px;
+  z-index: -1;
+}
+
+.submit_btn{
+  margin-left: 60px;
+  position: absolute;
+  top: 265px;
+  z-index: -1;
+}
+
+.sentiment_result{
+  font-family: 'Hind Siliguri', sans-serif;
+  color: black;
+  font-size: 20px;
+  margin-left: 60px;
+  margin-right: 60px;
+  position: absolute;
+  top: 300px;
+  z-index: -1;
+}
