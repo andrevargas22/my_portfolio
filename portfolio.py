@@ -1,5 +1,6 @@
 import mlflow
 import re
+import os
 from bs4 import BeautifulSoup
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
@@ -50,7 +51,6 @@ def sentiment_results():
 
     model_uri = f"models:/{model_name}/{stage}"
     loaded_model = mlflow.pyfunc.load_model(model_uri=model_uri)
-    sent = False
 
     if request.method == 'POST':
         text = request.form['textArea1']  # Get text from textarea
@@ -63,8 +63,8 @@ def sentiment_results():
     
 if __name__ == '__main__':
     # Development:
-    app.run(debug=True)
+    #app.run(debug=True)
     
     # Production:
-    #port = int(os.environ.get("PORT", 8080))
-    #app.run(host='0.0.0.0', port=port)
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host='0.0.0.0', port=port)
