@@ -2,11 +2,15 @@ import mlflow
 import re
 import os
 from bs4 import BeautifulSoup
+import nltk
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 from sklearn.feature_extraction.text import CountVectorizer
 import pickle
 from flask import Flask, render_template, request
+
+nltk.download("stopwords")
+stemmer = PorterStemmer()
 
 TRACKING_URI = "https://mlflow-server-wno7iop4fa-uc.a.run.app/"
 mlflow.set_tracking_uri(TRACKING_URI)
