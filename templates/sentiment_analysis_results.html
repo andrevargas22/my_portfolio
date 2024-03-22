@@ -49,9 +49,9 @@
   <div class="sentiment_result">
 
     <p>
-            {% if pred == 0 %}  
+            {% if pred == 'negative' %}  
               Prediction value: This is a NEGATIVE text.
-            {% elif pred == 1 %}
+            {% elif pred == 'positive' %}
               Prediction value: This is a POSITIVE text.
             {% endif %}
     </p>
