@@ -4,14 +4,14 @@ FROM python:3.9-slim
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy the requirements.txt file into the container at /app
+# Copy required files
 COPY requirements.txt .
+COPY static static
+COPY templates templates
+COPY portfolio.py .
 
 # Install any dependencies specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy the content of the local src directory to the working directory in the container
-COPY . .
 
 # Expose the port that Flask runs on
 EXPOSE 8080
