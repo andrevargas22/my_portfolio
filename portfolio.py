@@ -31,8 +31,8 @@ def sentiment_results():
     
 if __name__ == '__main__':
     # Development:
-    #app.run(debug=True)
+    app.run(debug=True)
     
     # Production:
-    port = int(os.environ.get("PORT", 8080))
-    app.run(host='0.0.0.0', port=port)
+    #port = int(os.environ.get("PORT", 8080))
+    #app.run(host='0.0.0.0', port=port)
