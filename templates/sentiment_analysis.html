@@ -4,24 +4,21 @@
     
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Personal Portfolio</title>
+<title>André Vargas - Machine Learning Engineer</title>
+<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
 <header>
   <nav>
     <ul>
-      <li><a href="#home">Home</a></li>
-      <li><a href="#about">About</a></li>
-      <li><a href="#toolbox">Toolbox</a></li>
+      <li><a href="/">Home</a></li>
       <li class="dropdown">
-        <a href="#" class="dropbtn">ML Models</a>
+        <a href="#" class="dropbtn">Projects</a>
         <div class="dropdown-content">
           <a href="{{ url_for('sentiment_analysis') }}">Sentiment Analysis</a>
         </div>
       </li>
-      <li><a href="#resume">Resume</a></li>
-      <li><a href="#contact">Contact</a></li>
     </ul>
   </nav>
 </header>
