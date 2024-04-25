@@ -3,8 +3,8 @@
 name: Deploy Flask Website
 
 on:
-  push:
-    branches: [main]
+  release:
+    types: [published]
 
 jobs:
   login-build-push:
