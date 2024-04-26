@@ -9,8 +9,6 @@ SENTIMENT_API = "https://sentiment-analysis-api-p6kayhv22a-uc.a.run.app/predict"
 with open('config.yaml', 'r') as config_file:
     config = yaml.safe_load(config_file)
     
-print(config.get('env'))
-
 app = Flask(__name__)
 
 @app.route('/')
