@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>André Vargas - Machine Learning Engineer</title>
 <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles-xsmall.css') }}" media="(max-width: 600px)">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles-small.css') }}" media="(min-width: 601px) and (max-width: 800px)">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles-medium.css') }}" media="(min-width: 801px) and (max-width: 1200px)">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}" media="(min-width: 1201px)">
 </head>
 <body>
 <header>
@@ -23,6 +25,7 @@
     </ul>
   </nav>
 </header>
+
 
 <main id="home">
     <div class="intro">

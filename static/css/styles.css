@@ -1,3 +1,5 @@
+/************************* HEADER ***************************/
+
 * {
     margin: 0;
     padding: 0;
@@ -8,7 +10,7 @@
     font-family: 'Arial', sans-serif;
     height: 100%;
     margin: 0;
-    overflow-y: hidden; /* This will hide the vertical scrollbar if the content is not taller than the viewport */
+    overflow-y: hidden;
   }
   
   header {
@@ -22,7 +24,7 @@
     display: flex;
     justify-content: flex-end; 
     padding-right: 20px; 
-}
+  }
   
   nav ul li {
     margin: 0 20px;
@@ -37,7 +39,38 @@
   nav ul li a:hover {
     color: #aaa;
   }
-  
+
+  .dropdown {
+    position: relative;
+    display: inline-block; 
+  }
+
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+
+  .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+
+  .dropdown-content a:hover {
+    background-color: #ddd;
+  }
+
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+
+/************************* INDEX ***************************/
+
   main {
     display: flex;
     justify-content: space-around;
@@ -80,94 +113,3 @@
     border: 5px solid white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   }
-  
-  @media (max-width: 768px) {
-    nav ul {
-      flex-direction: column;
-    }
-  
-    nav ul li {
-      margin: 10px 0;
-    }
-  
-    main {
-      flex-direction: column;
-      text-align: center;
-    }
-  
-    .profile-pic {
-      margin-top: 20px;
-    }
-  
-    .profile-pic img {
-      width: 150px;
-    }
-  }
-  
-  /* Dropdown Menu Styles */
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-}
-
-.dropdown-content a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
-
-.dropdown-content a:hover {
-  background-color: #ddd;
-}
-
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
-.sentiment_description {
-  font-family: 'Hind Siliguri', sans-serif;
-  color: black;
-  font-size: 20px;
-  position: absolute;
-  top: 100px;
-  left: 60px;
-  right: 60px;
-  z-index: -1;
-}
-
-.sentiment_text{
-  width: 80%;
-  margin-left: 60px;
-  margin-right: 60px;
-  position: absolute;
-  top: 150px;
-  z-index: -1;
-}
-
-.submit_btn{
-  margin-left: 60px;
-  position: absolute;
-  top: 265px;
-  z-index: -1;
-}
-
-.sentiment_result{
-  font-family: 'Hind Siliguri', sans-serif;
-  color: black;
-  font-size: 20px;
-  margin-left: 60px;
-  margin-right: 60px;
-  position: absolute;
-  top: 300px;
-  z-index: -1;
-}
