@@ -3,7 +3,7 @@
 name: Deploy Flask Website
 
 on:
-  pull_request:
+  push:
     branches: [main]
 
 jobs:
