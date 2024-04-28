@@ -1,4 +1,4 @@
-/* CSS file for media > 1201px */
+/* CSS file for media > 1301px */
 
 @import 'https://fonts.googleapis.com/css?family=Roboto';
 
@@ -6,6 +6,12 @@
 /******************************** INDEX PAGE *******************************/
 /***************************************************************************/
 
+/* Background color */
+html, body {
+  background-color: #ffffff;
+}
+
+/* Navbar */
 .navbar-nav {
   margin-left: auto;
 }
@@ -15,10 +21,7 @@
   margin-right:30px;
 }
 
-html, body {
-  background-color: #ffffff;
-}
-
+/* Typing animation */
 .blink {
   animation: blink 0.5s infinite;
 }
@@ -36,7 +39,7 @@ html, body {
 }
 
 .header-sub-title {
-  color: rgb(212, 7, 7);
+  color: rgb(184, 2, 2);
   font-family: 'Hind Siliguri', sans-serif;
   font-size: 55px;
   padding: 0.1em;
@@ -44,6 +47,17 @@ html, body {
   left: 300px;
 }
 
+.typing{
+  font-family: 'Hind Siliguri', sans-serif;
+  color: rgb(0, 1, 3);
+  font-size: 50px;
+  position: absolute;
+  top: 320px;
+  left: 600px;
+  right: 0px;
+}
+
+/* Profile image */
 .myimg{
   width:300px;
   height:300px;
@@ -56,6 +70,7 @@ html, body {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   }
 
+/* Introduction */  
 .intro{
   font-family: 'Hind Siliguri', sans-serif;
   color: rgb(0, 0, 0);
@@ -66,9 +81,10 @@ html, body {
   z-index: -1;
 }
 
+/* Name highlight */
 .intro span{
   font-family: 'Hind Siliguri', sans-serif;
-  color: rgb(243, 12, 12);
+  color: rgb(255, 0, 0);
   font-size: 50px;
   position: absolute;
   z-index: -1;
@@ -76,26 +92,7 @@ html, body {
   left: 250px;
 }
 
-.description{
-  font-family: 'Hind Siliguri', sans-serif;
-  color: rgb(0, 1, 3);
-  font-size: 50px;
-  position: absolute;
-  top: 320px;
-  left: 600px;
-  right: 0px;
-}
-
-.description span{
-  font-family: 'Hind Siliguri', sans-serif;
-  color: rgb(0, 0, 0);
-  font-size: 50px;
-  position: absolute;
-  z-index: -1;
-  top: 0px;
-  left: 0px;
-}
-
+/* Social media icons */
 .icon-bar{
   position: absolute;  
   left: 50%;

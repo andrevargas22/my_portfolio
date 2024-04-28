@@ -1,118 +1,101 @@
-/************************* HEADER ***************************/
+/* CSS file for media < 600px */
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+@import 'https://fonts.googleapis.com/css?family=Roboto';
 
+/***************************************************************************/
+/******************************** INDEX PAGE *******************************/
+/***************************************************************************/
+
+/* Background color */
 body {
-  font-family: 'Arial', sans-serif;
-  height: 100%;
-  margin: 0;
-  overflow-y: hidden;
+  background-color: #ffffff;
 }
 
-header {
-  background: #333;
-  color: white;
-  padding: 10px 0;
+/* Navbar */
+.navbar-nav {
+  margin-left: auto;
 }
 
-nav ul {
-  list-style: none;
+.navbar-nav > li{
+  margin-left:30px;
+  margin-right:30px;
+}
+
+/* Typing animation */
+.blink {
+  animation: blink 0.5s infinite;
+}
+
+@keyframes blink{
+  to { opacity: .0; }
+}
+
+.flex {
   display: flex;
-  justify-content: flex-end; 
-  padding-right: 20px; 
-}
-
-nav ul li {
-  margin: 0 20px;
-}
-
-nav ul li a {
-  color: white;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-nav ul li a:hover {
-  color: #aaa;
-}
-
-.dropdown {
-  position: relative;
-  display: inline-block; 
-}
-
-.dropdown-content {
-  display: none;
   position: absolute;
-  background-color: #f9f9f9;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
+  top: 8px;
+  left: -7px;
+  z-index: -1;
 }
 
-.dropdown-content a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
+.header-sub-title {
+  color: rgb(184, 2, 2);
+  font-family: 'Hind Siliguri', sans-serif;
+  font-size: 25px;
+  padding: 0.1em;
+  top: 120px;
+  left: 300px;
 }
 
-.dropdown-content a:hover {
-  background-color: #ddd;
+.typing{
+  font-family: 'Hind Siliguri', sans-serif;
+  color: rgb(0, 1, 3);
+  font-size: 50px;
+  position: absolute;
+  top: 220px;
+  left: 29px;
+  right: 0px;
 }
 
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
-/************************* INDEX ***************************/
-
-main {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  min-height: 40vh;
-  text-align: center;
-  margin-top: 20px;
-}
-
-.intro {
-  max-width: 200px;
-}
-
-.intro h1 {
-  font-size: 1.5rem;
-  margin-bottom: 25px;
-}
-
-.intro h1 span {
-  color: #f70000;
-}
-
-.intro p {
-  font-size: 0.9rem;
-  margin-bottom: 40px;
-}
-  
-.social-links img {
-  width: 30px;
-  margin: -20px 10px 0 10px; /* Adjust the left margin to move the images more to the right */
-  text-decoration: none;
-  text-align: center;
-}
-
-.profile-pic {
-  flex-shrink: 0;
-}
-
-.profile-pic img {
-  width: 125px;
-  border-radius: 50%;
-  border: 5px solid white;
+/* Profile image */
+.myimg{
+  width:120px;
+  height:120px;
+  object-fit:cover;
+  border-radius:50%;
+  position: absolute;
+  top: 80px;
+  left: 250px;  
+  z-index: -1;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  }
+
+/* Introduction */  
+.intro{
+  font-family: 'Hind Siliguri', sans-serif;
+  color: rgb(0, 0, 0);
+  font-size: 23px;
+  position: absolute;
+  top: 90px;
+  left: 25px;
+  z-index: -1;
 }
-  
+
+/* Name highlight */
+.intro span{
+  font-family: 'Hind Siliguri', sans-serif;
+  color: rgb(255, 0, 0);
+  font-size: 23px;
+  position: absolute;
+  z-index: -1;
+  top: 35px;
+  left: 116px;
+}
+
+/* Social media icons */
+.icon-bar{
+  position: absolute;  
+  left: 50%;
+  top: 350px;
+  transform: translate(-50%, -50%);
+}
