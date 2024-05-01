@@ -1,13 +1,8 @@
 import requests
-import yaml
 import os
 from flask import Flask, render_template, request
 
 SENTIMENT_API = "https://sentiment-analysis-api-p6kayhv22a-uc.a.run.app/predict"
-
-# Load configuration from config.yaml
-with open('config.yaml', 'r') as config_file:
-    config = yaml.safe_load(config_file)
     
 app = Flask(__name__)
 
