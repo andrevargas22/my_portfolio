@@ -46,10 +46,5 @@ def home_pt():
 
 if __name__ == '__main__':
 
-    if config.get('env') == 'production':
-        port = int(os.environ.get("PORT", 8080))
-        app.run(host='0.0.0.0', port=port)
-    
-    else:
-        app.run(debug=True)
-
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host='0.0.0.0', port=port)
