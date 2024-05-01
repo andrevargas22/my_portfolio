@@ -5,7 +5,6 @@ FROM python:3.9-slim
 WORKDIR /app
 
 # Copy required files
-COPY config.yaml .
 COPY requirements.txt .
 COPY static static
 COPY templates templates
