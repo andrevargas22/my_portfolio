@@ -11,6 +11,7 @@ with open('config.yaml', 'r') as config_file:
     
 app = Flask(__name__)
 
+############################## ENGLISH ##############################
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -37,7 +38,12 @@ def sentiment_results():
             # Get the predicted sentiment label from the response
             pred = response.json()["sentiment"]
             return render_template('sentiment_analysis_results.html', text=text, pred=pred)
-    
+
+############################## PT-BR ##############################
+@app.route('/pt-br')
+def home_pt():
+    return render_template('index_pt.html')
+
 if __name__ == '__main__':
 
     if config.get('env') == 'production':
