@@ -28,7 +28,7 @@
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 
         <!-- Page Title -->
-        <title>André Vargas - Machine Learning Engineer </title>
+        <title>About - André Vargas</title>
   
     </head>
 
@@ -40,14 +40,14 @@
             <div class="container-fluid">
 
                 <!-- Navigation Bar Brand -->
-                <a class="navbar-brand" href="/">
+                <a class="navbar-brand" href="/pt-br">
                     André Vargas
                     <div class="flag-icons">
-                        <a href="/pt-br">
+                        <a href="/sobre">
                             <img src="static/images/br.png" alt="Brazilian Flag" class="flag-icon">
                         </a>
                         &nbsp;
-                        <a href="/">
+                        <a href="/about">
                             <img src="static/images/uk.png" alt="UK Flag" class="flag-icon">
                         </a>
                     </div>
@@ -62,29 +62,29 @@
                 
                     <ul class="navbar-nav mb-2 mb-lg-0">
                         
-                        <!-- AI Projects -->
+                        <!-- Projects -->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            AI Projects
+                            Projetos de IA
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="/sentiment_analysis">Análise Sentimento</a></li>
+                            </ul>
+                        </li>
+                        
+                        <!-- Other Projects -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Outros Projetos
                             </a>
                             <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" href="/sentiment_analysis">Sentiment Analysis</a></li>
                             </ul>
                         </li>
 
-                        <!-- Other Projects -->
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Other Projects
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="/sentiment_analysis">Sentiment Analysis</a></li>
-                            </ul>
-                        </li>
-                        
                         <!-- About -->
                         <li class="nav-item">
-                            <a class="nav-link" href="/about">About</a>
+                            <a class="nav-link" href="/sobre">Sobre</a>
                         </li>
                         
                     </ul>
@@ -94,30 +94,10 @@
 
         <br><br>
 
-        <!-- Image -->
-        <img src="static/images/profile.png" class="myimg"/>
-
         <!-- Intro Text -->
         <div class="intro">
-            Welcome!<br>My name is <strong><span>André!</span></strong><br>
-            I am...
+           EM CONSTRUÇÃO!
         </div> 
-        
-        <!-- Typing Effect -->
-        <div class="typing">
-            <p> 
-                <div class="flex">
-                  <p class="header-sub-title" id="word"></p><p class="header-sub-title blink">|</p>
-                </div>
-            </p>
-        </div>
-        
-        <!-- Icon Bar -->
-        <div class="icon-bar">
-            <a href="https://github.com/andrevargas22"><i class="fa fa-github fa-2x fa-fw"></i></a>
-            <a href="https://www.linkedin.com/in/andrevargas22/"><i class="fa fa-linkedin fa-2x fa-fw"></i></a>
-            <a href="https://medium.com/@andrevargas22/"><i class="fa fa-medium fa-2x fa-fw"></i></a> 
-        </div>
         
         <!-- Bootstrap Bundle with Popper -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
