@@ -37,11 +37,11 @@ def sentiment_results():
 ############################## PT-BR ##############################
 @app.route('/pt-br')
 def home_pt():
-    return render_template('pt/index_pt.html')
+    return render_template('pt/index.html')
 
 @app.route('/sobre')
 def about_pt():
-    return render_template('pt/about_pt.html')
+    return render_template('pt/about.html')
 
 if __name__ == '__main__':
 
