@@ -104,3 +104,18 @@ body {
 .flag-icons {
   margin-right: auto; 
 }
+
+/***************************************************************************/
+/******************************** WORLD MAP ********************************/
+/***************************************************************************/
+
+/* Introduction */  
+.description_map{
+  font-family: 'Hind Siliguri', sans-serif;
+  color: rgb(0, 0, 0);
+  font-size: 50px;
+  position: absolute;
+  top: 110px;
+  left: 600px;
+  z-index: 1;
+}

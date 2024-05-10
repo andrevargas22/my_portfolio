@@ -15,6 +15,10 @@ def home():
 def about():
     return render_template('eng/about.html')
 
+@app.route('/world_map')
+def world():
+    return render_template('eng/world_map.html')
+
 @app.route('/sentiment_analysis')
 def sentiment_analysis():
     return render_template('sentiment_analysis.html')
@@ -42,6 +46,10 @@ def home_pt():
 @app.route('/sobre')
 def about_pt():
     return render_template('pt/about.html')
+
+@app.route('/mapa_mundi')
+def world_pt():
+    return render_template('pt/world_map.html')
 
 if __name__ == '__main__':
 
