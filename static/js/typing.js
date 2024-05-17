@@ -1,5 +1,5 @@
 // Array of words/phrases to display
-const words = ["a Machine Learning Engineer", "a Data Scientist", "a dog lover", "a gamer", "a drummer", "a chess learner", "not a web designer!"];
+const words = ["a Machine Learning Engineer", "a Data Scientist", "a dog lover", "Maria's husband", "a gamer", "a drummer", "a chess learner", "not a web designer!"];
 
 let i = 0; // Index variable to track current word/phrase
 let timer; // Timer variable for setTimeout function
