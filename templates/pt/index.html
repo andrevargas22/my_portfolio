@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="pt-br">
+
+    <!-- Header File -->
+    {% include 'common/header.html' %}
+
+    <body>
+        
+        <!-- Navigation Bar -->
+        {% include 'common/navbar_pt.html' %} 
+
+        <br><br>
+
+        <!-- Image -->
+        <img src="static/images/profile.png" class="myimg"/>
+
+        <!-- Intro Text -->
+        <div class="intro">
+            Olá!<br>Meu nome é <strong><span>André!</span></strong><br>
+            Eu sou um...
+        </div> 
+        
+        <!-- Typing Effect -->
+        <div class="typing">
+            <p> 
+                <div class="flex">
+                  <p class="header-sub-title" id="word"></p><p class="header-sub-title blink">|</p>
+                </div>
+            </p>
+        </div>
+        
+        <!-- Icon Bar -->
+        <div class="icon-bar">
+            <a href="https://github.com/andrevargas22"><i class="fa fa-github fa-2x fa-fw"></i></a>
+            <a href="https://www.linkedin.com/in/andrevargas22/"><i class="fa fa-linkedin fa-2x fa-fw"></i></a>
+            <a href="https://medium.com/@andrevargas22/"><i class="fa fa-medium fa-2x fa-fw"></i></a> 
+        </div>
+        
+        <!-- Bootstrap Bundle with Popper -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+        
+        <!-- My own JS -->
+        <script src="{{ url_for('static', filename='js/typing_pt.js') }}"></script>
+
+    </body>
+
+</html>

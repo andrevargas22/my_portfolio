@@ -9,11 +9,15 @@ app = Flask(__name__)
 ############################## ENGLISH ##############################
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('eng/index.html')
 
 @app.route('/about')
 def about():
-    return render_template('about.html')
+    return render_template('eng/about.html')
+
+@app.route('/world_map')
+def world():
+    return render_template('eng/world_map.html')
 
 @app.route('/sentiment_analysis')
 def sentiment_analysis():
@@ -37,7 +41,15 @@ def sentiment_results():
 ############################## PT-BR ##############################
 @app.route('/pt-br')
 def home_pt():
-    return render_template('index_pt.html')
+    return render_template('pt/index.html')
+
+@app.route('/sobre')
+def about_pt():
+    return render_template('pt/about.html')
+
+@app.route('/mapa_mundi')
+def world_pt():
+    return render_template('pt/world_map.html')
 
 if __name__ == '__main__':
 
