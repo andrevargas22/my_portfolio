@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+
+    <!-- Header File -->
+    {% include 'common/header.html' %} 
+
+    <body>
+        
+        <!-- Navigation Bar -->
+        {% include 'common/navbar.html' %} 
+
+        <br>
+
+        <!-- Required CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.js"></script>
+
+        <div class="container">
+            <!-- Page Header -->
+            <div class="row">
+                <div class="col-lg-12 text-center my-2">
+                    <h4 class="border-bottom border-dark p-2">Finished Games Archive</h4>
+                    <center>This is a personal list of videogames I finished (at least that I can remember). I'm using as an experiment 
+                    to create a Portfolio Menu like this.</center>
+                </div>
+            </div>
+            
+            <!-- Menu -->
+            <div class="portfolio-menu mt-2 mb-4">
+                <ul>
+                    <li class="btn btn-outline-dark active" data-filter="*">All</li>
+                    <li class="btn btn-outline-dark" data-filter=".pc">PC</li>
+                    <li class="btn btn-outline-dark" data-filter=".nes">NES</li>
+                    <li class="btn btn-outline-dark" data-filter=".snes">SNES</li>
+                    <li class="btn btn-outline-dark" data-filter=".n64">N64</li>
+                    <li class="btn btn-outline-dark" data-filter=".mega">Mega Drive</li>
+                    <li class="btn btn-outline-dark" data-filter=".switch">Switch</li>
+                    <li class="btn btn-outline-dark" data-filter=".ps1">PS1</li>
+                    <li class="btn btn-outline-dark" data-filter=".ps2">PS2</li>
+                    <li class="btn btn-outline-dark" data-filter=".gba">GBA</li>
+                </ul>
+            </div>
+
+            <!-- Items -->
+            <div class="portfolio-item row">
+                
+                <!-- A -->
+                <div class="item pc col-lg-3 col-md-4 col-6 col-sm">
+                    <a href="{{ url_for('static', filename='images/games/A short hike.avif') }}" class="fancylight popup-btn" data-fancybox-group="light"> 
+                        <img class="img-fluid" src="{{  url_for('static', filename='images/games/A short hike.avif') }}" alt="Description of the image">
+                    </a>
+                    <p class="image-description">A Short Hike (2019)</p>
+                </div>
+                
+                <div class="item snes col-lg-3 col-md-4 col-6 col-sm">
+                    <a href="{{ url_for('static', filename='images/games/Alladin.jpg') }}" class="fancylight popup-btn" data-fancybox-group="light"> 
+                        <img class="img-fluid" src="{{  url_for('static', filename='images/games/Alladin.jpg') }}" alt="Description of the image">
+                    </a>
+                    <p class="image-description">Alladin (1993)</p>
+                </div>
+                
+                <!-- B -->
+                <div class="item pc col-lg-3 col-md-4 col-6 col-sm">
+                    <a href="{{ url_for('static', filename='images/games/Batman Arkham Asylum.jpg') }}" class="fancylight popup-btn" data-fancybox-group="light"> 
+                        <img class="img-fluid" src="{{  url_for('static', filename='images/games/Batman Arkham Asylum.jpg') }}" alt="Description of the image">
+                    </a>
+                    <p class="image-description">Batman Arkham Asylum (2009)</p>
+                </div>
+                
+                <div class="item pc col-lg-3 col-md-4 col-6 col-sm">
+                    <a href="{{ url_for('static', filename='images/games/Batman Arkham City.jpg') }}" class="fancylight popup-btn" data-fancybox-group="light"> 
+                        <img class="img-fluid" src="{{  url_for('static', filename='images/games/Batman Arkham City.jpg') }}" alt="Description of the image">
+                    </a>
+                    <p class="image-description">Batman Arkham City (2011)</p>
+                </div>
+
+                <div class="item pc col-lg-3 col-md-4 col-6 col-sm">
+                    <a href="{{ url_for('static', filename='images/games/Braid.jpg') }}" class="fancylight popup-btn" data-fancybox-group="light"> 
+                        <img class="img-fluid" src="{{  url_for('static', filename='images/games/Braid.jpg') }}" alt="Description of the image">
+                    </a>
+                    <p class="image-description">Braid (2008)</p>
+                </div>
+                
+                <div class="item pc col-lg-3 col-md-4 col-6 col-sm">
+                    <a href="{{ url_for('static', filename='images/games/Brother.jpg') }}" class="fancylight popup-btn" data-fancybox-group="light"> 
+                        <img class="img-fluid" src="{{  url_for('static', filename='images/games/Brother.jpg') }}" alt="Description of the image">
+                    </a>
+                    <p class="image-description">Brothers: A Tale of Two Sons (2013)</p>
+                </div>
+                
+                <!-- C -->
+                <div class="item snes col-lg-3 col-md-4 col-6 col-sm">
+                    <a href="{{ url_for('static', filename='images/games/Chrono.webp') }}" class="fancylight popup-btn" data-fancybox-group="light"> 
+                        <img class="img-fluid" src="{{  url_for('static', filename='images/games/Chrono.webp') }}" alt="Description of the image">
+                    </a>
+                    <p class="image-description">Chrono Trigger (1995)</p>
+                </div>
+                
+                <div class="item n64 col-lg-3 col-md-4 col-6 col-sm">
+                    <a href="{{ url_for('static', filename='images/games/Clayfighter.jpeg') }}" class="fancylight popup-btn" data-fancybox-group="light"> 
+                        <img class="img-fluid" src="{{  url_for('static', filename='images/games/Clayfighter.jpeg') }}" alt="Description of the image">
+                    </a>
+                    <p class="image-description">ClayFighter 63⅓ (1997)</p>
+                </div>
+
+                <div class="item mega col-lg-3 col-md-4 col-6 col-sm">
+                    <a href="{{ url_for('static', filename='images/games/comix.jpg') }}" class="fancylight popup-btn" data-fancybox-group="light"> 
+                        <img class="img-fluid" src="{{  url_for('static', filename='images/games/comix.jpg') }}" alt="Description of the image">
+                    </a>
+                    <p class="image-description">Comix Zone (1995)</p>
+                </div>
+
+                <div class="item n64 col-lg-3 col-md-4 col-6 col-sm">
+                    <a href="{{ url_for('static', filename='images/games/conker.jpg') }}" class="fancylight popup-btn" data-fancybox-group="light"> 
+                        <img class="img-fluid" src="{{  url_for('static', filename='images/games/conker.jpg') }}" alt="Description of the image">
+                    </a>
+                    <p class="image-description">Conker's Bad Fur Day (2001)</p>
+                </div>
+
+                <div class="item mega col-lg-3 col-md-4 col-6 col-sm">
+                    <a href="{{ url_for('static', filename='images/games/contra.png') }}" class="fancylight popup-btn" data-fancybox-group="light"> 
+                        <img class="img-fluid" src="{{  url_for('static', filename='images/games/contra.png') }}" alt="Description of the image">
+                    </a>
+                    <p class="image-description">Contra Hard Corps (1994)</p>
+                </div>
+                
+                <div class="item switch col-lg-3 col-md-4 col-6 col-sm">
+                    <a href="{{ url_for('static', filename='images/games/crash1.jpg') }}" class="fancylight popup-btn" data-fancybox-group="light"> 
+                        <img class="img-fluid" src="{{  url_for('static', filename='images/games/crash1.jpg') }}" alt="Description of the image">
+                    </a>
+                    <p class="image-description">Crash Bandicoot 1 (1996)</p>
+                </div>
+
+                <div class="item pc col-lg-3 col-md-4 col-6 col-sm">
+                    <a href="{{ url_for('static', filename='images/games/Cuphead.jpg') }}" class="fancylight popup-btn" data-fancybox-group="light"> 
+                        <img class="img-fluid" src="{{  url_for('static', filename='images/games/Cuphead.jpg') }}" alt="Description of the image">
+                    </a>
+                    <p class="image-description">Cuphead (2017)</p>
+                </div>
+
+                <!-- D -->
+                <div class="item n64 col-lg-3 col-md-4 col-6 col-sm">
+                    <a href="{{ url_for('static', filename='images/games/diddy.jpg') }}" class="fancylight popup-btn" data-fancybox-group="light"> 
+                        <img class="img-fluid" src="{{  url_for('static', filename='images/games/diddy.jpg') }}" alt="Description of the image">
+                    </a>
+                    <p class="image-description">Diddy Kong Racing (1995)</p>
+                </div>
+
+                <div class="item snes col-lg-3 col-md-4 col-6 col-sm">
+                    <a href="{{ url_for('static', filename='images/games/dk1.jpg') }}" class="fancylight popup-btn" data-fancybox-group="light"> 
+                        <img class="img-fluid" src="{{  url_for('static', filename='images/games/dk1.jpg') }}" alt="Description of the image">
+                    </a>
+                    <p class="image-description">Donkey Kong Country (1994)</p>
+                </div>
+
+                <div class="item snes col-lg-3 col-md-4 col-6 col-sm">
+                    <a href="{{ url_for('static', filename='images/games/dk2.png') }}" class="fancylight popup-btn" data-fancybox-group="light"> 
+                        <img class="img-fluid" src="{{  url_for('static', filename='images/games/dk2.png') }}" alt="Description of the image">
+                    </a>
+                    <p class="image-description">Donkey Kong Country 2 (1995)</p>
+                </div>
+
+                <div class="item snes col-lg-3 col-md-4 col-6 col-sm">
+                    <a href="{{ url_for('static', filename='images/games/dk3.jpg') }}" class="fancylight popup-btn" data-fancybox-group="light"> 
+                        <img class="img-fluid" src="{{  url_for('static', filename='images/games/dk3.jpg') }}" alt="Description of the image">
+                    </a>
+                    <p class="image-description">Donkey Kong Country 3 (1996)</p>
+                </div>
+
+                <div class="item ps1 col-lg-3 col-md-4 col-6 col-sm">
+                    <a href="{{ url_for('static', filename='images/games/dbgt.jpg') }}" class="fancylight popup-btn" data-fancybox-group="light"> 
+                        <img class="img-fluid" src="{{  url_for('static', filename='images/games/dbgt.jpg') }}" alt="Description of the image">
+                    </a>
+                    <p class="image-description">Dragon Ball GT: Final Bout (1997)</p>
+                </div>
+
+                <div class="item gba col-lg-3 col-md-4 col-6 col-sm">
+                    <a href="{{ url_for('static', filename='images/games/db_buu.webp') }}" class="fancylight popup-btn" data-fancybox-group="light"> 
+                        <img class="img-fluid" src="{{  url_for('static', filename='images/games/db_buu.webp') }}" alt="Description of the image">
+                    </a>
+                    <p class="image-description">Dragon Ball Z - Buu's Fury (2004)</p>
+                </div>
+
+                <div class="item snes col-lg-3 col-md-4 col-6 col-sm">
+                    <a href="{{ url_for('static', filename='images/games/dbz2.png') }}" class="fancylight popup-btn" data-fancybox-group="light"> 
+                        <img class="img-fluid" src="{{  url_for('static', filename='images/games/dbz2.png') }}" alt="Description of the image">
+                    </a>
+                    <p class="image-description">Dragon Ball Z - Super Butoden 2 (1993)</p>
+                </div>
+
+                <div class="item snes col-lg-3 col-md-4 col-6 col-sm">
+                    <a href="{{ url_for('static', filename='images/games/dbz3.jpg') }}" class="fancylight popup-btn" data-fancybox-group="light"> 
+                        <img class="img-fluid" src="{{  url_for('static', filename='images/games/dbz3.jpg') }}" alt="Description of the image">
+                    </a>
+                    <p class="image-description">Dragon Ball Z - Super Butoden 3 (1994)</p>
+                </div>
+                
+                
+            </div>
+        </div>
+        
+        <!-- Bootstrap Bundle with Popper -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+        
+        <!-- My own JS -->
+        <script src="{{ url_for('static', filename='js/game_list.js') }}"></script>
+
+    </body>
+
+</html>

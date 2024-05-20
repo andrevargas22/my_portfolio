@@ -1,8 +1,5 @@
-import requests
 import os
-from flask import Flask, render_template, request
-
-SENTIMENT_API = "https://sentiment-analysis-api-p6kayhv22a-uc.a.run.app/predict"
+from flask import Flask, render_template
     
 app = Flask(__name__)
 
@@ -19,25 +16,6 @@ def about():
 def world():
     return render_template('eng/world_map.html')
 
-@app.route('/sentiment_analysis')
-def sentiment_analysis():
-    return render_template('sentiment_analysis.html')
-
-@app.route('/sentiment_results', methods=['POST', 'GET'])
-def sentiment_results():
-
-    if request.method == 'POST':
-        text = request.form['textArea1']  # Get text from textarea
-
-        # Send a POST request to the FastAPI endpoint
-        response = requests.post(SENTIMENT_API, json={"text": text})
-                
-        if response.status_code == 200:
-            
-            # Get the predicted sentiment label from the response
-            pred = response.json()["sentiment"]
-            return render_template('sentiment_analysis_results.html', text=text, pred=pred)
-
 ############################## PT-BR ##############################
 @app.route('/pt-br')
 def home_pt():
@@ -50,6 +28,15 @@ def about_pt():
 @app.route('/mapa_mundi')
 def world_pt():
     return render_template('pt/world_map.html')
+
+############################## TEST ##############################
+@app.route('/games')
+def games():
+    return render_template('eng/game.html')
+
+@app.route('/jogos')
+def jogos():
+    return render_template('pt/game.html')
 
 if __name__ == '__main__':
 
