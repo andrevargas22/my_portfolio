@@ -34,10 +34,6 @@ def world_pt():
 def games():
     return render_template('eng/game.html')
 
-@app.route('/jogos')
-def jogos():
-    return render_template('pt/game.html')
-
 if __name__ == '__main__':
 
     port = int(os.environ.get("PORT", 8080))
