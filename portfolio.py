@@ -16,6 +16,10 @@ def about():
 def world():
     return render_template('eng/world_map.html')
 
+@app.route('/games')
+def games():
+    return render_template('eng/game.html')
+
 ############################## PT-BR ##############################
 @app.route('/pt-br')
 def home_pt():
@@ -29,10 +33,11 @@ def about_pt():
 def world_pt():
     return render_template('pt/world_map.html')
 
+@app.route('/jogos')
+def jogos():
+    return render_template('pt/game.html')
+
 ############################## TEST ##############################
-@app.route('/games')
-def games():
-    return render_template('eng/game.html')
 
 if __name__ == '__main__':
 
