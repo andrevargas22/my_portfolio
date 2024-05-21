@@ -1,22 +1,30 @@
 <!doctype html>
 <html lang="en">
 
-<div class="item pc col-lg-3 col-md-4 col-6 col-sm">
-    <a href="{{ url_for('static', filename='images/games/A short hike.avif') }}" class="fancylight popup-btn" data-fancybox-group="light"> 
-        <img class="img-fluid" src="{{  url_for('static', filename='images/games/A short hike.avif') }}" alt="Description of the image">
-    </a>
-    <p class="image-description">A Short Hike (2019)</p>
-</div>
-
-<div class="item snes platformer col-lg-3 col-md-4 col-6 col-sm">
-    <a href="{{ url_for('static', filename='images/games/Alladin.jpg') }}" class="fancylight popup-btn" data-fancybox-group="light"> 
-        <img class="img-fluid" src="{{  url_for('static', filename='images/games/Alladin.jpg') }}" alt="Description of the image">
-    </a>
-    <div class="image-info">
-        <p class="image-description">Alladin (1993)</p>
+<div class="item pc dplat col-lg-3 col-md-4 col-6 col-sm">
+    <div class="image-container">
+        <p class="image-description">A Short Hike (2019)</p>
+        <a href="{{ url_for('static', filename='images/games/shorthike.jpg') }}" class="fancylight popup-btn" data-fancybox-group="light">
+            <img class="img-fluid" src="{{ url_for('static', filename='images/games/shorthike.jpg') }}" alt="Description of the image">
+        </a>
         <div class="tags">
-            <span class="tag">SNES</span>
-            <span class="tag">Platformer</span>
+            <span class="tag pc">PC</span>
+            <span class="tag dplat">3D Platformer</span>
         </div>
     </div>
 </div>
+
+<div class="item snes platformer col-lg-3 col-md-4 col-6 col-sm">
+    <div class="image-container">
+        <p class="image-description">Alladin (1993)</p>
+        <a href="{{ url_for('static', filename='images/games/Alladin.jpg') }}" class="fancylight popup-btn" data-fancybox-group="light">
+            <img class="img-fluid" src="{{ url_for('static', filename='images/games/Alladin.jpg') }}" alt="Description of the image">
+        </a>
+        <div class="tags">
+            <span class="tag snes">SNES</span>
+            <span class="tag platformer">Platformer</span>
+        </div>
+    </div>
+</div>
+
+

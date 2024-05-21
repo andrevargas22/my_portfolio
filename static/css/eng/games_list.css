@@ -1,0 +1,142 @@
+/* CSS file for the page of games finished */
+
+.portfolio-menu{
+	text-align:center;
+}
+
+.portfolio-menu ul li{
+	display:inline-block;
+	margin:0;
+	list-style:none;
+	padding:10px 15px;
+	cursor:pointer;
+	-webkit-transition:all 05s ease;
+	-moz-transition:all 05s ease;
+	-ms-transition:all 05s ease;
+	-o-transition:all 05s ease;
+	transition:all .5s ease;
+}
+
+.portfolio-item {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.portfolio-item .item{
+  margin-bottom:10px;
+}
+
+.image-info {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-top: 3px;
+}
+
+.image-container {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.image-description {
+  font-size: 12px;
+  color: rgb(75, 72, 72);
+
+  margin-bottom: 5px; /* Space between title and image */
+}
+
+.tags {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 5px; /* Space between image and tags */
+}
+
+.tag {
+  background-color: #007bff;
+  color: white;
+  padding: 3px 7px;
+  border-radius: 3px;
+  font-size: 10px;
+}
+
+
+.tag.pc {
+  background-color: #e65d0e; 
+}
+
+.tag.nes {
+  background-color: #085e13; 
+}
+
+.tag.snes {
+  background-color: #007bff; 
+}
+
+.tag.n64 {
+  background-color: #c184da; 
+}
+
+.tag.mega {
+  background-color: #29b39c; 
+}
+
+.tag.switch {
+  background-color: #e21c1c; 
+}
+
+.tag.ps1 {
+  background-color: #575050; 
+}
+
+.tag.ps2 {
+  background-color: #faf7f7; 
+}
+
+.tag.gba {
+  background-color: #3fbcee; 
+}
+
+.tag.dplat {
+  background-color: #972284; 
+}
+
+.tag.platformer {
+  background-color: #6eaa76; 
+}
+
+.tag.action {
+  background-color: #f02400; 
+}
+
+.tag.puzzle {
+  background-color: #3e1350; 
+}
+
+.tag.adventure {
+  background-color: #070e79; 
+}
+
+.tag.rpg {
+  background-color: #0eb10e; 
+}
+
+.tag.fighting {
+  background-color: #330618; 
+}
+
+.tag.beat-em-up {
+  background-color: #0c9eca; 
+}
+
+.tag.run_gun {
+  background-color: #e2799c; 
+}
+
+.tag.racing {
+  background-color: #ec15c8; 
+}
+
+.tag.fps {
+  background-color: #482bc7; 
+}
