@@ -49,7 +49,8 @@
   display: flex;
   justify-content: center;
   gap: 5px;
-  margin-top: 5px; /* Space between image and tags */
+  margin-top: 5px; 
+  margin-bottom: 5px;
 }
 
 .tag {
@@ -95,6 +96,10 @@
 
 .tag.gba {
   background-color: #3fbcee; 
+}
+
+.tag.gb {
+  background-color: #7c8588; 
 }
 
 .tag.dplat {
@@ -155,4 +160,8 @@
 
 .tag.party {
   background-color: #76d1ec; 
+}
+
+.tag.simulation {
+  background-color: #820086; 
 }
