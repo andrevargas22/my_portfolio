@@ -45,6 +45,12 @@
   margin-bottom: 5px; /* Space between title and image */
 }
 
+.item {
+  border-top: 1px solid #413e3e; 
+  padding-top: 10px; 
+  margin-top: 10px; 
+}
+
 .tags {
   display: flex;
   justify-content: center;
@@ -74,6 +80,10 @@
   background-color: #007bff; 
 }
 
+.tag.ds3 {
+  background-color: #420057; 
+}
+
 .tag.n64 {
   background-color: #c184da; 
 }
@@ -91,7 +101,7 @@
 }
 
 .tag.ps2 {
-  background-color: #faf7f7; 
+  background-color: #4e3939; 
 }
 
 .tag.gba {
