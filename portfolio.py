@@ -37,6 +37,12 @@ def world_pt():
 def games_pt():
     return render_template('pt/game.html')
 
+############################## COMMON ##############################
+
+@app.route('/render_map')
+def render_map():
+    return render_template('common/folium.html')
+
 if __name__ == '__main__':
 
     port = int(os.environ.get("PORT", 8080))

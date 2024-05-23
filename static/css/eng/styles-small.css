@@ -105,18 +105,4 @@ body {
   margin-right: auto; 
 }
 
-/***************************************************************************/
-/******************************** WORLD MAP ********************************/
-/***************************************************************************/
 
-/* Introduction */  
-.description_map{
-  font-family: 'Hind Siliguri', sans-serif;
-  color: rgb(0, 0, 0);
-  font-size: 20px;
-  position: absolute;
-  top: 80px;
-  left: 30px;
-  right: 20px;
-  z-index: 1;
-}
