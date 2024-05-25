@@ -25,10 +25,6 @@
   flex-direction: column;
 }
 
-/***************************************************************************/
-/******************************** INDEX PAGE *******************************/
-/***************************************************************************/
-
 /* Background color */
 html, body {
   background-color: #ffffff;
@@ -79,7 +75,7 @@ html, body {
   justify-content: center;
 }
 .myimg {
-  width: 300px;
+  width: 250px;
   max-width: 100%;
   height: auto;
   object-fit: cover;
@@ -113,4 +109,26 @@ html, body {
 /* Flag icons */
 .flag-icons {
   margin-right: auto; 
+}
+
+/* Media Queries for Responsive Design */
+@media (min-width: 1201px) {
+  .myimg {
+      width: 300px; /* Reduce image size on small screens */
+  }
+}
+@media (min-width: 851px) and (max-width: 1200px) {
+  .myimg {
+      width: 250px; /* Further reduce image size on very small screens */
+  }
+}
+@media (min-width: 601px) and (max-width: 850px) {
+  .myimg {
+      width: 200px; /* Reduce image size on small screens */
+  }
+}
+@media (max-width: 600px) {
+  .myimg {
+      width: 125px; /* Further reduce image size on very small screens */
+  }
 }
