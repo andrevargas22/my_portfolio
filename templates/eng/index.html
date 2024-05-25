@@ -1,8 +1,12 @@
 <!doctype html>
 <html lang="en">
 
-    <!-- Header File -->
-    {% include 'common/header.html' %} 
+    <head>
+        <!-- Header File -->
+        {% include 'common/header.html' %} 
+        <!-- Page CSS -->
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}">
+    </head>
 
     <body>
         
@@ -10,10 +14,8 @@
         {% include 'common/navbar.html' %} 
 
         <div class="container">
-            <!-- First Row -->
             <div class="row">
                 <div class="col image-container">
-                    <!-- Image -->
                     <img src="static/images/profile.png" class="myimg"/>
                 </div>
 
@@ -36,7 +38,7 @@
                     </div>
                 </div>
             </div>
-            <!-- Second Row -->
+            <!-- Icon Bar -->
             <div class="row">
                 <div class="col">
                     <div class="icon-bar">
