@@ -1,62 +1,53 @@
 <!doctype html>
 <html lang="en">
-
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-
         <div class="container-fluid">
-
             <!-- Navigation Bar Brand -->
             <a class="navbar-brand" href="/">
                 André Vargas
                 <div class="flag-icons">
-                    <a href="/pt-br">
-                        <img src="static/images/br.png" alt="Brazilian Flag" class="flag-icon">
+                    <a id="br-flag" href="#">
+                        <img src="{{ url_for('static', filename='images/icons/br.png') }}" alt="Brazilian Flag" class="flag-icon">
                     </a>
                     &nbsp;
-                    <a href="/">
-                        <img src="static/images/uk.png" alt="UK Flag" class="flag-icon">
+                    <a id="en-flag" href="/">
+                        <img src="{{ url_for('static', filename='images/icons/uk.png') }}" alt="UK Flag" class="flag-icon">
                     </a>
                 </div>
             </a>
-        
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            
             <!-- Navigation Bar Options -->
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            
                 <ul class="navbar-nav mb-2 mb-lg-0">
-                    
                     <!-- AI Projects -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         AI Projects
                         </a>
                         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="/sentiment_analysis">Sentiment Analysis</a></li>
+                            <li><a class="dropdown-item" href="#">Placeholder</a></li>
                         </ul>
                     </li>
-
                     <!-- Other Projects -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Other Projects
                         </a>
                         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="/world_map">Visited Countries</a></li>
+                            <li><a class="dropdown-item" href="/games">Finished Games</a></li>
+                            <li><a class="dropdown-item" href="/map">Visited Countries</a></li>
                         </ul>
                     </li>
-                    
                     <!-- About -->
                     <li class="nav-item">
                         <a class="nav-link" href="/about">About</a>
                     </li>
-                    
                 </ul>
             </div>
         </div>
     </nav>
-
+    <script src="{{ url_for('static', filename='js/language.js') }}"></script>
 </html>
