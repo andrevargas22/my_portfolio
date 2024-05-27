@@ -1,53 +1,41 @@
 <!doctype html>
-<html lang="pt-br">
+<html lang="en">
 
     <head>
         <!-- Header File -->
         {% include 'common/header.html' %} 
         <!-- Page CSS -->
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index_pt.css') }}">
     </head>
 
     <body>
         
         <!-- Navigation Bar -->
-        {% include 'common/navbar_pt.html' %} 
+        {% include 'common/navbar.html' %} 
 
-        <div class="container">
-            <div class="row">
-                <div class="col image-container">
-                    <img src="static/images/profile.png" class="myimg"/>
-                </div>
+        <!-- Image -->
+        <img src="static/images/profile.png" class="myimg"/>
 
-                <div class="col split-col">
-                    <div class="half-col">
-                        <!-- Intro Text -->
-                        <div class="intro">
-                            Olá!<br>Meu nome é <strong><span>André!</span></strong><br>
-                            Eu sou...
-                        </div> 
-                    </div>
-                    <div class="half-col">
-                        <!-- Typing Effect -->
-                        <div class="typing">
-                            <div class="flex">
-                                <p class="header-sub-title" id="word"></p>
-                                <p class="header-sub-title blink">|</p>
-                            </div>
-                        </div>
-                    </div>
+        <!-- Intro Text -->
+        <div class="intro">
+            Olá!<br>Meu nome é <strong><span>André!</span></strong><br>
+            Eu sou...
+        </div> 
+        
+        <!-- Typing Effect -->
+        <div class="typing">
+            <p> 
+                <div class="flex">
+                  <p class="header-sub-title" id="word"></p><p class="header-sub-title blink">|</p>
                 </div>
-            </div>
-            <!-- Icon Bar -->
-            <div class="row">
-                <div class="col">
-                    <div class="icon-bar">
-                        <a href="https://github.com/andrevargas22"><i class="fa fa-github fa-2x fa-fw"></i></a>
-                        <a href="https://www.linkedin.com/in/andrevargas22/"><i class="fa fa-linkedin fa-2x fa-fw"></i></a>
-                        <a href="https://medium.com/@andrevargas22/"><i class="fa fa-medium fa-2x fa-fw"></i></a> 
-                    </div>
-                </div>
-            </div>
+            </p>
+        </div>
+        
+        <!-- Icon Bar -->
+        <div class="icon-bar">
+            <a href="https://github.com/andrevargas22"><i class="fa fa-github fa-2x fa-fw"></i></a>
+            <a href="https://www.linkedin.com/in/andrevargas22/"><i class="fa fa-linkedin fa-2x fa-fw"></i></a>
+            <a href="https://medium.com/@andrevargas22/"><i class="fa fa-medium fa-2x fa-fw"></i></a> 
         </div>
 
         <!-- Bootstrap Bundle with Popper -->
