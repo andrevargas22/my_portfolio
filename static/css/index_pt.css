@@ -94,7 +94,7 @@ html, body {
     position: absolute;
     z-index: -1;
     top: 74px;
-    left: 250px;
+    left: 270px;
   }
   
   /* Social media icons */
@@ -166,7 +166,7 @@ html, body {
     position: absolute;
     z-index: -1;
     top: 67px;
-    left: 225px;
+    left: 245px;
   }
   
   /* Social media icons */
@@ -238,7 +238,7 @@ html, body {
     position: absolute;
     z-index: -1;
     top: 44px;
-    left: 150px;
+    left: 165px;
   }
   
   /* Social media icons */
@@ -247,7 +247,7 @@ html, body {
     left: 50%;
     top: 450px;
     transform: translate(-50%, -50%);
-  }
+  }  
 }
 
 @media (max-width: 600px) {
@@ -310,7 +310,7 @@ html, body {
     position: absolute;
     z-index: -1;
     top: 35px;
-    left: 116px;
+    left: 125px;
   }
   
   /* Social media icons */
@@ -320,6 +320,5 @@ html, body {
     top: 350px;
     transform: translate(-50%, -50%);
   }
-  
 }
 
