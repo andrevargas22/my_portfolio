@@ -151,7 +151,7 @@
 }
 
 .tag.rpg {
-  background-color: #0eb10e; 
+  background-color: hsl(22, 85%, 37%); 
 }
 
 .tag.fighting {
@@ -192,4 +192,8 @@
 
 .tag.simulation {
   background-color: #820086; 
+}
+
+.tag.shooter {
+  background-color: #32ee61; 
 }
