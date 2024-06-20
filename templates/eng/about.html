@@ -1,177 +1,172 @@
 <!doctype html>
 <html lang="en">
 
-    <head>
-        <!-- Header File -->
-        {% include 'common/header.html' %} 
-        <!-- Page CSS -->
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/about.css') }}">
-    </head>
+<head>
+    <!-- Header File -->
+    {% include 'common/header.html' %} 
+    <!-- Page CSS -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/about.css') }}">
+</head>
 
-    <body>
-        
-        <!-- Navigation Bar -->
-        {% include 'common/navbar.html' %} 
+<body>
+    
+    <!-- Navigation Bar -->
+    {% include 'common/navbar.html' %} 
 
-        <br><br>
+    <br><br>
 
-        <div class="container">
+    <div class="container">
 
-            <!-- Page Header -->
-            <div class="row">
-                <div class="col-lg-12 text-center my-2">
-                    <h4 class="border-bottom border-dark p-2">About me</h4>
-                </div>
-            </div>
-
-            <div class="row">
-
-                <!-- Text Column -->
-                <div class="col-lg-8">
-                    <div class="text">
-                        <p>
-                            I am a Machine Learning Engineer based in São Paulo, Brazil, with experience in developing and deploying ML and MLOps solutions with a 
-                            solid background in Computer Science and Software Engineering, cloud architectures, CI/CD, and implementing models and APIs in production. 
-                            <br><br>
-                            My journey began with a degree in Mechatronics Engineering from the Universidade de Brasília, which provided a strong foundation in electronics, 
-                            microcontrollers, hardware design, and embedded firmware programming. An exchange program at Cardiff University further broadened my technical 
-                            and cultural horizons.
-                            <br><br>
-                            Initially, I worked as a Hardware Engineer, focusing on IoT, industrial automation and digital transformation. This period allowed me to 
-                            hone my skills in practical, hands-on environments, bridging the gap between physical systems and digital data. My work in hardware and 
-                            electronics laid a critical groundwork for understanding complex systems.
-                            <br><br>
-                            A few years into my career, my fascination with data and its potential to drive innovation led me to pivot towards Data Science and Machine Learning. 
-                            I embraced this new direction by diving deep into machine learning models, cloud-based architectures, and MLOps practices. Today, I leverage my 
-                            diverse background to develop and implement scalable machine learning solutions, driving efficiency and innovation in various projects. 
-                            I seek opportunities to expand MLOps skills, contributing to Machine Learning projects' advancement, efficiency, and scalability.
-                            <br><br>
-                            I am passionate about studying and am largely self-taught. Despite not being a web designer by trade, I designed and built this website myself, 
-                            incorporating cool features using HTML, CSS, and JavaScript, all of which I learned on my own.
-                            <br><br>
-                            Outside of my professional life, I'm fortunate to share my life with my beautiful wife, Maria, whose support and love inspire me every day. 
-                            I enjoy spending time with her and my dog, Bibi, who adds joy and companionship to our routine. I'm also an avid gamer and a music enthusiast, 
-                            often found behind a drum set. These personal passions enrich my life, providing balance and perspective that I bring into my work.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Image Column -->
-                <div class="col-lg-4 text-center">
-                    <img src="static/images/about.jpeg" alt="Your Image Description" class="img-fluid">
-                </div>
+        <!-- Page Header -->
+        <div class="row">
+            <div class="col-lg-12 text-center my-2">
+                <h4 class="border-bottom border-dark p-2">About me</h4>
             </div>
         </div>
-        
-        
-        <!-- Horizontal Timeline -->
 
-        <!-- Inspired by Codyhouse -->
-        <div class="container experience">
-            <div class="row">
-                <div class="col-md-12">
-                    <h4>Timeline:</h4>
+        <div class="row">
 
-                    <section class="cd-horizontal-timeline container">
-                        <div class="timeline">
+            <!-- Text Column -->
+            <div class="col-lg-8">
+                <div class="text">
+                    <p>
+                        I am a Machine Learning Engineer based in São Paulo, Brazil, with experience in developing and deploying ML and MLOps solutions with a 
+                        solid background in Computer Science and Software Engineering, cloud architectures, CI/CD, and implementing models and APIs in production. 
+                        <br><br>
+                        My journey began with a degree in Mechatronics Engineering from the Universidade de Brasília, which provided a strong foundation in electronics, 
+                        microcontrollers, hardware design, and embedded firmware programming. An exchange program at Cardiff University further broadened my technical 
+                        and cultural horizons.
+                        <br><br>
+                        Initially, I worked as a Hardware Engineer, focusing on IoT, industrial automation and digital transformation. This period allowed me to 
+                        hone my skills in practical, hands-on environments, bridging the gap between physical systems and digital data. My work in hardware and 
+                        electronics laid a critical groundwork for understanding complex systems.
+                        <br><br>
+                        A few years into my career, my fascination with data and its potential to drive innovation led me to pivot towards Data Science and Machine Learning. 
+                        I embraced this new direction by diving deep into machine learning models, cloud-based architectures, and MLOps practices. Today, I leverage my 
+                        diverse background to develop and implement scalable machine learning solutions, driving efficiency and innovation in various projects. 
+                        I seek opportunities to expand MLOps skills, contributing to Machine Learning projects' advancement, efficiency, and scalability.
+                        <br><br>
+                        I am passionate about studying and am largely self-taught. Despite not being a web designer by trade, I designed and built this website myself, 
+                        incorporating cool features using HTML, CSS, and JavaScript, all of which I learned on my own.
+                        <br><br>
+                        Outside of my professional life, I'm fortunate to share my life with my beautiful wife, Maria, whose support and love inspire me every day. 
+                        I enjoy spending time with her and my dog, Bibi, who adds joy and companionship to our routine. I'm also an avid gamer and a music enthusiast, 
+                        often found behind a drum set. These personal passions enrich my life, providing balance and perspective that I bring into my work.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Image Column -->
+            <div class="col-lg-4 text-center">
+                <img src="static/images/about.jpeg" alt="Your Image Description" class="img-fluid">
+            </div>
+        </div>
+    </div>
+    
+    <!-- Horizontal Timeline -->
+    <!-- Inspired by Codyhouse -->
+    <div class="container experience">
+        <div class="row">
+            <div class="col-12">
+                <h4>Timeline:</h4>
+                <section class="cd-horizontal-timeline container">
+                    <div class="timeline">
                         <div class="events-wrapper">
                             <div class="events">
                                 <ol>
                                     <li>
-                                        <a href="#0" data-date="01/01/2015" class="selected">
-                                            <img src="static/images/icons/stefanini.png" alt="My Icon" style="width: 40px; height: 40px;">
+                                        <a href="#0" data-date="01/01/2015">
                                         </a>
                                     </li>
 
                                     <li>
                                         <a href="#0" data-date="01/01/2014">
-                                            <img src="static/images/icons/falconi.png" alt="My Icon" style="width: 45px; height: 45px;">
                                         </a>
                                     </li>
 
                                     <li>
                                         <a href="#0" data-date="01/01/2013">
-                                            <img src="static/images/icons/senai.png" alt="My Icon" style="width:45px; height: 45px;">
                                         </a>
                                     </li>
 
                                     <li>
-                                        <a href="#0" data-date="01/01/2012">
-                                            <img src="static/images/icons/unb.png" alt="My Icon" style="width:60px; height: 45px;">
+                                        <a href="#0" data-date="01/01/2012" class="selected">
                                         </a>
                                     </li>
 
                                 </ol>
-
                                 <span class="filling-line" aria-hidden="true"></span>
                             </div> <!-- .events -->
                         </div> <!-- .events-wrapper -->
-                        </div> <!-- .timeline -->
+                    </div> <!-- .timeline -->
 
-                        <div class="events-content">
-                            <ol>
-                                <li class="selected" data-date="01/01/2015">
-                                    <h5>Stefanini Brasil</h5> 
-                                    <em>January 2024 - Present</em>
-                                    <p><strong>Senior Data Scientist</strong><br>
-                                        Currently working as a contractor within Banco do Brasil, developing different kinds of Machine Learning Models in the bank environment. 
-                                        <br><br>• Development of credit risk models to estimate the probability of an asset becoming problematic.
-                                        <br>• Development of managerial market projection models for Banco do Brasil.</p>
-                                </li>
+                    <div class="events-content">
+                        <ol>
+                            <li data-date="01/01/2015">
+                                <h5>Universidade de Brasília</h5>
+                                <img src="static/images/icons/unb.png" alt="UNB Logo" class="img-fluid" style="max-width: 100px;">
+                                <em>2011 - 2017</em>
+                                <p><strong>Mechatronics Engineering</strong><br>
+                                    Bachelor's degree in Mechatronics Engineering, with one year of exchange at Cardiff University, UK.
+                                </p>   
+                            </li>
+                    
+                            <li data-date="01/01/2014">
+                                <h5>SENAI</h5> 
+                                <img src="static/images/icons/senai.png" alt="SENAI Logo" class="img-fluid" style="max-width: 100px;">
+                                <em>May 2018 - February 2022</em>
+                                <p><strong>Hardware Engineer</strong><br>
+                                    Development of projects and technological solutions meeting the demands of various industry sectors within the scope of the SENAI Institute of Technology: Electronics and Automation.
+                                    <br>• Electronics and Microcontrollers;
+                                    <br>• Internet of Things, Industrial Automation, Industry 4.0, Digital Transformation;
+                                    <br>• Hardware Design and Embedded Firmware Programming; 
+                                </p>   
+                            </li>
+                    
+                            <li data-date="01/01/2013">
+                                <h5>Falconi</h5>
+                                <img src="static/images/icons/falconi.png" alt="Falconi Logo" class="img-fluid" style="max-width: 100px;">
+                                <em>March 2022 - December 2023</em>
+                                <p><strong>Machine Learning Engineer</strong><br>
+                                    Work in consulting projects, delivering valuable results for the business in a fast, secure, and scalable way by building Machine Learning systems.                                        
+                                    <br>• Cloud architecture solutions for Machine Learning Systems.
+                                    <br>• Implementation and deployment of models in production.
+                                    <br>• Usage of MLOps and CI/CD best practices.
+                                    <br>• Help to develop Falconi’s MLOps stack.
+                                    <br>• Deployed Falconi’s MLFlow Server on GCP.
+                                    <br>• Creation of digital assets (templates, libraries) to accelerate the progress of projects.
+                                </p>
+                                <p><strong>Data Scientist</strong><br>
+                                    Work in consulting projects, delivering business-value results using data science and technology.
+                                    <br>• Development of supervised and unsupervised Machine Learning models for different business problems.
+                                    <br>• Coding of data apps and libraries to leverage work in projects.
+                                </p>
+                            </li>
+                    
+                            <li class="selected" data-date="01/01/2012">
+                                <h5>Stefanini Brasil</h5>
+                                <img src="static/images/icons/stefanini.png" alt="Stefanini Logo" class="img-fluid" style="max-width: 100px;">   
+                                <em>January 2024 - Present</em>
+                                <p><strong>Senior Data Scientist</strong><br>
+                                    Currently working as a contractor within Banco do Brasil, developing different kinds of Machine Learning Models in the bank environment. 
+                                    <br>• Development of credit risk models to estimate the probability of an asset becoming problematic.
+                                    <br>• Development of managerial market projection models for Banco do Brasil.</p>
+                            </li>
+                        </ol>
+                    </div> <!-- .events-content -->
+                </section>
+            </div> <!-- end div experience -->
+        </div> <!-- end row experience -->
+    </div> <!-- end container experience -->
 
-                                <li data-date="01/01/2014">
-                                    <h5>Falconi</h5>
-                                    <em>March 2022 - December 2023</em>
-                                    <p><strong>Machine Learning Engineer</strong><br>
-                                        Work in consulting projects, delivering valuable results for the business in a fast, secure, and scalable way by building Machine Learning systems.                                        
-                                        <br><br>• Cloud architecture solutions for Machine Learning Systems.
-                                        <br>• Implementation and deployment of models in production.
-                                        <br>• Usage of MLOps and CI/CD best practices.
-                                        <br>• Help to develop Falconi’s MLOps stack.
-                                        <br>• Deployed Falconi’s MLFlow Server on GCP.
-                                        <br>• Creation of digital assets (templates, libraries) to accelerate the progress of projects.
-                                    </p><br>
-                                    <p><strong>Data Scientist</strong><br>
-                                        Work in consulting projects, delivering business-value results using data science and technology.
-                                        <br><br>• Development of supervised and unsupervised Machine Learning models for different business problems.
-                                        <br>• Coding of data apps and libraries to leverage work in projects.
-                                    </p>
-                                </li>
+    <!-- end work experience -->
 
-                                <li data-date="01/01/2013">
-                                    <h5>SENAI</h5>
-                                    <em>May 2018 - February 2022</em>
-                                    <p><strong>Hardware Engineer</strong><br>
-                                        Development of projects and technological solutions meeting the demands of various industry sectors within the scope of the SENAI Institute of Technology: Electronics and Automation.
-                                        <br><br>• Electronics and Microcontrollers;
-                                        <br>• Internet of Things, Industrial Automation, Industry 4.0, Digital Transformation;
-                                        <br>• Hardware Design and Embedded Firmware Programming; 
-                                    </p>   
-                                </li>
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    
+    <!-- My own JS -->
+    <script src="{{ url_for('static', filename='js/about.js') }}"></script>
 
-                                <li data-date="01/01/2012">
-                                    <h5>Universidade de Brasília</h5>
-                                    <em>2011 - 2017</em>
-                                    <p><strong>Mechatronics Engineering</strong><br>
-                                        Bachelor's degree in Mechatronics Engineering, with one year of exchange at Cardiff University, UK.
-                                    </p>   
-                                </li>
-                            </ol>
-                        </div> <!-- .events-content -->
-                    </section>
-
-                </div> <!-- end div experience -->
-            </div> <!-- end row experience -->
-        </div> <!-- end container experience -->
-
-        <!-- end work experience -->
-
-        <!-- Bootstrap Bundle with Popper -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-        
-        <!-- My own JS -->
-        <script src="{{ url_for('static', filename='js/about.js') }}"></script>
-
-    </body>
+</body>
 
 </html>

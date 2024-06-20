@@ -8,6 +8,7 @@ jQuery(document).ready(function($) {
         timelines.each(function() {
             var timeline = $(this),
                 timelineComponents = {};
+
             // Cache timeline components
             timelineComponents['timelineWrapper'] = timeline.find('.events-wrapper');
             timelineComponents['eventsWrapper'] = timelineComponents['timelineWrapper'].children('.events');
@@ -22,6 +23,16 @@ jQuery(document).ready(function($) {
             var timelineTotWidth = setTimelineWidth(timelineComponents);
             // The timeline has been initialized - show it
             timeline.addClass('loaded');
+
+            // Select the most recent event by default
+            var lastEvent = timelineComponents['timelineEvents'].last();
+            lastEvent.addClass('selected');
+            updateFilling(lastEvent, timelineComponents['fillingLine'], timelineTotWidth);
+            updateVisibleContent(lastEvent, timelineComponents['eventsContent']);
+
+            // Show the content of the most recent event by default
+            timelineComponents['eventsContent'].find('li').removeClass('selected');
+            timelineComponents['eventsContent'].find('[data-date="' + lastEvent.data('date') + '"]').addClass('selected');
 
             // Detect click on the next arrow
             timelineComponents['timelineNavigation'].on('click', '.next', function(event) {
@@ -63,6 +74,7 @@ jQuery(document).ready(function($) {
         });
     }
 
+    // Function to set equal positions for the events along the timeline
     function setEqualPosition(timelineComponents) {
         var totalEvents = timelineComponents['timelineEvents'].length;
         var totalWidth = Number(timelineComponents['timelineWrapper'].css('width').replace('px', ''));
@@ -82,6 +94,7 @@ jQuery(document).ready(function($) {
         });
     }
 
+    // Function to set the total width of the timeline
     function setTimelineWidth(timelineComponents) {
         var totalEvents = timelineComponents['timelineEvents'].length;
         var totalWidth = Number(timelineComponents['timelineWrapper'].css('width').replace('px', ''));
@@ -91,6 +104,7 @@ jQuery(document).ready(function($) {
         return width;
     }
 
+    // Function to update the timeline slide (next/prev)
     function updateSlide(timelineComponents, timelineTotWidth, string) {
         var translateValue = getTranslateValue(timelineComponents['eventsWrapper']),
             wrapperWidth = Number(timelineComponents['timelineWrapper'].css('width').replace('px', ''));
@@ -98,6 +112,7 @@ jQuery(document).ready(function($) {
         translateTimeline(timelineComponents, translateValue - wrapperWidth + eventsMinDistance, wrapperWidth - timelineTotWidth) : translateTimeline(timelineComponents, translateValue + wrapperWidth - eventsMinDistance);
     }
 
+    // Function to show new content on slide or swipe
     function showNewContent(timelineComponents, timelineTotWidth, string) {
         var visibleContent = timelineComponents['eventsContent'].find('.selected'),
             newContent = (string == 'next') ? visibleContent.next() : visibleContent.prev();
@@ -113,6 +128,7 @@ jQuery(document).ready(function($) {
         }
     }
 
+    // Function to translate the timeline
     function translateTimeline(timelineComponents, value, totWidth) {
         var eventsWrapper = timelineComponents['eventsWrapper'].get(0);
         value = (value > 0) ? 0 : value;
@@ -122,15 +138,17 @@ jQuery(document).ready(function($) {
         (value == totWidth) ? timelineComponents['timelineNavigation'].find('.next').addClass('inactive') : timelineComponents['timelineNavigation'].find('.next').removeClass('inactive');
     }
 
+    // Function to update the filling line
     function updateFilling(selectedEvent, filling, totWidth) {
         var eventStyle = window.getComputedStyle(selectedEvent.get(0), null),
             eventLeft = eventStyle.getPropertyValue("left"),
             eventWidth = eventStyle.getPropertyValue("width");
         eventLeft = Number(eventLeft.replace('px', '')) + Number(eventWidth.replace('px', '')) / 2;
-        var scaleValue = eventLeft / totWidth;
+        var scaleValue = eventLeft / totWidth; // Scale value
         setTransformValue(filling.get(0), 'scaleX', scaleValue);
     }
 
+    // Function to update the visible content
     function updateVisibleContent(event, eventsContent) {
         var eventDate = event.data('date'),
             visibleContent = eventsContent.find('.selected'),
@@ -153,6 +171,7 @@ jQuery(document).ready(function($) {
         eventsContent.css('height', selectedContentHeight + 'px');
     }
 
+    // Function to get the translate value of the timeline
     function getTranslateValue(timeline) {
         var timelineStyle = window.getComputedStyle(timeline.get(0), null),
             timelineTranslate = timelineStyle.getPropertyValue("-webkit-transform") ||
@@ -173,6 +192,7 @@ jQuery(document).ready(function($) {
         return Number(translateValue);
     }
 
+    // Function to set the transform value of an element
     function setTransformValue(element, property, value) {
         element.style["-webkit-transform"] = property + "(" + value + ")";
         element.style["-moz-transform"] = property + "(" + value + ")";
@@ -181,6 +201,7 @@ jQuery(document).ready(function($) {
         element.style["transform"] = property + "(" + value + ")";
     }
 
+    // Function to check if an element is in viewport
     function elementInViewport(el) {
         var top = el.offsetTop;
         var left = el.offsetLeft;
@@ -201,6 +222,7 @@ jQuery(document).ready(function($) {
         );
     }
 
+    // Function to check the media query
     function checkMQ() {
         return window.getComputedStyle(document.querySelector('.cd-horizontal-timeline'), '::before').getPropertyValue('content').replace(/'/g, "").replace(/"/g, "");
     }
