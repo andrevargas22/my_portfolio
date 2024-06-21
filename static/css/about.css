@@ -295,3 +295,35 @@
     text-decoration: none;
     cursor: pointer;
 }
+
+.btn-primary {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #008080;
+    border: none;
+    text-decoration: none;
+    margin-top: 3%;
+    transition: background-color 0.3s ease;
+    max-width: 100%; /* Ensure the button doesn't overflow */
+    white-space: nowrap; /* Prevent text from wrapping */
+}
+
+.btn-primary:hover {
+    background-color: #016363;
+}
+
+.btn-resume {
+    margin: 20px auto; /* Add some margin to center the button */
+}
+
+.technical-skills {
+    margin-top: 2rem;
+    overflow-x: hidden; /* Prevent horizontal overflow */
+}
+
+.row.justify-content-center {
+    margin: 0; /* Reset margin */
+}
