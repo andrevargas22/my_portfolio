@@ -1,29 +1,399 @@
 <!doctype html>
 <html lang="en">
 
-    <head>
-        <!-- Header File -->
-        {% include 'common/header.html' %} 
-    </head>
+<head>
+    <!-- Header File -->
+    {% include 'common/header.html' %} 
+    <!-- Page CSS -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/about.css') }}">
+</head>
 
-    <body>
+<body>
+    
+    <!-- Navigation Bar -->
+    {% include 'common/navbar.html' %} 
+
+    <div class="container">
+
+        <!-- Page Header -->
+        <div class="row">
+            <div class="col-lg-12 text-center my-2">
+                <h4 class="border-bottom border-dark p-2">About me</h4>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <!-- Text Column -->
+            <div class="col-lg-8">
+                <div class="text">
+                    <p>
+                        I am a Machine Learning Engineer based in São Paulo, Brazil, with experience in developing and deploying ML and MLOps solutions with a 
+                        solid background in Computer Science and Software Engineering, cloud architectures, CI/CD, and implementing models and APIs in production. 
+                        <br><br>
+                        My journey began with a degree in Mechatronics Engineering from the Universidade de Brasília, which provided a strong foundation in electronics, 
+                        microcontrollers, hardware design, and embedded firmware programming. An exchange program at Cardiff University further broadened my technical 
+                        and cultural horizons.
+                        <br><br>
+                        Initially, I worked as a Hardware Engineer, focusing on IoT, industrial automation and digital transformation. After a few years, my fascination 
+                        with data and its potential to drive innovation led me to pivot towards Data Science and Machine Learning. 
+                        I embraced this new direction by diving deep into machine learning models, cloud-based architectures, and MLOps practices.  
+                        <br><br>
+                        I am passionate about studying and am largely self-taught. Despite not being a web designer by trade, I designed and built this website myself, 
+                        incorporating cool features using HTML, CSS, and JavaScript, all of which I learned on my own.
+                        <br><br>
+                        Outside of my professional life, I'm fortunate to share my life with my beautiful wife, Maria, whose support and love inspire me every day. 
+                        I enjoy spending time with her and my dog, Bibi, who adds joy and companionship to our routine. I'm also an avid gamer and a music enthusiast, 
+                        often found behind a drum set. These personal passions enrich my life, providing balance and perspective that I bring into my work.
+                        <br><br>
+                        I seek opportunities to expand MLOps skills, contributing to Machine Learning projects' advancement, efficiency, and scalability.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Image Column -->
+            <div class="col-lg-4 text-center">
+                <img src="static/images/about.jpeg" alt="Your Image Description" class="img-fluid">
+            </div>
+        </div>
+    </div>
+    
+    <!-- Horizontal Timeline -->
+    <div class="container experience">
+        <div class="row">
+            <div class="col-12">
+                <h4>Timeline:</h4>
+                <section class="cd-horizontal-timeline container">
+                    <div class="timeline">
+                        <div class="events-wrapper">
+                            <div class="events">
+                                <ol>
+                                    <li>
+                                        <a href="#0" data-date="01/01/2015">
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="#0" data-date="01/01/2014">
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="#0" data-date="01/01/2013">
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="#0" data-date="01/01/2012" class="selected">
+                                        </a>
+                                    </li>
+
+                                </ol>
+                                <span class="filling-line" aria-hidden="true"></span>
+                            </div> <!-- .events -->
+                        </div> <!-- .events-wrapper -->
+                    </div> <!-- .timeline -->
+
+                    <div class="events-content">
+                        <ol>
+                            <li data-date="01/01/2015">
+                                <h5>Universidade de Brasília</h5>
+                                <img src="static/images/icons/unb.png" alt="UNB Logo" class="img-fluid" style="max-width: 100px;">
+                                <em>2011 - 2017</em>
+                                <p><strong>Mechatronics Engineering</strong><br>
+                                    Bachelor's degree in Mechatronics Engineering, with one year of exchange at Cardiff University, UK.
+                                </p>   
+                            </li>
+                    
+                            <li data-date="01/01/2014">
+                                <h5>SENAI</h5> 
+                                <img src="static/images/icons/senai.png" alt="SENAI Logo" class="img-fluid" style="max-width: 100px;">
+                                <em>May 2018 - February 2022</em>
+                                <p><strong>Hardware Engineer</strong><br>
+                                    Development of projects and technological solutions meeting the demands of various industry sectors within the scope of the SENAI Institute of Technology: Electronics and Automation.
+                                    <br>• Electronics and Microcontrollers;
+                                    <br>• Internet of Things, Industrial Automation, Industry 4.0, Digital Transformation;
+                                    <br>• Hardware Design and Embedded Firmware Programming; 
+                                </p>   
+                            </li>
+                    
+                            <li data-date="01/01/2013">
+                                <h5>Falconi</h5>
+                                <img src="static/images/icons/falconi.png" alt="Falconi Logo" class="img-fluid" style="max-width: 100px;">
+                                <em>March 2022 - December 2023</em>
+                                <p><strong>Machine Learning Engineer</strong><br>
+                                    Work in consulting projects, delivering valuable results for the business in a fast, secure, and scalable way by building Machine Learning systems.                                        
+                                    <br>• Cloud architecture solutions for Machine Learning Systems.
+                                    <br>• Implementation and deployment of models in production.
+                                    <br>• Usage of MLOps and CI/CD best practices.
+                                    <br>• Help to develop Falconi’s MLOps stack.
+                                    <br>• Deployed Falconi’s MLFlow Server on GCP.
+                                    <br>• Creation of digital assets (templates, libraries) to accelerate the progress of projects.
+                                </p>
+                                <p><strong>Data Scientist</strong><br>
+                                    Work in consulting projects, delivering business-value results using data science and technology.
+                                    <br>• Development of supervised and unsupervised Machine Learning models for different business problems.
+                                    <br>• Coding of data apps and libraries to leverage work in projects.
+                                </p>
+                            </li>
+                    
+                            <li class="selected" data-date="01/01/2012">
+                                <h5>Stefanini Brasil</h5>
+                                <img src="static/images/icons/stefanini.png" alt="Stefanini Logo" class="img-fluid" style="max-width: 100px;">   
+                                <em>January 2024 - Present</em>
+                                <p><strong>Senior Data Scientist</strong><br>
+                                    Currently working as a contractor within Banco do Brasil, developing different kinds of Machine Learning Models in the bank environment. 
+                                    <br>• Development of credit risk models to estimate the probability of an asset becoming problematic.
+                                    <br>• Development of managerial market projection models for Banco do Brasil.</p>
+                            </li>
+                        </ol>
+                    </div> <!-- .events-content -->
+                </section>
+            </div> <!-- end div experience -->
+        </div> <!-- end row experience -->
+    </div> <!-- end container experience -->
+
+    <div class="container technical-skills">
         
-        <!-- Navigation Bar -->
-        {% include 'common/navbar.html' %} 
+        <div id="tooltip" class="tooltip"></div>
 
-        <br><br>
+        <!-- Modal for mobile devices -->
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <span id="close-modal" class="close">&times;</span>
+                <p id="modal-text"></p>
+            </div>
+        </div>
 
-        <!-- Intro Text -->
-        <div class="intro">
-           UNDER CONSTRUCTION!
-        </div> 
+        <h4>Technical Skills:</h4>
+    
+        <!-- ML Infrastructure / MLOps -->
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <h5 class="text">ML Infrastructure / MLOps:</h5>
+                <div class="row justify-content-center">
+                    <!-- Column 1: OS Setup -->
+                    <div class="col-md-2 text-center">
+                        <p class="category-title">Environment & OS Setup</p>
+                        <div class="row justify-content-center text-container">
+                            <div class="col-12">
+                                <img src="{{ url_for('static', filename='images/icons/linux.png') }}" alt="Linux" class="icon" data-title="Linux">
+                            </div>
+                        </div>
+                    </div>
+    
+                    <!-- Column 2: Version Control -->
+                    <div class="col-md-2 text-center">
+                        <p class="category-title">Version Control</p>
+                        <div class="row justify-content-center text-container">
+                            <div class="col-4">
+                                <img src="{{ url_for('static', filename='images/icons/git.png') }}" alt="Git" class="icon" data-title="Git">
+                            </div>
+                            <div class="col-4">
+                                <img src="{{ url_for('static', filename='images/icons/github.png') }}" alt="GitHub" class="icon" data-title="GitHub">
+                            </div>
+                            <div class="col-4">
+                                <img src="{{ url_for('static', filename='images/icons/gitlab.webp') }}" alt="GitLab" class="icon" data-title="GitLab">
+                            </div>
+                        </div>
+                    </div>
+    
+                    <!-- Column 3: Cloud Services -->
+                    <div class="col-md-2 text-center">
+                        <p class="category-title">Cloud Services</p>
+                        <div class="row justify-content-center text-container">
+                            <div class="col-4">
+                                <img src="{{ url_for('static', filename='images/icons/gcp.webp') }}" alt="Google Cloud Platform" class="icon" data-title="Google Cloud Platform">
+                            </div>
+                            <div class="col-4">
+                                <img src="{{ url_for('static', filename='images/icons/aws.webp') }}" alt="Amazon Web Services" class="icon" data-title="Amazon Web Services">
+                            </div>
+                            <div class="col-4">
+                                <img src="{{ url_for('static', filename='images/icons/azure.png') }}" alt="Microsoft Azure" class="icon" data-title="Microsoft Azure">
+                            </div>
+                        </div>
+                    </div>
+    
+                    <!-- Column 4: Containerization -->
+                    <div class="col-md-2 text-center">
+                        <p class="category-title">Containerization</p>
+                        <div class="row justify-content-center text-container">
+                            <div class="col-6">
+                                <img src="{{ url_for('static', filename='images/icons/docker.png') }}" alt="Docker" class="icon" data-title="Docker">
+                            </div>
+                            <div class="col-6">
+                                <img src="{{ url_for('static', filename='images/icons/kubernetes.png') }}" alt="Kubernetes" class="icon" data-title="Kubernetes">
+                            </div>
+                        </div>
+                    </div>
+    
+                    <!-- Column 5: Experiment Tracking and Model Registry -->
+                    <div class="col-md-2 text-center">
+                        <p class="category-title">Experiment Tracking</p>
+                        <div class="row justify-content-center text-container">
+                            <div class="col-12">
+                                <img src="{{ url_for('static', filename='images/icons/mlflow.png') }}" alt="MLFlow" class="icon" data-title="MLFlow">
+                            </div>
+                        </div>
+                    </div>
+    
+                    <!-- Column 6: CI/CD -->
+                    <div class="col-md-2 text-center">
+                        <p class="category-title">CI/CD/CT</p>
+                        <div class="row justify-content-center text-container">
+                            <div class="col-6">
+                                <img src="{{ url_for('static', filename='images/icons/gitactions.png') }}" alt="GitHub Actions" class="icon" data-title="GitHub Actions">
+                            </div>
+                            <div class="col-6">
+                                <img src="{{ url_for('static', filename='images/icons/jenkins.jpg') }}" alt="Jenkins" class="icon" data-title="Jenkins">
+                            </div>
+                        </div>
+                    </div>
+    
+                    <!-- Column 7: Pipeline Orchestration -->
+                    <div class="col-md-2 text-center">
+                        <p class="category-title">Pipeline Orchestration</p>
+                        <div class="row justify-content-center text-container">
+                            <div class="col-6">
+                                <img src="{{ url_for('static', filename='images/icons/kedro.jpeg') }}" alt="Kedro" class="icon" data-title="Kedro">
+                            </div>
+                            <div class="col-6">
+                                <img src="{{ url_for('static', filename='images/icons/kubeflow.png') }}" alt="Kubeflow" class="icon" data-title="Kubeflow">
+                            </div>
+                        </div>
+                    </div>
+    
+                    <!-- Column 8: Model Serving -->
+                    <div class="col-md-2 text-center">
+                        <p class="category-title">Model Serving</p>
+                        <div class="row justify-content-center text-container">
+                            <div class="col-6">
+                                <img src="{{ url_for('static', filename='images/icons/bentoml.svg') }}" alt="BentoML" class="icon" data-title="BentoML">
+                            </div>
+                            <div class="col-6">
+                                <img src="{{ url_for('static', filename='images/icons/fastapi.svg') }}" alt="FastAPI" class="icon" data-title="FastAPI">
+                            </div>
+                        </div>
+                    </div>
+    
+                    <!-- Column 9: Model Monitoring -->
+                    <div class="col-md-2 text-center">
+                        <p class="category-title">Model Monitoring</p>
+                        <div class="row justify-content-center text-container">
+                            <div class="col-6">
+                                <img src="{{ url_for('static', filename='images/icons/grafana.png') }}" alt="Grafana" class="icon" data-title="Grafana">
+                            </div>
+                            <div class="col-6">
+                                <img src="{{ url_for('static', filename='images/icons/evidently.png') }}" alt="Evidently" class="icon" data-title="Evidently">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         
-        <!-- Bootstrap Bundle with Popper -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-        
-        <!-- My own JS -->
-        <script src="{{ url_for('static', filename='js/typing.js') }}"></script>
+        <!-- Data Science and Analysis -->
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <h5 class="text">Data Science and Analysis:</h5>
+                <div class="row justify-content-center">
+                    <!-- Python Libraries -->
+                    <div class="col-md-2 text-center">
+                        <p class="category-title">Python</p>
+                        <div class="row justify-content-center text-container">
+                            <div class="col-4">
+                                <img src="{{ url_for('static', filename='images/icons/numpy.png') }}" alt="Numpy" class="icon" data-title="Numpy">
+                            </div>
+                            <div class="col-4">
+                                <img src="{{ url_for('static', filename='images/icons/pandas.png') }}" alt="Pandas" class="icon" data-title="Pandas">
+                            </div>
+                            <div class="col-4">
+                                <img src="{{ url_for('static', filename='images/icons/matplotlib.png') }}" alt="Matplotlib" class="icon" data-title="Matplotlib">
+                            </div>
+                            <div class="col-4">
+                                <img src="{{ url_for('static', filename='images/icons/seaborn.svg') }}" alt="Seaborn" class="icon" data-title="Seaborn">
+                            </div>
+                        </div>
+                    </div>
 
-    </body>
+                    <!-- Machine Learning Libraries -->
+                    <div class="col-md-2 text-center">
+                        <p class="category-title">Machine Learning</p>
+                        <div class="row justify-content-center text-container">
+                            <div class="col-4">
+                                <img src="{{ url_for('static', filename='images/icons/scikit.png') }}" alt="Scikit-Learn" class="icon" data-title="Scikit-Learn">
+                            </div>
+                            <div class="col-4">
+                                <img src="{{ url_for('static', filename='images/icons/tensorflow.png') }}" alt="TensorFlow" class="icon" data-title="TensorFlow">
+                            </div>
+                            <div class="col-4">
+                                <img src="{{ url_for('static', filename='images/icons/keras.png') }}" alt="Keras" class="icon" data-title="Keras">
+                            </div>
+                            <div class="col-4">
+                                <img src="{{ url_for('static', filename='images/icons/pytorch.webp') }}" alt="Pytorch" class="icon" data-title="Pytorch">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Front-end Frameworks -->
+                    <div class="col-md-2 text-center">
+                        <p class="category-title">Front-end</p>
+                        <div class="row justify-content-center text-container">
+                            <div class="col-6">
+                                <img src="{{ url_for('static', filename='images/icons/streamlit.jpg') }}" alt="Streamlit" class="icon" data-title="Streamlit">
+                            </div>
+                            <div class="col-6">
+                                <img src="{{ url_for('static', filename='images/icons/flask.png') }}" alt="Flask" class="icon" data-title="Flask">
+                            </div>
+                            <div class="col-6">
+                                <img src="{{ url_for('static', filename='images/icons/html.jpg') }}" alt="HTML" class="icon" data-title="HTML">
+                            </div>
+                            <div class="col-6">
+                                <img src="{{ url_for('static', filename='images/icons/css.png') }}" alt="CSS" class="icon" data-title="CSS">
+                            </div>
+                            <div class="col-6">
+                                <img src="{{ url_for('static', filename='images/icons/javascript.webp') }}" alt="JavaScript" class="icon" data-title="JavaScript">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Databases -->
+                    <div class="col-md-2 text-center">
+                        <p class="category-title">Databases</p>
+                        <div class="row justify-content-center text-container">
+                            <div class="col-6">
+                                <img src="{{ url_for('static', filename='images/icons/sql.png') }}" alt="SQL" class="icon" data-title="SQL">
+                            </div>
+                            <div class="col-6">
+                                <img src="{{ url_for('static', filename='images/icons/sqla.png') }}" alt="SQLAlchemy" class="icon" data-title="SQLAlchemy">
+                            </div>
+                            <div class="col-6">
+                                <img src="{{ url_for('static', filename='images/icons/postgresql.png') }}" alt="PostgreSQL" class="icon" data-title="PostgreSQL">
+                            </div>
+                            <div class="col-6">
+                                <img src="{{ url_for('static', filename='images/icons/pyspark.png') }}" alt="PySpark" class="icon" data-title="PySpark">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Download Resume Button -->
+    <div class="row justify-content-center">
+        <div class="col-12 text-center">
+            <a href="{{ url_for('static', filename='resume.pdf') }}" class="btn btn-primary btn-resume" download="Andre_Resume.pdf">Download my resumé!</a>
+        </div>
+    </div>
+    
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    
+    <!-- My own JS -->
+    <script src="{{ url_for('static', filename='js/about.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/about_anim.js') }}"></script>
+
+</body>
 
 </html>

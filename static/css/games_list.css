@@ -1,5 +1,11 @@
 /* CSS file for the page of games finished */
 
+body {
+  width: 100%;
+  height: 100%;
+  background: #FFFAF0; 
+}
+
 /* Navbar */
 .navbar-nav {
   margin-left: auto;
@@ -151,7 +157,7 @@
 }
 
 .tag.rpg {
-  background-color: #0eb10e; 
+  background-color: hsl(22, 85%, 37%); 
 }
 
 .tag.fighting {
@@ -192,4 +198,8 @@
 
 .tag.simulation {
   background-color: #820086; 
+}
+
+.tag.shooter {
+  background-color: #32ee61; 
 }
