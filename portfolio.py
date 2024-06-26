@@ -1,5 +1,6 @@
 import os
 from flask import Flask, render_template
+import feedparser
     
 app = Flask(__name__)
 
@@ -11,6 +12,23 @@ def home():
 @app.route('/about')
 def about():
     return render_template('eng/about.html')
+
+@app.route('/blog')
+def blog():
+    feed_url = 'https://medium.com/@andrevargas22/feed'
+    feed = feedparser.parse(feed_url)
+    articles = []
+
+    for entry in feed.entries:
+        article = {
+            'title': entry.title,
+            'link': entry.link,
+            'published': entry.published,
+            'summary': entry.summary
+        }
+        articles.append(article)
+
+    return render_template('eng/blog.html',articles=articles)
 
 @app.route('/map')
 def world():
@@ -28,6 +46,23 @@ def home_pt():
 @app.route('/br/about')
 def about_pt():
     return render_template('pt/about.html')
+
+@app.route('/br/blog')
+def blog_pt():
+    feed_url = 'https://medium.com/@andrevargas22/feed'
+    feed = feedparser.parse(feed_url)
+    articles = []
+
+    for entry in feed.entries:
+        article = {
+            'title': entry.title,
+            'link': entry.link,
+            'published': entry.published,
+            'summary': entry.summary
+        }
+        articles.append(article)
+
+    return render_template('pt/blog.html',articles=articles)
 
 @app.route('/br/map')
 def world_pt():
