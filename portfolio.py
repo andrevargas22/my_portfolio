@@ -38,6 +38,10 @@ def world():
 def games():
     return render_template('eng/game.html')
 
+@app.route('/AI/mnist_api')
+def mnist():
+    return render_template('eng/mnist.html')
+
 ############################## PT-BR ##############################
 @app.route('/br')
 def home_pt():
