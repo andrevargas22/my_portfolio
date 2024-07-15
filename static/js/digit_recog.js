@@ -125,6 +125,22 @@ function clean() {
     resultDiv.innerHTML = "";
 }
 
+function animateProgressBar(element, targetPercentage, progressBarColor) {
+    element.classList.add(progressBarColor);
+    let width = 0;
+    const interval = setInterval(function() {
+        if (width >= targetPercentage) {
+            clearInterval(interval);
+        } else {
+            width++;
+            element.style.width = width + '%';
+            element.setAttribute('aria-valuenow', width);
+            element.innerHTML = width + '%';
+        }
+    }, 10);
+}
+
+
 // On call, send data to server
 function predict() {
     var resultDiv = document.getElementById("result");
@@ -159,10 +175,18 @@ function predict() {
                     <div class="d-flex align-items-center my-1">
                         <strong>${digit}:</strong>
                         <div class="progress flex-grow-1 mx-2" style="height: 20px;">
-                            <div class="progress-bar ${progressBarColor}" role="progressbar" style="width: ${probability}%" aria-valuenow="${probability}" aria-valuemin="0" aria-valuemax="100">${probability}%</div>
+                            <div class="progress-bar ${progressBarColor}" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                     </div>
                 `;
+            }
+
+            // Animate progress bars
+            var progressBars = resultDiv.querySelectorAll('.progress-bar');
+            for (var i = 0; i < progressBars.length; i++) {
+                var targetPercentage = predictions[i].probability * 100;
+                var progressBarColor = i === 0 ? "bg-success" : i === 1 ? "bg-primary" : "bg-danger";
+                animateProgressBar(progressBars[i], targetPercentage, progressBarColor);
             }
         },
         // If error:

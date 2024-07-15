@@ -1,71 +1,71 @@
 <!doctype html>
-<html lang="en">
+<html lang="pt">
 
     <head>
-        <!-- Header File -->
+        <!-- Arquivo de Cabeçalho -->
         {% include 'common/header.html' %} 
-        <!-- Page CSS -->
+        <!-- CSS da Página -->
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/digit_recog.css') }}">
     </head>
 
     <body>
         
-        <!-- Navigation Bar -->
-        {% include 'common/navbar.html' %} 
+        <!-- Barra de Navegação -->
+        {% include 'common/navbar_pt.html' %} 
 
-        <!-- Required CSS -->
+        <!-- CSS Necessário -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.css" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js"></script>
 
         <div class="container">
-            <!-- Page Header -->
+            <!-- Cabeçalho da Página -->
             <div class="row">
                 <div class="col-lg-12 text-center my-2">
-                    <h4 class="border-bottom border-dark p-2">MNIST Digit Classifier API</h4>
+                    <h4 class="border-bottom border-dark p-2">API de Classificação de Dígitos MNIST</h4>
                     <center>
                         <p>
-                            This is a small app for handwritten digit recognition using a convolutional neural network.
+                            Este é um pequeno aplicativo para reconhecimento de dígitos manuscritos usando uma rede neural convolucional.
                         </p>
                     </center>
                 </div>
             </div>
             
-            <!-- Main Content: Two Columns -->
+            <!-- Conteúdo Principal: Duas Colunas -->
             <div class="row">
                 <p>
-                    <b>Instructions</b>: Draw a digit in the canvas below and click "Predict!" to see the model's top three predictions, click "Clear" to start over.
+                    <b>Instruções</b>: Desenhe um dígito no canvas abaixo e clique em "Predict!" para ver as três principais previsões do modelo, clique em "Clean" para começar de novo.
                 </p>
-                <!-- Drawing Canvas Column -->
+                <!-- Coluna do Canvas de Desenho -->
                 <div class="col-md-6 text-center">
-                    <!-- Drawing Canvas -->
+                    <!-- Canvas de Desenho -->
                     <canvas id='canvas' width='300' height='300'></canvas><br>
     
-                    <!-- Interactive Buttons -->
-                    <button class="btn btn-primary m-2" onclick="clean()">Clear</button>
+                    <!-- Botões Interativos -->
+                    <button class="btn btn-primary m-2" onclick="clean()">Clean</button>
                     <button class="btn btn-success m-2" onclick="predict()">Predict!</button>
                 </div> 
 
-                <!-- Result Column -->
+                <!-- Coluna de Resultados -->
                 <div class="col-md-6">
-                    <!-- Result Display -->
+                    <!-- Exibição dos Resultados -->
                     <div id="result" class="mt-4 text-center">
-                        <img id="loading" src="https://i.gifer.com/ZZ5H.gif" alt="Loading...">
+                        <img id="loading" src="https://i.gifer.com/ZZ5H.gif" alt="Carregando...">
                     </div>
                 </div>
 
                 <p>
                     <br>
-                    <b>How does it work?</b> This model was trained on the MNIST dataset in TensorFlow using the Keras API. The model is stored in a MLFlow Server Model Registry, 
-                    by clicking "Predict", the canvas image is sent to a FastAPI endpoint deployed on Google Cloud Run. This API fetches the model from the MLFlow Model Registry, 
-                    processes the image, and returns the top three predictions with their probabilities.
+                    <b>Como funciona?</b> Este modelo foi treinado no conjunto de dados MNIST usando TensorFlow com a API Keras. O modelo está armazenado em um Model Registry no servidor MLFlow. 
+                    Ao clicar em "Predict", a imagem do canvas é enviada para um endpoint FastAPI implantado com Docker no Google Cloud Run. Esta API busca o modelo no Model Registry do MLFlow, 
+                    processa a imagem e retorna as três principais previsões com suas probabilidades.
                 </p>
 
             </div>
         </div>
     
-    <!-- Bootstrap Bundle with Popper -->
+    <!-- Bootstrap Bundle com Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     
     <script type="text/javascript" src="{{ url_for('static', filename='js/digit_recog.js') }}"></script>

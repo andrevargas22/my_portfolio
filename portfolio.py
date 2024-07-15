@@ -76,6 +76,10 @@ def world_pt():
 def games_pt():
     return render_template('pt/game.html')
 
+@app.route('/br/AI/mnist_api')
+def mnist_pt():
+    return render_template('pt/mnist.html')
+
 ############################## COMMON ##############################
 
 @app.route('/render_map')
