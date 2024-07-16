@@ -35,7 +35,8 @@
             <!-- Main Content: Two Columns -->
             <div class="row">
                 <p>
-                    <b>Instructions</b>: Draw a digit in the canvas below and click "Predict!" to see the model's top three predictions, click "Clear" to start over.
+                    <b>Instructions</b>: Draw a digit in the canvas below and click "Predict!" to see the model's top three predictions, click "Clear" to start over. If the model is inactive,
+                    it may take a few seconds to load the predictions.
                 </p>
                 <!-- Drawing Canvas Column -->
                 <div class="col-md-6 text-center">
@@ -61,6 +62,11 @@
                     by clicking "Predict", the canvas image is sent to a FastAPI endpoint deployed on Google Cloud Run. This API fetches the model from the MLFlow Model Registry, 
                     processes the image, and returns the top three predictions with their probabilities.
                 </p>
+
+                <!-- Image Column -->
+                <div>
+                    <img src="{{ url_for('static', filename = 'images/projects/mnist.jpg') }}" alt="MNIST API architecture" class="img-fluid">
+                </div>
 
             </div>
         </div>

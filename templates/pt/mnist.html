@@ -36,6 +36,7 @@
             <div class="row">
                 <p>
                     <b>Instruções</b>: Desenhe um dígito no canvas abaixo e clique em "Predict!" para ver as três principais previsões do modelo, clique em "Clean" para começar de novo.
+                    Se o modelo estiver inativo, pode levar alguns segundos para carregar as previsões.
                 </p>
                 <!-- Coluna do Canvas de Desenho -->
                 <div class="col-md-6 text-center">
@@ -62,6 +63,11 @@
                     processa a imagem e retorna as três principais previsões com suas probabilidades.
                 </p>
 
+                <!-- Image Column -->
+                <div>
+                    <img src="{{ url_for('static', filename = 'images/projects/mnist.jpg') }}" alt="MNIST API architecture" class="img-fluid">
+                </div>
+                
             </div>
         </div>
     
