@@ -42,6 +42,10 @@ def games():
 def mnist():
     return render_template('eng/mnist.html')
 
+@app.route('/titanic_api')
+def titanic():
+    return render_template('eng/titanic.html')
+
 ############################## PT-BR ##############################
 @app.route('/br')
 def home_pt():
