@@ -11,6 +11,14 @@
             text-align: left;
             font-size: smaller;
         }
+        .button-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .loading-text {
+            margin-left: 10px;
+        }
     </style>
 </head>
 
@@ -40,29 +48,32 @@
         </div>
 
         <p class="header">
-            <strong>Instruções:</strong> Essa página consome uma API de um modelo que prevê a sobrevivência de passageiros do Titanic. 
-
+            Essa página consome uma API de um modelo que prevê a sobrevivência de passageiros do Titanic. 
+        
             Este modelo foi treinado no conjunto de dados do Titanic utilizando RandomForest, e está armazenado em um Model Registry no servidor MLFlow. 
             Ao clicar em "Predict", os dados são enviados para um endpoint FastAPI implantado com Docker no Google Cloud Run. Esta API busca o modelo no Model Registry do MLFlow, 
             processa os dados e retorna as previsões de sobrevivência.
+            <br><br>
+            <strong>Instruções:</strong> 
+            <ul>
+                <li>Prepare um arquivo CSV contendo os dados dos passageiros. O CSV deve incluir as seguintes colunas: <code>Pclass</code> (numérico), <code>Sex</code> (string), <code>SibSp</code> (numérico), <code>Parch</code> (numérico) e <code>Fare</code> (numérico). Certifique-se de que os tipos de dados estão corretos.</li>
+                <li>Carregue o CSV na página com os botões "Choose File" e "Carregar" para visualizar as primeiras 5 linhas na tabela abaixo.</li>
+                <li>Verifique se os dados estão corretos. Se estiverem, clique no botão "Predict" que será exibido após carregar o CSV.</li>
+                <li>A API processará os dados e retornará as previsões na última coluna da tabela. As previsões indicarão "Survived" e "Not survived".</li>
+                <li>Se desejar baixar o arquivo com os resultados completos, clique no botão "Baixar resultados".</li>
+            </ul>
         </p>
 
         <div class="row">
             <div class="col-lg-12 text-center my-2">
                 <input type="file" id="csvFileInput" accept=".csv" class="form-control-file">
-                <button class="btn btn-primary my-2" onclick="loadCSV()">Carregar CSV</button>
-            </div>
-        </div>
-
-        <div class="row" id="predict-section" style="display: none;">
-            <div class="col-lg-12 text-center my-2">
-                <button class="btn btn-success my-2" onclick="predict()">Predict</button>
+                <button class="btn btn-primary my-2" onclick="loadCSV()">Carregar</button>
             </div>
         </div>
 
         <div class="row">
             <div class="col-lg-12 text-center my-2">
-                <h5 class="border-bottom border-dark p-2 custom-header" id="data-title" style="display: none;">Primeiras 5 linhas do CSV</h5>
+                <h5 class="border-bottom border-dark p-2 custom-header" id="data-title" style="display: none;">Primeiras linhas:</h5>
                 <table id="csvTable" class="table table-striped">
                     <thead>
                         <tr id="csvTableHeader"></tr>
@@ -72,9 +83,16 @@
             </div>
         </div>
 
+        <div class="row" id="predict-section" style="display: none;">
+            <div class="col-lg-12 text-center my-2 button-container">
+                <button class="btn btn-success" onclick="predict()">Predict</button>
+                <span id="loading-text" class="loading-text" style="display: none;">Aguardando Resultados...</span>
+            </div>
+        </div>
+
         <div class="row" id="download-section" style="display: none;">
             <div class="col-lg-12 text-center my-2">
-                <button class="btn btn-warning my-2" onclick="downloadResults()">Baixar resultados</button>
+                <button class="btn btn-warning" onclick="downloadResults()">Baixar resultados</button>
             </div>
         </div>
     </div>
@@ -130,7 +148,8 @@
         }
     
         function predict() {
-            fetch('http://127.0.0.1:8000/predict', {
+            document.getElementById('loading-text').style.display = 'inline'; // Show loading text
+            fetch('https://titanic-api-wno7iop4fa-uc.a.run.app/predict', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -139,6 +158,7 @@
             })
             .then(response => response.json())
             .then(data => {
+                document.getElementById('loading-text').style.display = 'none'; // Hide loading text
                 if (data.error) {
                     alert("Error: " + data.error);
                 } else {
@@ -170,6 +190,7 @@
                 }
             })
             .catch(error => {
+                document.getElementById('loading-text').style.display = 'none'; // Hide loading text
                 console.error('Error:', error);
                 alert(`Error: ${error.message}`);
             });
