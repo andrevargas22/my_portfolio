@@ -19,6 +19,9 @@
         .loading-text {
             margin-left: 10px;
         }
+        .bold-text {
+            font-weight: bold;
+        }
     </style>
 </head>
 
@@ -175,6 +178,7 @@
                     data.predictions.slice(0, 5).forEach((prediction, index) => {
                         const td = document.createElement('td');
                         td.innerText = prediction === 1 ? 'Survived' : 'Not survived';
+                        td.classList.add('bold-text');
                         document.getElementById('csvTableBody').rows[index].appendChild(td);
                     });
     
