@@ -71,6 +71,7 @@
             <div class="col-lg-12 text-center my-2">
                 <input type="file" id="csvFileInput" accept=".csv" class="form-control-file">
                 <button class="btn btn-primary my-2" onclick="loadCSV()">Carregar</button>
+                <button class="btn btn-info my-2" onclick="viewMetadata()">Ver Metadados</button>
             </div>
         </div>
 
@@ -195,6 +196,37 @@
             })
             .catch(error => {
                 document.getElementById('loading-text').style.display = 'none'; // Hide loading text
+                console.error('Error:', error);
+                alert(`Error: ${error.message}`);
+            });
+        }
+    
+        function viewMetadata() {
+            fetch('https://titanic-api-wno7iop4fa-uc.a.run.app/metadata')
+            .then(response => response.json())
+            .then(data => {
+                const { tags, params, metrics } = data;
+
+                const formattedMetadata = `
+                Author: ${tags["mlflow.user"]}
+                Model: ${tags["model_type"]}
+                Description: ${tags["experiment_description"]}
+                Run Name: ${tags["mlflow.runName"]}
+
+                Params:
+                n_estimators: ${params["n_estimators"]}
+                max_depth: ${params["max_depth"]}
+                min_samples_split: ${params["min_samples_split"]}
+                min_samples_leaf: ${params["min_samples_leaf"]}
+                max_features: ${params["max_features"]}
+
+                Metrics:
+                f1_score: ${metrics["f1_score"]}
+                `;
+
+                alert(`Metadados:\n${formattedMetadata}`);
+            })
+            .catch(error => {
                 console.error('Error:', error);
                 alert(`Error: ${error.message}`);
             });
