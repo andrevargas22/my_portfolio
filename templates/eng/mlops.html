@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Header File -->
+    {% include 'common/header.html' %}
+    <!-- Page CSS -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/mlops.css') }}">
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    {% include 'common/navbar.html' %}
+
+    <!-- Required CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js"></script>
+
+    <div class="container">
+        <!-- Page Header -->
+        <div class="row">
+            <div class="col-lg-12 text-center my-2">
+                <h4 class="border-bottom border-dark p-2">MLOPs Stack Builder</h4>
+                <center>
+                    <p>lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                </center>
+            </div>
+        </div>
+
+        <div class="content-wrapper">
+            <!-- Sidebar -->
+            <div class="sidebar" id="sidebar">
+                <h5>Experiment Tracking</h5>
+                <div class="button-container">
+                    <div class="custom-button" id="mlflowButton">
+                        <img src="/static/images/mlopsstack/mlflow.png" alt="MLFlow Logo">
+                        <span>MLFlow</span>
+                    </div>
+                    <div class="custom-button" id="cometmlButton">
+                        <img src="/static/images/mlopsstack/comet.png" alt="CometML Logo">
+                        <span>CometML</span>
+                    </div>
+                    <div class="custom-button" id="dvcButton">
+                        <img src="/static/images/mlopsstack/dvc.png" alt="DVC Logo">
+                        <span>DVC</span>
+                    </div>
+                    <div class="custom-button" id="clearmlButton">
+                        <img src="/static/images/mlopsstack/clearml.png" alt="ClearML Logo">
+                        <span>ClearML</span>
+                    </div>
+                    <div class="custom-button" id="wandbButton">
+                        <img src="/static/images/mlopsstack/wandb.png" alt="Weights & Biases Logo">
+                        <span>W&B</span>
+                    </div>
+                    <div class="custom-button" id="neptuneButton">
+                        <img src="/static/images/mlopsstack/neptune.webp" alt="Neptune Logo">
+                        <span>Neptune.ai</span>
+                    </div>
+                    <div class="custom-button" id="polyaxonButton">
+                        <img src="/static/images/mlopsstack/polyaxon.png" alt="Polyaxon Logo">
+                        <span>Polyaxon</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="row">
+                    <!-- Experiment Tracking Block -->
+                    <div class="mlops-block" id="experiment-tracking">
+                        <h5>Experiment Tracking</h5>
+                        <div class="user-selection"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Structure -->
+    <div class="modal" id="infoModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <img src="" alt="Logo" id="modalLogo" style="height: 24px; margin-right: 10px;">
+                    <h5 class="modal-title" id="modalTitle">Product Info</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <!-- Information about the product will be inserted here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="addToStackBtn" class="btn btn-primary">Add to Stack</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+    <!-- Page JS -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/mlops.js') }}"></script>
+
+</body>
+
+</html>

@@ -38,13 +38,13 @@ def world():
 def games():
     return render_template('eng/game.html')
 
-@app.route('/AI/mnist_api')
+@app.route('/mnist_api')
 def mnist():
     return render_template('eng/mnist.html')
 
-@app.route('/titanic_api')
-def titanic():
-    return render_template('eng/titanic.html')
+@app.route('/mlops')
+def mlops():
+    return render_template('eng/mlops.html')
 
 ############################## PT-BR ##############################
 @app.route('/br')
@@ -80,7 +80,7 @@ def world_pt():
 def games_pt():
     return render_template('pt/game.html')
 
-@app.route('/br/AI/mnist_api')
+@app.route('/br/mnist_api')
 def mnist_pt():
     return render_template('pt/mnist.html')
 
