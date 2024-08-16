@@ -13,3 +13,9 @@ body {
   margin-left:30px;
   margin-right:30px;
 }
+
+#diagram {
+  background-color: #f8f9fa;
+  border: 1px solid #ccc;
+  overflow: scroll;
+}

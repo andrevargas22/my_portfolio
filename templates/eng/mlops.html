@@ -6,17 +6,14 @@
     {% include 'common/header.html' %}
     <!-- Page CSS -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/mlops.css') }}">
+
+    <script src="https://cdn.jsdelivr.net/npm/@joint/core@4.0.1/dist/joint.js"></script>
+
 </head>
 
 <body>
     <!-- Navigation Bar -->
     {% include 'common/navbar.html' %}
-
-    <!-- Required CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js"></script>
 
     <div class="container">
         <!-- Page Header -->
@@ -27,6 +24,9 @@
                     <p>lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                 </center>
             </div>
+
+            <div id="diagram" style="width: 100%; height: 600px; border: 1px solid #ccc;"></div>
+
         </div>
     </div>
         
