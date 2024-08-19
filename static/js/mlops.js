@@ -1,106 +1,89 @@
 document.addEventListener("DOMContentLoaded", function() {
-    const { dia, shapes } = joint;
+    const $ = go.GraphObject.make;
 
-    const paperContainer = document.getElementById("diagram");
-
-    if (!paperContainer) {
-        console.error("O elemento #diagram não foi encontrado na página.");
-        return;
-    }
-
-    const graph = new dia.Graph({}, { cellNamespace: shapes });
-    const paper = new dia.Paper({
-        model: graph,
-        cellViewNamespace: shapes,
-        width: "100%",
-        height: 600,
-        gridSize: 10,
-        async: true,
-        frozen: true,
-        sorting: dia.Paper.sorting.APPROX,
-        background: { color: "#f8f9fa" },
-        clickThreshold: 10,
-        defaultConnector: {
-            name: "rounded"  // Conector padrão, sem curvas exageradas
-        },
-        defaultLink: new shapes.standard.Link({
-            attrs: {
-                line: {
-                    stroke: '#333333',
-                    strokeWidth: 2,
-                    targetMarker: {
-                        'type': 'path',
-                        'd': 'M 10 -5 0 0 10 5 Z', // Seta ao final da linha
-                        'stroke': '#333333',
-                        'fill': '#333333'
-                    }
-                }
-            }
-        })
+    const myDiagram = $(go.Diagram, "diagramDiv", {
+        initialContentAlignment: go.Spot.Center,
+        "undoManager.isEnabled": true
     });
 
-    paperContainer.appendChild(paper.el);
+    myDiagram.nodeTemplate =
+        $(go.Node, "Auto",
+            { locationSpot: go.Spot.Center },
+            $(go.Shape, "RoundedRectangle",
+                { strokeWidth: 1, stroke: "#333333", fill: "#ffffff" },
+                new go.Binding("fill", "color")),
+            $(go.TextBlock,
+                { margin: 8, font: "bold 12pt Arial", stroke: "#333333" },
+                new go.Binding("text", "key"))
+        );
 
-    // Função para criar os elementos (caixas)
-    function createElement(label, x, y) {
-        return new shapes.standard.Rectangle({
-            position: { x, y },
-            size: { width: 150, height: 60 },
-            attrs: {
-                body: {
-                    fill: '#ffffff',
-                    stroke: '#333333',
-                    rx: 5,
-                    ry: 5,
-                    'stroke-width': 1
-                },
-                label: {
-                    text: label,
-                    fill: '#333333',
-                    fontFamily: 'Arial',
-                    fontSize: 12,
-                    fontWeight: 'bold'
-                }
-            }
-        });
+    myDiagram.linkTemplate =
+        $(go.Link,
+            { routing: go.Link.AvoidsNodes, curve: go.Link.JumpOver },
+            $(go.Shape, { strokeWidth: 2, stroke: "#333333" }),
+            $(go.Shape, { toArrow: "Standard", stroke: "#333333", fill: "#333333" })
+        );
+
+    myDiagram.model = new go.GraphLinksModel(
+        [
+            { key: "EXPERIMENT TRACKING", color: "white", loc: "0 0" },
+            { key: "EXPERIMENTATION", color: "white", loc: "250 0" },
+            { key: "DATA VERSIONING", color: "white", loc: "0 100" },
+            { key: "CODE VERSIONING", color: "white", loc: "250 100" },
+            { key: "PIPELINE ORCHESTRATION", color: "white", loc: "250 200" },
+            { key: "ARTIFACT TRACKING", color: "white", loc: "250 300" },
+            { key: "MODEL REGISTRY", color: "white", loc: "500 200" },
+            { key: "MODEL SERVING", color: "white", loc: "700 200" },
+            { key: "MODEL MONITORING", color: "white", loc: "700 300" },
+            { key: "RUNTIME ENGINE", color: "white", loc: "700 0" } // Desconectado, apenas posicionado
+        ],
+        [
+            { from: "EXPERIMENT TRACKING", to: "EXPERIMENTATION" },
+            { from: "EXPERIMENTATION", to: "CODE VERSIONING" },
+            { from: "EXPERIMENTATION", to: "DATA VERSIONING" },
+            { from: "DATA VERSIONING", to: "PIPELINE ORCHESTRATION" },
+            { from: "CODE VERSIONING", to: "PIPELINE ORCHESTRATION" },
+            { from: "PIPELINE ORCHESTRATION", to: "ARTIFACT TRACKING" },
+            { from: "PIPELINE ORCHESTRATION", to: "MODEL REGISTRY" },
+            { from: "MODEL REGISTRY", to: "MODEL SERVING" },
+            { from: "MODEL SERVING", to: "MODEL MONITORING" }
+            // "RUNTIME ENGINE" removido das conexões
+        ]);
+
+    myDiagram.model.nodeDataArray.forEach(function(node) {
+        myDiagram.findNodeForKey(node.key).location = go.Point.parse(node.loc);
+    });
+
+    myDiagram.addDiagramListener("ObjectSingleClicked", function(e) {
+        const part = e.subject.part;
+        if (part instanceof go.Node) {
+            updateSidebar(part.data.key);
+        }
+    });
+
+    function updateSidebar(title) {
+        const sidebarTitle = document.querySelector('.sidebar h5');
+        const sidebarContent = document.querySelector('.sidebar p');
+
+        if (!sidebarTitle || !sidebarContent) {
+            console.error('Elementos da barra lateral não encontrados!');
+            return;
+        }
+
+        sidebarTitle.textContent = title;
+
+        if (title === 'EXPERIMENT TRACKING') {
+            sidebarContent.innerHTML = `
+                <div>
+                    <h6>Available Tools:</h6>
+                    <ul>
+                        <li><a href="#">MLFlow</a></li>
+                        <li><a href="#">CometML</a></li>
+                    </ul>
+                </div>
+            `;
+        } else {
+            sidebarContent.innerHTML = '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>';
+        }
     }
-
-    // Função para criar as conexões (links)
-    function createLink(source, target, dashed = false) {
-        return new shapes.standard.Link({
-            source: { id: source.id },
-            target: { id: target.id },
-            connector: { name: 'rounded' },
-            attrs: {
-                line: {
-                    stroke: '#333333',
-                    strokeWidth: 2,
-                    strokeDasharray: dashed ? '5 5' : '0',
-                    targetMarker: {
-                        'type': 'path',
-                        'd': 'M 10 -5 0 0 10 5 Z',
-                        'stroke': '#333333',
-                        'fill': '#333333'
-                    }
-                }
-            }
-        });
-    }
-
-    // Criar os três elementos (caixas)
-    const experimentTracking = createElement('EXPERIMENT TRACKING', 50, 50);
-    const experimentation = createElement('EXPERIMENTATION', 250, 50);
-    const dataVersioning = createElement('DATA VERSIONING', 150, 150);
-
-    // Adicionar os elementos ao gráfico
-    graph.addCells([experimentTracking, experimentation, dataVersioning]);
-
-    // Criar e adicionar as conexões entre os elementos
-    const link1 = createLink(experimentTracking, experimentation, false);
-    const link2 = createLink(experimentation, dataVersioning, false);  // Conectando Experimentation com Data Versioning
-    const link3 = createLink(dataVersioning, experimentation, false).set('connector', { name: 'rounded', args: { startDirections: ['top'], endDirections: ['bottom'] } });  // Conectando Data Versioning com a parte de baixo de Experimentation
-
-    graph.addCells([link1, link2, link3]);
-
-    paper.unfreeze();
 });
