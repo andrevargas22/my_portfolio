@@ -1,66 +1,84 @@
 document.addEventListener("DOMContentLoaded", function() {
-    const $ = go.GraphObject.make;
-
-    const myDiagram = $(go.Diagram, "diagramDiv", {
-        initialContentAlignment: go.Spot.Center,
-        "undoManager.isEnabled": true
-    });
-
-    myDiagram.nodeTemplate =
-        $(go.Node, "Auto",
-            { locationSpot: go.Spot.Center },
-            $(go.Shape, "RoundedRectangle",
-                { strokeWidth: 1, stroke: "#333333", fill: "#ffffff" },
-                new go.Binding("fill", "color")),
-            $(go.TextBlock,
-                { margin: 8, font: "bold 12pt Arial", stroke: "#333333" },
-                new go.Binding("text", "key"))
-        );
-
-    // Configura o template de link com pontos de origem e destino específicos
-    myDiagram.linkTemplate =
-        $(go.Link,
-            { routing: go.Link.AvoidsNodes, curve: go.Link.JumpOver },
-            new go.Binding("fromSpot", "fromSpot", go.Spot.parse),
-            new go.Binding("toSpot", "toSpot", go.Spot.parse),
-            $(go.Shape, { strokeWidth: 2, stroke: "#333333" }),
-            $(go.Shape, { toArrow: "Standard", stroke: "#333333", fill: "#333333" })
-        );
-
-    myDiagram.model = new go.GraphLinksModel(
-        [
-            { key: "EXPERIMENT TRACKING", color: "white", loc: "0 0" },
-            { key: "EXPERIMENTATION", color: "white", loc: "250 0" },
-            { key: "DATA VERSIONING", color: "white", loc: "0 100" },
-            { key: "CODE VERSIONING", color: "white", loc: "250 100" },
-            { key: "PIPELINE ORCHESTRATION", color: "white", loc: "250 200" },
-            { key: "ARTIFACT TRACKING", color: "white", loc: "250 300" },
-            { key: "MODEL REGISTRY", color: "white", loc: "500 200" },
-            { key: "MODEL SERVING", color: "white", loc: "700 200" },
-            { key: "MODEL MONITORING", color: "white", loc: "700 300" },
-            { key: "RUNTIME ENGINE", color: "white", loc: "700 0" }
+    const cy = cytoscape({
+        container: document.getElementById('cy'),
+        style: [
+            {
+                selector: 'node',
+                style: {
+                    'background-color': '#ffffff',
+                    'label': 'data(label)',
+                    'shape': 'roundrectangle',
+                    'text-valign': 'center', // Centraliza o texto
+                    'text-halign': 'center',
+                    'width': '170px',
+                    'height': '60px',
+                    'border-width': '2px',
+                    'border-color': '#333333',
+                    'font-family': 'Arial',
+                    'font-size': '12px',
+                    'font-weight': 'bold',
+                    'color': '#333333',
+                    'text-wrap': 'wrap'
+                }
+            },
+            {
+                selector: 'edge',
+                style: {
+                    'width': 2,
+                    'line-color': '#333333',
+                    'target-arrow-color': '#333333',
+                    'target-arrow-shape': 'triangle',
+                    'curve-style': 'bezier'
+                }
+            }
         ],
-        [
-            { from: "EXPERIMENT TRACKING", to: "EXPERIMENTATION", fromSpot: "Right", toSpot: "Left" },
-            { from: "EXPERIMENTATION", to: "CODE VERSIONING", fromSpot: "Bottom", toSpot: "Top" },
-            { from: "EXPERIMENTATION", to: "DATA VERSIONING", fromSpot: "Bottom", toSpot: "Top" },
-            { from: "DATA VERSIONING", to: "PIPELINE ORCHESTRATION", fromSpot: "Bottom", toSpot: "Left" },
-            { from: "CODE VERSIONING", to: "PIPELINE ORCHESTRATION", fromSpot: "Bottom", toSpot: "Top" },
-            { from: "PIPELINE ORCHESTRATION", to: "ARTIFACT TRACKING", fromSpot: "Bottom", toSpot: "Top" },
-            { from: "PIPELINE ORCHESTRATION", to: "MODEL REGISTRY", fromSpot: "Right", toSpot: "Left" },
-            { from: "MODEL REGISTRY", to: "MODEL SERVING", fromSpot: "Right", toSpot: "Left" },
-            { from: "MODEL SERVING", to: "MODEL MONITORING", fromSpot: "Bottom", toSpot: "Top" }
-        ]);
-
-    myDiagram.model.nodeDataArray.forEach(function(node) {
-        myDiagram.findNodeForKey(node.key).location = go.Point.parse(node.loc);
+        layout: {
+            name: 'preset'
+        },
+        elements: {
+            nodes: [
+                { data: { id: 'a', label: 'EXPERIMENT TRACKING\n\n' }, position: { x: 100, y: 50 } },
+                { data: { id: 'b', label: 'EXPERIMENTATION\n\n' }, position: { x: 300, y: 50 } },
+                { data: { id: 'c', label: 'DATA VERSIONING\n\n' }, position: { x: 100, y: 150 } },
+                { data: { id: 'd', label: 'CODE VERSIONING\n\n' }, position: { x: 300, y: 150 } },
+                { data: { id: 'e', label: 'PIPELINE ORCHESTRATION\n\n' }, position: { x: 200, y: 250 } },
+                { data: { id: 'f', label: 'ARTIFACT TRACKING\n\n' }, position: { x: 200, y: 350 } },
+                { data: { id: 'g', label: 'MODEL REGISTRY\n\n' }, position: { x: 500, y: 250 } },
+                { data: { id: 'h', label: 'MODEL SERVING\n\n' }, position: { x: 700, y: 250 } },
+                { data: { id: 'i', label: 'MODEL MONITORING\n\n' }, position: { x: 700, y: 350 } },
+                { data: { id: 'j', label: 'RUNTIME ENGINE\n\n' }, position: { x: 700, y: 50 } }
+            ],
+            edges: [
+                { data: { source: 'a', target: 'b' } },
+                { data: { source: 'b', target: 'c' } },
+                { data: { source: 'b', target: 'd' } },
+                { data: { source: 'c', target: 'e' } },
+                { data: { source: 'd', target: 'e' } },
+                { data: { source: 'e', target: 'f' } },
+                { data: { source: 'e', target: 'g' } },
+                { data: { source: 'g', target: 'h' } },
+                { data: { source: 'h', target: 'i' } },
+                { data: { source: 'j', target: 'h' } }
+            ]
+        }
     });
 
-    myDiagram.addDiagramListener("ObjectSingleClicked", function(e) {
-        const part = e.subject.part;
-        if (part instanceof go.Node) {
-            updateSidebar(part.data.key);
-        }
+    cy.on('tap', 'node', function(evt) {
+        const node = evt.target;
+        updateSidebar(node.data('label'));
+        
+        node.animate({
+            style: { 'background-color': '#ffcc00' }
+        }, {
+            duration: 500,
+            complete: function() {
+                node.animate({
+                    style: { 'background-color': '#ffffff' }
+                }, {
+                    duration: 500
+                });
+            }
+        });
     });
 
     function updateSidebar(title) {
@@ -69,37 +87,37 @@ document.addEventListener("DOMContentLoaded", function() {
 
         sidebarTitle.textContent = title;
 
-        if (title === 'EXPERIMENT TRACKING') {
+        if (title.includes('EXPERIMENT TRACKING')) {
             sidebarContent.innerHTML = `
                 <h5>EXPERIMENT TRACKING</h5>
                 <p>Experiment Tracking is the practice of managing and documenting your experiments in machine learning projects. It helps in organizing experiments, tracking progress, and ensuring reproducibility.</p>
                 
                 <div class="tool-buttons">
-                    <div class="tool-button">
+                    <div class="tool-button" data-tool="MLFlow">
                         <img src="/static/images/mlopsstack/mlflow.png" alt="MLFlow Logo">
                         <span>MLFlow</span>
                     </div>
-                    <div class="tool-button">
+                    <div class="tool-button" data-tool="CometML">
                         <img src="/static/images/mlopsstack/comet.png" alt="CometML Logo">
                         <span>CometML</span>
                     </div>
-                    <div class="tool-button">
+                    <div class="tool-button" data-tool="ClearML">
                         <img src="/static/images/mlopsstack/clearml.png" alt="ClearML Logo">
                         <span>ClearML</span>
                     </div>
-                    <div class="tool-button">
+                    <div class="tool-button" data-tool="DVC">
                         <img src="/static/images/mlopsstack/dvc.png" alt="DVC Logo">
                         <span>DVC</span>
                     </div>
-                    <div class="tool-button">
+                    <div class="tool-button" data-tool="Neptune">
                         <img src="/static/images/mlopsstack/neptune.webp" alt="Neptune Logo">
                         <span>Neptune</span>
                     </div>
-                    <div class="tool-button">
+                    <div class="tool-button" data-tool="Polyaxon">
                         <img src="/static/images/mlopsstack/polyaxon.png" alt="Polyaxon Logo">
                         <span>Polyaxon</span>
                     </div>
-                    <div class="tool-button">
+                    <div class="tool-button" data-tool="WandB">
                         <img src="/static/images/mlopsstack/wandb.png" alt="W&B Logo">
                         <span>W&B</span>
                     </div>
@@ -111,8 +129,23 @@ document.addEventListener("DOMContentLoaded", function() {
                 <p>Click on a block in the diagram to see more details.</p>
             `;
         }
+
+        document.querySelectorAll('.tool-button').forEach(function(button) {
+            button.addEventListener('click', function() {
+                const tool = this.getAttribute('data-tool');
+                addToolToNode(tool);
+            });
+        });
     }
 
-    // Inicializa a barra lateral com uma mensagem padrão
+    function addToolToNode(tool) {
+        const selectedNode = cy.$(':selected');
+        if (selectedNode) {
+            const [title] = selectedNode.data('label').split('\n\n'); // Pega o título original
+            const toolContent = `✔ ${tool}`; // Adiciona a ferramenta na linha abaixo
+            selectedNode.data('label', `${title}\n\n${toolContent}`); // Mantém o título original e adiciona a ferramenta abaixo
+        }
+    }
+
     updateSidebar('MLOPs Stack Builder');
 });

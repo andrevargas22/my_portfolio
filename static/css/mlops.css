@@ -22,16 +22,7 @@ body {
   padding: 20px;
 }
 
-.sidebar h5 {
-  font-size: 1.5em;
-  margin-bottom: 15px;
-}
-
-.sidebar p {
-  font-size: 1em;
-  margin-bottom: 20px;
-}
-
+/* Estilo para os botões das ferramentas */
 .tool-buttons {
   display: flex;
   flex-wrap: wrap;
@@ -41,31 +32,21 @@ body {
 .tool-button {
   display: flex;
   align-items: center;
-  padding: 5px 10px;
-  background-color: #ffffff;
-  border: 1px solid #ccc;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  width: 150px;
 }
 
 .tool-button img {
-  height: 24px;
-  margin-right: 8px;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
 }
 
 .tool-button span {
-  font-size: 0.9em;
-  font-weight: bold;
-  color: #333333;
-}
-
-.tool-button:hover {
-  background-color: #f0f0f0;
-}
-
-#diagram {
-  position: relative;
-  height: 500px;
-  overflow: scroll;
+  font-size: 14px;
+  color: #333;
 }
