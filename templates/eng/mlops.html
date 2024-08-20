@@ -1,6 +1,5 @@
 <!doctype html>
 <html lang="en">
-
 <head>
     <!-- Header File -->
     {% include 'common/header.html' %}
@@ -11,7 +10,6 @@
     <script src="https://unpkg.com/gojs/release/go.js"></script>
 
 </head>
-
 <body>
     <!-- Navigation Bar -->
     {% include 'common/navbar.html' %}
@@ -30,8 +28,9 @@
         <div class="row">
             <!-- Barra lateral -->
             <div class="col-md-3 sidebar">
-                <h5>Sidebar Title</h5>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                <!-- Conteúdo inicial da barra lateral será vazio -->
+                <h5>MLOPs Stack Builder</h5>
+                <p>Click on a block in the diagram to see more details.</p>
             </div>
 
             <!-- Área do diagrama -->
@@ -46,6 +45,6 @@
 
     <!-- Page JS -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/mlops.js') }}"></script>
-</body>
 
+</body>
 </html>

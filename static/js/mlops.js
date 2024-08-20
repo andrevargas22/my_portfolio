@@ -17,9 +17,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 new go.Binding("text", "key"))
         );
 
+    // Configura o template de link com pontos de origem e destino específicos
     myDiagram.linkTemplate =
         $(go.Link,
             { routing: go.Link.AvoidsNodes, curve: go.Link.JumpOver },
+            new go.Binding("fromSpot", "fromSpot", go.Spot.parse),
+            new go.Binding("toSpot", "toSpot", go.Spot.parse),
             $(go.Shape, { strokeWidth: 2, stroke: "#333333" }),
             $(go.Shape, { toArrow: "Standard", stroke: "#333333", fill: "#333333" })
         );
@@ -35,19 +38,18 @@ document.addEventListener("DOMContentLoaded", function() {
             { key: "MODEL REGISTRY", color: "white", loc: "500 200" },
             { key: "MODEL SERVING", color: "white", loc: "700 200" },
             { key: "MODEL MONITORING", color: "white", loc: "700 300" },
-            { key: "RUNTIME ENGINE", color: "white", loc: "700 0" } // Desconectado, apenas posicionado
+            { key: "RUNTIME ENGINE", color: "white", loc: "700 0" }
         ],
         [
-            { from: "EXPERIMENT TRACKING", to: "EXPERIMENTATION" },
-            { from: "EXPERIMENTATION", to: "CODE VERSIONING" },
-            { from: "EXPERIMENTATION", to: "DATA VERSIONING" },
-            { from: "DATA VERSIONING", to: "PIPELINE ORCHESTRATION" },
-            { from: "CODE VERSIONING", to: "PIPELINE ORCHESTRATION" },
-            { from: "PIPELINE ORCHESTRATION", to: "ARTIFACT TRACKING" },
-            { from: "PIPELINE ORCHESTRATION", to: "MODEL REGISTRY" },
-            { from: "MODEL REGISTRY", to: "MODEL SERVING" },
-            { from: "MODEL SERVING", to: "MODEL MONITORING" }
-            // "RUNTIME ENGINE" removido das conexões
+            { from: "EXPERIMENT TRACKING", to: "EXPERIMENTATION", fromSpot: "Right", toSpot: "Left" },
+            { from: "EXPERIMENTATION", to: "CODE VERSIONING", fromSpot: "Bottom", toSpot: "Top" },
+            { from: "EXPERIMENTATION", to: "DATA VERSIONING", fromSpot: "Bottom", toSpot: "Top" },
+            { from: "DATA VERSIONING", to: "PIPELINE ORCHESTRATION", fromSpot: "Bottom", toSpot: "Left" },
+            { from: "CODE VERSIONING", to: "PIPELINE ORCHESTRATION", fromSpot: "Bottom", toSpot: "Top" },
+            { from: "PIPELINE ORCHESTRATION", to: "ARTIFACT TRACKING", fromSpot: "Bottom", toSpot: "Top" },
+            { from: "PIPELINE ORCHESTRATION", to: "MODEL REGISTRY", fromSpot: "Right", toSpot: "Left" },
+            { from: "MODEL REGISTRY", to: "MODEL SERVING", fromSpot: "Right", toSpot: "Left" },
+            { from: "MODEL SERVING", to: "MODEL MONITORING", fromSpot: "Bottom", toSpot: "Top" }
         ]);
 
     myDiagram.model.nodeDataArray.forEach(function(node) {
@@ -63,27 +65,54 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function updateSidebar(title) {
         const sidebarTitle = document.querySelector('.sidebar h5');
-        const sidebarContent = document.querySelector('.sidebar p');
-
-        if (!sidebarTitle || !sidebarContent) {
-            console.error('Elementos da barra lateral não encontrados!');
-            return;
-        }
+        const sidebarContent = document.querySelector('.sidebar');
 
         sidebarTitle.textContent = title;
 
         if (title === 'EXPERIMENT TRACKING') {
             sidebarContent.innerHTML = `
-                <div>
-                    <h6>Available Tools:</h6>
-                    <ul>
-                        <li><a href="#">MLFlow</a></li>
-                        <li><a href="#">CometML</a></li>
-                    </ul>
+                <h5>EXPERIMENT TRACKING</h5>
+                <p>Experiment Tracking is the practice of managing and documenting your experiments in machine learning projects. It helps in organizing experiments, tracking progress, and ensuring reproducibility.</p>
+                
+                <div class="tool-buttons">
+                    <div class="tool-button">
+                        <img src="/static/images/mlopsstack/mlflow.png" alt="MLFlow Logo">
+                        <span>MLFlow</span>
+                    </div>
+                    <div class="tool-button">
+                        <img src="/static/images/mlopsstack/comet.png" alt="CometML Logo">
+                        <span>CometML</span>
+                    </div>
+                    <div class="tool-button">
+                        <img src="/static/images/mlopsstack/clearml.png" alt="ClearML Logo">
+                        <span>ClearML</span>
+                    </div>
+                    <div class="tool-button">
+                        <img src="/static/images/mlopsstack/dvc.png" alt="DVC Logo">
+                        <span>DVC</span>
+                    </div>
+                    <div class="tool-button">
+                        <img src="/static/images/mlopsstack/neptune.webp" alt="Neptune Logo">
+                        <span>Neptune</span>
+                    </div>
+                    <div class="tool-button">
+                        <img src="/static/images/mlopsstack/polyaxon.png" alt="Polyaxon Logo">
+                        <span>Polyaxon</span>
+                    </div>
+                    <div class="tool-button">
+                        <img src="/static/images/mlopsstack/wandb.png" alt="W&B Logo">
+                        <span>W&B</span>
+                    </div>
                 </div>
             `;
         } else {
-            sidebarContent.innerHTML = '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>';
+            sidebarContent.innerHTML = `
+                <h5>${title}</h5>
+                <p>Click on a block in the diagram to see more details.</p>
+            `;
         }
     }
+
+    // Inicializa a barra lateral com uma mensagem padrão
+    updateSidebar('MLOPs Stack Builder');
 });
