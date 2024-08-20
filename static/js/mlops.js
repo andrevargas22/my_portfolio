@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
+    let previousNode = null; // Para armazenar o nó previamente selecionado
+
     const cy = cytoscape({
         container: document.getElementById('cy'),
         style: [
@@ -8,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     'background-color': '#ffffff',
                     'label': 'data(label)',
                     'shape': 'roundrectangle',
-                    'text-valign': 'center', // Centraliza o texto
+                    'text-valign': 'center', 
                     'text-halign': 'center',
                     'width': '170px',
                     'height': '60px',
@@ -18,7 +20,8 @@ document.addEventListener("DOMContentLoaded", function() {
                     'font-size': '12px',
                     'font-weight': 'bold',
                     'color': '#333333',
-                    'text-wrap': 'wrap'
+                    'text-wrap': 'wrap',
+                    'text-margin-y': '0px' // Ajuste para elevar o texto
                 }
             },
             {
@@ -37,16 +40,16 @@ document.addEventListener("DOMContentLoaded", function() {
         },
         elements: {
             nodes: [
-                { data: { id: 'a', label: 'EXPERIMENT TRACKING\n\n' }, position: { x: 100, y: 50 } },
-                { data: { id: 'b', label: 'EXPERIMENTATION\n\n' }, position: { x: 300, y: 50 } },
-                { data: { id: 'c', label: 'DATA VERSIONING\n\n' }, position: { x: 100, y: 150 } },
-                { data: { id: 'd', label: 'CODE VERSIONING\n\n' }, position: { x: 300, y: 150 } },
-                { data: { id: 'e', label: 'PIPELINE ORCHESTRATION\n\n' }, position: { x: 200, y: 250 } },
-                { data: { id: 'f', label: 'ARTIFACT TRACKING\n\n' }, position: { x: 200, y: 350 } },
-                { data: { id: 'g', label: 'MODEL REGISTRY\n\n' }, position: { x: 500, y: 250 } },
-                { data: { id: 'h', label: 'MODEL SERVING\n\n' }, position: { x: 700, y: 250 } },
-                { data: { id: 'i', label: 'MODEL MONITORING\n\n' }, position: { x: 700, y: 350 } },
-                { data: { id: 'j', label: 'RUNTIME ENGINE\n\n' }, position: { x: 700, y: 50 } }
+                { data: { id: 'a', label: 'EXPERIMENT TRACKING' }, position: { x: 100, y: 50 } },
+                { data: { id: 'b', label: 'EXPERIMENTATION' }, position: { x: 300, y: 50 } },
+                { data: { id: 'c', label: 'DATA VERSIONING' }, position: { x: 100, y: 150 } },
+                { data: { id: 'd', label: 'CODE VERSIONING' }, position: { x: 300, y: 150 } },
+                { data: { id: 'e', label: 'PIPELINE ORCHESTRATION' }, position: { x: 200, y: 250 } },
+                { data: { id: 'f', label: 'ARTIFACT TRACKING' }, position: { x: 200, y: 350 } },
+                { data: { id: 'g', label: 'MODEL REGISTRY' }, position: { x: 500, y: 250 } },
+                { data: { id: 'h', label: 'MODEL SERVING' }, position: { x: 700, y: 250 } },
+                { data: { id: 'i', label: 'MODEL MONITORING' }, position: { x: 700, y: 350 } },
+                { data: { id: 'j', label: 'RUNTIME ENGINE' }, position: { x: 700, y: 50 } }
             ],
             edges: [
                 { data: { source: 'a', target: 'b' } },
@@ -65,20 +68,27 @@ document.addEventListener("DOMContentLoaded", function() {
 
     cy.on('tap', 'node', function(evt) {
         const node = evt.target;
-        updateSidebar(node.data('label'));
-        
+
+        // Se houver um nó previamente selecionado, remove a cor de fundo
+        if (previousNode) {
+            previousNode.animate({
+                style: { 'background-color': '#ffffff' }
+            }, {
+                duration: 500 // Duração de 0.5 segundos para desfazer a animação
+            });
+        }
+
+        // Atualiza a cor de fundo do nó atual
         node.animate({
-            style: { 'background-color': '#ffcc00' }
+            style: { 'background-color': '#ffcc00' } // Cor amarela
         }, {
-            duration: 500,
+            duration: 500, // Duração de 0.5 segundos para a animação de destaque
             complete: function() {
-                node.animate({
-                    style: { 'background-color': '#ffffff' }
-                }, {
-                    duration: 500
-                });
+                previousNode = node; // Atualiza o nó previamente selecionado
             }
         });
+
+        updateSidebar(node.data('label'));
     });
 
     function updateSidebar(title) {
@@ -126,8 +136,7 @@ document.addEventListener("DOMContentLoaded", function() {
         } else {
             sidebarContent.innerHTML = `
                 <h5>${title}</h5>
-                <p>Click on a block in the diagram to see more details.</p>
-            `;
+                <p>Click on a block in the diagram to see more details.</p>`;
         }
 
         document.querySelectorAll('.tool-button').forEach(function(button) {
@@ -142,8 +151,42 @@ document.addEventListener("DOMContentLoaded", function() {
         const selectedNode = cy.$(':selected');
         if (selectedNode) {
             const [title] = selectedNode.data('label').split('\n\n'); // Pega o título original
-            const toolContent = `✔ ${tool}`; // Adiciona a ferramenta na linha abaixo
-            selectedNode.data('label', `${title}\n\n${toolContent}`); // Mantém o título original e adiciona a ferramenta abaixo
+            const toolLogo = getToolLogo(tool); // Função para obter a URL da logo da ferramenta
+
+            // Atualiza o rótulo do nó com o nome da ferramenta
+            selectedNode.data('label', `${title}\n\n${tool}`);
+
+            // Adiciona a imagem como background do nó
+            selectedNode.style({
+                'background-image': `url(${toolLogo})`,
+                'background-fit': 'contain',
+                'background-position-x': '10px', // Ajusta a posição horizontal da imagem
+                'background-position-y': 'center', // Centraliza verticalmente
+                'background-clip': 'none',
+                'background-width': '30px', // Define a largura da imagem
+                'background-height': '30px' // Define a altura da imagem
+            });
+        }
+    }
+
+    function getToolLogo(tool) {
+        switch(tool) {
+            case 'MLFlow':
+                return '/static/images/mlopsstack/mlflow.png';
+            case 'CometML':
+                return '/static/images/mlopsstack/comet.png';
+            case 'ClearML':
+                return '/static/images/mlopsstack/clearml.png';
+            case 'DVC':
+                return '/static/images/mlopsstack/dvc.png';
+            case 'Neptune':
+                return '/static/images/mlopsstack/neptune.webp';
+            case 'Polyaxon':
+                return '/static/images/mlopsstack/polyaxon.png';
+            case 'WandB':
+                return '/static/images/mlopsstack/wandb.png';
+            default:
+                return '';
         }
     }
 
