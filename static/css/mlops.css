@@ -72,3 +72,65 @@ body {
   margin-right: 4px;
   vertical-align: middle;
 }
+
+/* Modal Customization */
+.modal-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.modal-title {
+  font-family: Arial, sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+.modal-body {
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  color: #555;
+}
+
+.modal-body h6 {
+  font-weight: bold;
+  color: #333;
+  margin-top: 10px;
+}
+
+.modal-body ul {
+  padding-left: 20px;
+}
+
+.modal-body ul li {
+  margin-bottom: 5px;
+}
+
+.modal-footer {
+  border-top: 1px solid #dee2e6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-footer .btn {
+  padding: 6px 12px;
+  font-size: 14px;
+}
+
+#toolLogo {
+  max-width: 100px;
+  height: auto;
+  margin-bottom: 15px;
+}
+
+#toolLink {
+  display: block;
+  margin-top: 10px;
+  color: #007bff;
+  text-decoration: none;
+}
+
+#toolLink:hover {
+  text-decoration: underline;
+}
