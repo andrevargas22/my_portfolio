@@ -51,4 +51,5 @@ jobs:
           --service-account "${{ env.SERVICE_ACCOUNT }}" \
           --memory 2Gi \
           --allow-unauthenticated \
-          --port 8080
+          --port 8080 \
+          --set-env-vars "MNINST_ENDPOINT=${{ env.MNINST_ENDPOINT }}"
