@@ -13,10 +13,12 @@ jobs:
 
     env:
       REGION: us-central1            
-      PROJECT_ID: my-website-416300          
+      PROJECT_ID:  ${{ secrets.PROJECT_ID }}        
       REPOSITORY: website-repo
       SERVICE_ACCOUNT: site-sa
       SERVICE_NAME: website-dev
+      MNINST_ENDPOINT: ${{ secrets.MNIST_API_ENDPOINT }}
+
 
     steps:
     - name: Checkout
