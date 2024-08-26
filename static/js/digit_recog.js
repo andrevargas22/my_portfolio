@@ -1,3 +1,5 @@
+var apiEndpoint = "{{ mnist_endpoint }}";
+
 // Set up the canvas
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
@@ -154,7 +156,7 @@ function predict() {
     // Ajax post to route /predict
     $.ajax({
         type: "POST",
-        url: "https://fastapi-server-wno7iop4fa-uc.a.run.app/predict",  // Updated URL for FastAPI
+        url: apiEndpoint,  // Updated URL for FastAPI
         contentType: "application/json",
         data: JSON.stringify({
             imageBase64: dataURL
