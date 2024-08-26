@@ -40,7 +40,8 @@ def games():
 
 @app.route('/mnist_api')
 def mnist():
-    return render_template('eng/mnist.html')
+    mnist_endpoint = os.getenv('MNINST_ENDPOINT')
+    return render_template('eng/mnist.html', mnist_endpoint=mnist_endpoint)
 
 @app.route('/mlops')
 def mlops():
@@ -82,7 +83,8 @@ def games_pt():
 
 @app.route('/br/mnist_api')
 def mnist_pt():
-    return render_template('pt/mnist.html')
+    mnist_endpoint = os.getenv('MNINST_ENDPOINT')
+    return render_template('pt/mnist.html', mnist_endpoint=mnist_endpoint)
 
 ############################## COMMON ##############################
 
