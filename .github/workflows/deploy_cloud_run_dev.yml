@@ -17,8 +17,7 @@ jobs:
       REPOSITORY: website-repo
       SERVICE_ACCOUNT: site-sa
       SERVICE_NAME: website-dev
-      MNINST_ENDPOINT: ${{ secrets.MNIST_API_ENDPOINT }}
-
+      MNIST_ENDPOINT: ${{ secrets.MNIST_API_ENDPOINT }}
 
     steps:
     - name: Checkout
@@ -52,4 +51,4 @@ jobs:
           --memory 2Gi \
           --allow-unauthenticated \
           --port 8080 \
-          --set-env-vars "MNINST_ENDPOINT=${{ env.MNINST_ENDPOINT }}"
+          --set-env-vars "MNIST_ENDPOINT=${{ env.MNIST_ENDPOINT }}"
