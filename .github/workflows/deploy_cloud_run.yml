@@ -4,7 +4,7 @@ name: Deploy Flask Website
 
 on:
   push:
-    branches: [main]
+    branches: [bug/mnist_api]
 
 jobs:
   login-build-push:

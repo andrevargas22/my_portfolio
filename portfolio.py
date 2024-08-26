@@ -41,6 +41,8 @@ def games():
 @app.route('/mnist_api')
 def mnist():
     mnist_endpoint = os.getenv('MNIST_ENDPOINT')
+    print("############################")
+    print(mnist_endpoint)
     return render_template('eng/mnist.html', mnist_endpoint=mnist_endpoint)
 
 @app.route('/mlops')
