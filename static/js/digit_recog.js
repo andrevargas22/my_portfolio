@@ -1,4 +1,5 @@
-var apiEndpoint = "https://fastapi-server-wno7iop4fa-uc.a.run.app/predict";
+var apiEndpoint = "{{ mnist_endpoint }}";
+console.log("API Endpoint:", apiEndpoint);
 
 // Set up the canvas
 var canvas = document.getElementById("canvas");
