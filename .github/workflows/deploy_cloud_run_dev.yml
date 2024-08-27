@@ -4,7 +4,7 @@ name: Deploy Dev
 
 on:
   push:
-    branches: [bug/mnist_api]
+    branches: [dev]
 
 jobs:
   login-build-push:
