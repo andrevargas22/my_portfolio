@@ -1,5 +1,4 @@
-var apiEndpoint = "{{ mnist_endpoint }}";
-console.log("API Endpoint:", apiEndpoint);
+console.log("API Endpoint:", window.apiEndpoint);
 
 // Set up the canvas
 var canvas = document.getElementById("canvas");
