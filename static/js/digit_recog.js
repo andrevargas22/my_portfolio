@@ -154,7 +154,7 @@ function predict() {
     // Ajax post to route /predict
     $.ajax({
         type: "POST",
-        url: "https://fastapi-server-wno7iop4fa-uc.a.run.app/predict",  // Updated URL for FastAPI
+        url: window.apiEndpoint,
         contentType: "application/json",
         data: JSON.stringify({
             imageBase64: dataURL
