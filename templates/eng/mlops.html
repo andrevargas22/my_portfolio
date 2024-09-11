@@ -1,24 +1,21 @@
 <!doctype html>
 <html lang="en">
-
 <head>
     <!-- Header File -->
     {% include 'common/header.html' %}
+
     <!-- Page CSS -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/mlops.css') }}">
-</head>
 
+    <!-- Cytoscape.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.19.1/cytoscape.min.js"></script>
+
+</head>
 <body>
     <!-- Navigation Bar -->
     {% include 'common/navbar.html' %}
 
-    <!-- Required CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js"></script>
-
-    <div class="container">
+    <div class="container-fluid">
         <!-- Page Header -->
         <div class="row">
             <div class="col-lg-12 text-center my-2">
@@ -28,15 +25,63 @@
                 </center>
             </div>
         </div>
+
+        <div class="row">
+            <!-- Barra lateral -->
+            <div class="col-md-3 sidebar">
+                <h5>MLOPs Stack Builder</h5>
+                <p>Click on a block in the diagram to see more details.</p>
+            </div>
+
+            <!-- Área do diagrama -->
+            <div class="col-md-9">
+                <div id="cy" style="width: 100%; height: 550px; border: 1px solid #ccc;"></div>
+            </div>
+        </div>
     </div>
-        
+
+    <!-- Modal -->
+    <div class="modal fade" id="toolModal" tabindex="-1" aria-labelledby="toolModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="toolModalLabel">Tool Name</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <img id="toolLogo" src="" alt="Tool Logo" style="max-width: 100%; height: auto;">
+                        </div>
+                        <div class="col-md-8">
+                            <h6>Description:</h6>
+                            <p id="toolDescription">Tool Description</p>
+                            <h6>Advantages:</h6>
+                            <ul id="toolAdvantages">
+                                <li>Advantage 1</li>
+                                <li>Advantage 2</li>
+                            </ul>
+                            <h6>Disadvantages:</h6>
+                            <ul id="toolDisadvantages">
+                                <li>Disadvantage 1</li>
+                                <li>Disadvantage 2</li>
+                            </ul>
+                            <a id="toolLink" href="#" target="_blank">Visit Website</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="addToStackButton" data-bs-dismiss="modal">Add to Stack</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Bootstrap Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Page JS -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/mlops.js') }}"></script>
-
 </body>
-
 </html>
