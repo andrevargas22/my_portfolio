@@ -322,3 +322,11 @@ body {
 .row.justify-content-center {
     margin: 0; /* Reset margin */
 }
+
+.about-img {
+    border-radius: 50%; 
+    width: 450px; 
+    height: 450px; 
+    object-fit: cover; 
+    margin-left: 20px;
+}
