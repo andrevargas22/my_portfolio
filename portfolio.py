@@ -43,7 +43,7 @@ def mnist():
     mnist_endpoint = os.getenv('MNIST_ENDPOINT')
     print("############################")
     print(mnist_endpoint)
-    return render_template('eng/digit_recog.html', mnist_endpoint=mnist_endpoint)
+    return render_template('eng/mnist.html', mnist_endpoint=mnist_endpoint)
 
 @app.route('/mlops')
 def mlops():
@@ -86,7 +86,7 @@ def games_pt():
 @app.route('/br/mnist_api')
 def mnist_pt():
     mnist_endpoint = os.getenv('MNIST_ENDPOINT')
-    return render_template('pt/digit_recog.html', mnist_endpoint=mnist_endpoint)
+    return render_template('pt/mnist.html', mnist_endpoint=mnist_endpoint)
 
 ############################## COMMON ##############################
 
