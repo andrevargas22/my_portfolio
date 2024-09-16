@@ -55,6 +55,13 @@
         </div>
     </div>
     
+    <!-- Download Resume Button -->
+    <div class="row justify-content-center">
+        <div class="col-12 text-center">
+            <a href="{{ url_for('static', filename='resume.pdf') }}" class="btn btn-primary btn-resume" download="Andre_Resume.pdf">Download my Resumé!</a>
+        </div>
+    </div>
+
     <!-- Horizontal Timeline -->
     <div class="container experience">
         <div class="row">
@@ -81,7 +88,12 @@
                                     </li>
 
                                     <li>
-                                        <a href="#0" data-date="01/01/2012" class="selected">
+                                        <a href="#0" data-date="01/01/2012">
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="#0" data-date="01/01/2011" class="selected">
                                         </a>
                                     </li>
 
@@ -134,14 +146,22 @@
                                 </p>
                             </li>
                     
-                            <li class="selected" data-date="01/01/2012">
+                            <li data-date="01/01/2012">
                                 <h5>Stefanini Brasil</h5>
                                 <img src="static/images/icons/stefanini.png" alt="Stefanini Logo" class="img-fluid" style="max-width: 100px;">   
-                                <em>January 2024 - Present</em>
+                                <em>January 2024 - July 2024</em>
                                 <p><strong>Senior Data Scientist</strong><br>
                                     Currently working as a contractor within Banco do Brasil, developing different kinds of Machine Learning Models in the bank environment. 
                                     <br>• Development of credit risk models to estimate the probability of an asset becoming problematic.
                                     <br>• Development of managerial market projection models for Banco do Brasil.</p>
+                            </li>
+
+                            <li class="selected" data-date="01/01/2011">
+                                <h5>Grupo Casas Bahia</h5>
+                                <img src="static/images/icons/gcb.jpg" alt="GCB Logo" class="img-fluid" style="max-width: 100px;">   
+                                <em>August 2024 - Present</em>
+                                <p><strong>Machine Learning Engineer Specialist</strong><br>
+                                </p>
                             </li>
                         </ol>
                     </div> <!-- .events-content -->
@@ -149,13 +169,6 @@
             </div> <!-- end div experience -->
         </div> <!-- end row experience -->
     </div> <!-- end container experience -->
-
-    <!-- Download Resume Button -->
-    <div class="row justify-content-center">
-        <div class="col-12 text-center">
-            <a href="{{ url_for('static', filename='resume.pdf') }}" class="btn btn-primary btn-resume" download="Andre_Resume.pdf">Download my resumé!</a>
-        </div>
-    </div>
     
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
