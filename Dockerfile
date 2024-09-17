@@ -8,7 +8,7 @@ WORKDIR /app
 COPY requirements.txt .
 COPY static static
 COPY templates templates
-COPY portfolio.py .
+COPY website.py .
 
 # Install any dependencies specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
@@ -17,4 +17,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 8080
 
 # Define the command to run your Flask application when the container starts
-CMD ["python", "portfolio.py"]
+CMD ["python", "website.py"]
