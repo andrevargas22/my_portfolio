@@ -9,6 +9,9 @@ Author: André Vargas
 """
 
 import os
+import io
+from google.cloud import storage
+import csv
 from flask import Flask, render_template
 import feedparser
     
@@ -186,6 +189,41 @@ def render_map():
     """
     return render_template('common/folium.html')
 
+############################## TESTING ##############################
+
+# Inicializa o cliente do GCS fora da função
+client = storage.Client()
+bucket_name = 'remedios_andre'
+blob_name = 'data_remedios.csv'
+
+@app.route('/remedios')
+def remedios():
+    try:
+        # Obtém o bucket e o blob (arquivo)
+        bucket = client.get_bucket(bucket_name)
+        blob = bucket.blob(blob_name)
+
+        # Faz o download do conteúdo do blob como string
+        conteudo = blob.download_as_text()
+
+        # Usa o módulo csv para ler o conteúdo
+        leitor_csv = csv.reader(io.StringIO(conteudo))
+        dados = []
+
+        # Lê o cabeçalho do CSV
+        headers = next(leitor_csv)
+
+        # Itera sobre as linhas e cria uma lista de dicionários
+        for linha in leitor_csv:
+            item = dict(zip(headers, linha))
+            dados.append(item)
+
+        # Retorna os dados como JSON
+        return jsonify(dados)
+
+    except Exception as e:
+        return jsonify({'erro': str(e)}), 500
+    
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 8080))
     app.run(host='0.0.0.0', port=port)
