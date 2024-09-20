@@ -219,11 +219,11 @@ def remedios():
             item = dict(zip(headers, linha))
             dados.append(item)
 
-        # Retorna os dados como JSON
-        return jsonify(dados)
+        # Renderiza o template HTML com os dados
+        return render_template('eng/remedios.html', dados=dados, headers=headers)
 
     except Exception as e:
-        return jsonify({'erro': str(e)}), 500
+        return render_template('erro.html', mensagem=str(e)), 500
     
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 8080))
