@@ -60,6 +60,7 @@ body {
     font-size: 30px;
 }
 
+/* Ajustes para a timeline horizontal */
 .cd-horizontal-timeline {
     position: relative;
     width: 100%;
@@ -138,18 +139,21 @@ body {
     position: relative;
     width: 100%;
     margin: 2em 0;
-    transition: height 0.4s;
+    transition: min-height 0.4s ease-in-out;
 }
 
 .cd-horizontal-timeline .events-content li {
     position: absolute;
     z-index: 1;
     width: 100%;
+    /* Remova ou comente a linha abaixo */
+    /* height: 100%; */
     left: 0;
     top: 0;
     transform: translateX(-100%);
     padding: 0 5%;
     opacity: 0;
+    overflow: hidden; /* Você pode manter isso para evitar barras de rolagem internas */
     animation-duration: 0.4s;
     animation-timing-function: ease-in-out;
 }
@@ -183,6 +187,7 @@ body {
         width: 100%;
     }
 }
+
 
 /* Technical Skills */
 .technical-skills {
@@ -321,4 +326,12 @@ body {
 
 .row.justify-content-center {
     margin: 0; /* Reset margin */
+}
+
+.about-img {
+    border-radius: 50%; 
+    width: 450px; 
+    height: 450px; 
+    object-fit: cover; 
+    margin-left: 20px;
 }

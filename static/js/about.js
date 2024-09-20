@@ -1,6 +1,6 @@
 jQuery(document).ready(function($) {
     var timelines = $('.cd-horizontal-timeline'),
-        eventsMinDistance = 100; // Adjust this value to set the minimum distance between events
+        eventsMinDistance = 100; // Ajuste este valor conforme necessário
 
     if (timelines.length > 0) initTimeline(timelines);
 
@@ -9,7 +9,7 @@ jQuery(document).ready(function($) {
             var timeline = $(this),
                 timelineComponents = {};
 
-            // Cache timeline components
+            // Cache dos componentes da timeline
             timelineComponents['timelineWrapper'] = timeline.find('.events-wrapper');
             timelineComponents['eventsWrapper'] = timelineComponents['timelineWrapper'].children('.events');
             timelineComponents['fillingLine'] = timelineComponents['eventsWrapper'].children('.filling-line');
@@ -17,34 +17,25 @@ jQuery(document).ready(function($) {
             timelineComponents['timelineNavigation'] = timeline.find('.cd-timeline-navigation');
             timelineComponents['eventsContent'] = timeline.children('.events-content');
 
-            // Assign equal positions to the single events along the timeline
+            // Configurações iniciais
             setEqualPosition(timelineComponents);
-            // Assign a width to the timeline
             var timelineTotWidth = setTimelineWidth(timelineComponents);
-            // The timeline has been initialized - show it
             timeline.addClass('loaded');
 
-            // Select the most recent event by default
+            // Seleciona o evento mais recente por padrão
             var lastEvent = timelineComponents['timelineEvents'].last();
             lastEvent.addClass('selected');
             updateFilling(lastEvent, timelineComponents['fillingLine'], timelineTotWidth);
             updateVisibleContent(lastEvent, timelineComponents['eventsContent']);
 
-            // Show the content of the most recent event by default
+            // Mostra o conteúdo do evento mais recente por padrão
             timelineComponents['eventsContent'].find('li').removeClass('selected');
             timelineComponents['eventsContent'].find('[data-date="' + lastEvent.data('date') + '"]').addClass('selected');
 
-            // Detect click on the next arrow
-            timelineComponents['timelineNavigation'].on('click', '.next', function(event) {
-                event.preventDefault();
-                updateSlide(timelineComponents, timelineTotWidth, 'next');
-            });
-            // Detect click on the prev arrow
-            timelineComponents['timelineNavigation'].on('click', '.prev', function(event) {
-                event.preventDefault();
-                updateSlide(timelineComponents, timelineTotWidth, 'prev');
-            });
-            // Detect click on a single event - show new event content
+            // Define a altura máxima para o contêiner de conteúdo
+            setMaxHeight(timelineComponents['eventsContent']);
+
+            // Detecta clique em um evento - mostra o novo conteúdo
             timelineComponents['eventsWrapper'].on('click', 'a', function(event) {
                 event.preventDefault();
                 timelineComponents['timelineEvents'].removeClass('selected');
@@ -53,17 +44,7 @@ jQuery(document).ready(function($) {
                 updateVisibleContent($(this), timelineComponents['eventsContent']);
             });
 
-            // On swipe, show next/prev event content
-            timelineComponents['eventsContent'].on('swipeleft', function() {
-                var mq = checkMQ();
-                (mq == 'mobile') && showNewContent(timelineComponents, timelineTotWidth, 'next');
-            });
-            timelineComponents['eventsContent'].on('swiperight', function() {
-                var mq = checkMQ();
-                (mq == 'mobile') && showNewContent(timelineComponents, timelineTotWidth, 'prev');
-            });
-
-            // Keyboard navigation
+            // Navegação por teclado
             $(document).keyup(function(event) {
                 if (event.which == '37' && elementInViewport(timeline.get(0))) {
                     showNewContent(timelineComponents, timelineTotWidth, 'prev');
@@ -74,27 +55,39 @@ jQuery(document).ready(function($) {
         });
     }
 
-    // Function to set equal positions for the events along the timeline
+    // Função para definir a altura máxima dos blocos de conteúdo
+    function setMaxHeight(eventsContent) {
+        var maxHeight = 0;
+        eventsContent.find('li').each(function() {
+            var height = $(this).outerHeight();
+            if (height > maxHeight) {
+                maxHeight = height;
+            }
+        });
+        eventsContent.css('min-height', maxHeight + 'px');
+    }
+
+    // Função para posicionar os eventos igualmente na timeline
     function setEqualPosition(timelineComponents) {
         var totalEvents = timelineComponents['timelineEvents'].length;
         var totalWidth = Number(timelineComponents['timelineWrapper'].css('width').replace('px', ''));
         var centerIndex = Math.floor(totalEvents / 2);
         var distance = eventsMinDistance;
-        
+
         timelineComponents['timelineEvents'].each(function(index) {
             var position;
             if (totalEvents % 2 === 0) {
-                // Even number of events
+                // Número par de eventos
                 position = (index - centerIndex + 0.5) * distance + totalWidth / 2;
             } else {
-                // Odd number of events
+                // Número ímpar de eventos
                 position = (index - centerIndex) * distance + totalWidth / 2;
             }
             $(this).css('left', position + 'px');
         });
     }
 
-    // Function to set the total width of the timeline
+    // Função para definir a largura total da timeline
     function setTimelineWidth(timelineComponents) {
         var totalEvents = timelineComponents['timelineEvents'].length;
         var totalWidth = Number(timelineComponents['timelineWrapper'].css('width').replace('px', ''));
@@ -104,15 +97,31 @@ jQuery(document).ready(function($) {
         return width;
     }
 
-    // Function to update the timeline slide (next/prev)
-    function updateSlide(timelineComponents, timelineTotWidth, string) {
-        var translateValue = getTranslateValue(timelineComponents['eventsWrapper']),
-            wrapperWidth = Number(timelineComponents['timelineWrapper'].css('width').replace('px', ''));
-        (string == 'next') ?
-        translateTimeline(timelineComponents, translateValue - wrapperWidth + eventsMinDistance, wrapperWidth - timelineTotWidth) : translateTimeline(timelineComponents, translateValue + wrapperWidth - eventsMinDistance);
+    // Função para atualizar o conteúdo visível
+    function updateVisibleContent(event, eventsContent) {
+        var eventDate = event.data('date'),
+            visibleContent = eventsContent.find('.selected'),
+            selectedContent = eventsContent.find('[data-date="' + eventDate + '"]');
+
+        if (selectedContent.index() > visibleContent.index()) {
+            var classEntering = 'selected enter-right',
+                classLeaving = 'leave-left';
+        } else {
+            var classEntering = 'selected enter-left',
+                classLeaving = 'leave-right';
+        }
+
+        selectedContent.attr('class', classEntering);
+        visibleContent.attr('class', classLeaving).one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function() {
+            visibleContent.removeClass('leave-right leave-left');
+            selectedContent.removeClass('enter-left enter-right');
+        });
+
+        // Remova ou comente a linha abaixo para não ajustar a altura dinamicamente
+        // eventsContent.css('height', selectedContentHeight + 'px');
     }
 
-    // Function to show new content on slide or swipe
+    // Função para mostrar novo conteúdo ao navegar
     function showNewContent(timelineComponents, timelineTotWidth, string) {
         var visibleContent = timelineComponents['eventsContent'].find('.selected'),
             newContent = (string == 'next') ? visibleContent.next() : visibleContent.prev();
@@ -128,71 +137,17 @@ jQuery(document).ready(function($) {
         }
     }
 
-    // Function to translate the timeline
-    function translateTimeline(timelineComponents, value, totWidth) {
-        var eventsWrapper = timelineComponents['eventsWrapper'].get(0);
-        value = (value > 0) ? 0 : value;
-        value = (!(typeof totWidth === 'undefined') && value < totWidth) ? totWidth : value;
-        setTransformValue(eventsWrapper, 'translateX', value + 'px');
-        (value == 0) ? timelineComponents['timelineNavigation'].find('.prev').addClass('inactive') : timelineComponents['timelineNavigation'].find('.prev').removeClass('inactive');
-        (value == totWidth) ? timelineComponents['timelineNavigation'].find('.next').addClass('inactive') : timelineComponents['timelineNavigation'].find('.next').removeClass('inactive');
-    }
-
-    // Function to update the filling line
+    // Função para atualizar a linha de preenchimento
     function updateFilling(selectedEvent, filling, totWidth) {
         var eventStyle = window.getComputedStyle(selectedEvent.get(0), null),
             eventLeft = eventStyle.getPropertyValue("left"),
             eventWidth = eventStyle.getPropertyValue("width");
         eventLeft = Number(eventLeft.replace('px', '')) + Number(eventWidth.replace('px', '')) / 2;
-        var scaleValue = eventLeft / totWidth; // Scale value
+        var scaleValue = eventLeft / totWidth; // Valor de escala
         setTransformValue(filling.get(0), 'scaleX', scaleValue);
     }
 
-    // Function to update the visible content
-    function updateVisibleContent(event, eventsContent) {
-        var eventDate = event.data('date'),
-            visibleContent = eventsContent.find('.selected'),
-            selectedContent = eventsContent.find('[data-date="' + eventDate + '"]'),
-            selectedContentHeight = selectedContent.height();
-
-        if (selectedContent.index() > visibleContent.index()) {
-            var classEntering = 'selected enter-right',
-                classLeaving = 'leave-left';
-        } else {
-            var classEntering = 'selected enter-left',
-                classLeaving = 'leave-right';
-        }
-
-        selectedContent.attr('class', classEntering);
-        visibleContent.attr('class', classLeaving).one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function() {
-            visibleContent.removeClass('leave-right leave-left');
-            selectedContent.removeClass('enter-left enter-right');
-        });
-        eventsContent.css('height', selectedContentHeight + 'px');
-    }
-
-    // Function to get the translate value of the timeline
-    function getTranslateValue(timeline) {
-        var timelineStyle = window.getComputedStyle(timeline.get(0), null),
-            timelineTranslate = timelineStyle.getPropertyValue("-webkit-transform") ||
-            timelineStyle.getPropertyValue("-moz-transform") ||
-            timelineStyle.getPropertyValue("-ms-transform") ||
-            timelineStyle.getPropertyValue("-o-transform") ||
-            timelineStyle.getPropertyValue("transform");
-
-        if (timelineTranslate.indexOf('(') >= 0) {
-            var timelineTranslate = timelineTranslate.split('(')[1];
-            timelineTranslate = timelineTranslate.split(')')[0];
-            timelineTranslate = timelineTranslate.split(',');
-            var translateValue = timelineTranslate[4];
-        } else {
-            var translateValue = 0;
-        }
-
-        return Number(translateValue);
-    }
-
-    // Function to set the transform value of an element
+    // Função para definir o valor de transformação de um elemento
     function setTransformValue(element, property, value) {
         element.style["-webkit-transform"] = property + "(" + value + ")";
         element.style["-moz-transform"] = property + "(" + value + ")";
@@ -201,7 +156,7 @@ jQuery(document).ready(function($) {
         element.style["transform"] = property + "(" + value + ")";
     }
 
-    // Function to check if an element is in viewport
+    // Função para verificar se um elemento está na viewport
     function elementInViewport(el) {
         var top = el.offsetTop;
         var left = el.offsetLeft;
@@ -222,7 +177,28 @@ jQuery(document).ready(function($) {
         );
     }
 
-    // Function to check the media query
+    // Função para obter o valor de tradução da timeline
+    function getTranslateValue(timeline) {
+        var timelineStyle = window.getComputedStyle(timeline.get(0), null),
+            timelineTranslate = timelineStyle.getPropertyValue("-webkit-transform") ||
+            timelineStyle.getPropertyValue("-moz-transform") ||
+            timelineStyle.getPropertyValue("-ms-transform") ||
+            timelineStyle.getPropertyValue("-o-transform") ||
+            timelineStyle.getPropertyValue("transform");
+
+        if (timelineTranslate.indexOf('(') >= 0) {
+            var timelineTranslate = timelineTranslate.split('(')[1];
+            timelineTranslate = timelineTranslate.split(')')[0];
+            timelineTranslate = timelineTranslate.split(',');
+            var translateValue = timelineTranslate[4];
+        } else {
+            var translateValue = 0;
+        }
+
+        return Number(translateValue);
+    }
+
+    // Função para verificar a mídia query
     function checkMQ() {
         return window.getComputedStyle(document.querySelector('.cd-horizontal-timeline'), '::before').getPropertyValue('content').replace(/'/g, "").replace(/"/g, "");
     }

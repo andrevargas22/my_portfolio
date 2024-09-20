@@ -5,7 +5,7 @@
         <!-- Arquivo de Cabeçalho -->
         {% include 'common/header.html' %} 
         <!-- CSS da Página -->
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/digit_recog.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/mnist.css') }}">
     </head>
 
     <body>
@@ -36,8 +36,10 @@
             <div class="row">
                 <p>
                     <b>Instruções</b>: Desenhe um dígito no canvas abaixo e clique em "Predict!" para ver as três principais previsões do modelo, clique em "Clean" para começar de novo.
-                    Se o modelo estiver inativo, pode levar alguns segundos para carregar as previsões.
+                    Se o modelo estiver inativo, pode levar alguns segundos para carregar as previsões. O canvas funciona melhor em computadores, ainda 
+                    estou trabalhando na melhoria da experiência móvel!
                 </p>
+
                 <!-- Coluna do Canvas de Desenho -->
                 <div class="col-md-6 text-center">
                     <!-- Canvas de Desenho -->
@@ -74,7 +76,7 @@
     <!-- Bootstrap Bundle com Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     
-    <script type="text/javascript" src="{{ url_for('static', filename='js/digit_recog.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/mnist.js') }}"></script>
 
 </body>
 
