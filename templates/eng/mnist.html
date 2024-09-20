@@ -5,7 +5,7 @@
         <!-- Header File -->
         {% include 'common/header.html' %} 
         <!-- Page CSS -->
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/digit_recog.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/mnist.css') }}">
         <script type="text/javascript">
             // Defina a variável globalmente
             window.apiEndpoint = "{{ mnist_endpoint }}";
@@ -40,7 +40,7 @@
             <div class="row">
                 <p>
                     <b>Instructions</b>: Draw a digit in the canvas below and click "Predict!" to see the model's top three predictions, click "Clear" to start over. If the model is inactive,
-                    it may take a few seconds to load the predictions.
+                    it may take a few seconds to load the predictions. The canvas works better on computers, I'm still working on improving the mobile experience!
                 </p>
                 <!-- Drawing Canvas Column -->
                 <div class="col-md-6 text-center">
@@ -78,7 +78,7 @@
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     
-    <script type="text/javascript" src="{{ url_for('static', filename='js/digit_recog.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/mnist.js') }}"></script>
 
 </body>
 

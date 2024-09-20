@@ -9,7 +9,128 @@ body {
   margin-left: auto;
 }
 
-.navbar-nav > li{
-  margin-left:30px;
-  margin-right:30px;
+.navbar-nav > li {
+  margin-left: 30px;
+  margin-right: 30px;
+}
+
+/* Barra lateral */
+.sidebar {
+  min-height: 550px; /* Garante que a barra lateral tenha pelo menos a altura do diagrama */
+  background-color: #FFFAF0; /* Alinha com o fundo da página */
+  border-right: 1px solid #ccc;
+  padding: 20px;
+}
+
+#cy {
+  position: relative;
+  height: 500px;
+  overflow: scroll;
+}
+
+.tool-buttons {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px; /* Espaçamento entre os botões */
+}
+
+.tool-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 10px;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  width: auto;
+  height: auto;
+  text-align: center;
+}
+
+.tool-button img {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
+
+.tool-button span {
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  color: #333;
+}
+
+.cy-node-label {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.cy-node-label img {
+  width: 16px;
+  height: 16px;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+/* Modal Customization */
+.modal-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.modal-title {
+  font-family: Arial, sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+.modal-body {
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  color: #555;
+}
+
+.modal-body h6 {
+  font-weight: bold;
+  color: #333;
+  margin-top: 10px;
+}
+
+.modal-body ul {
+  padding-left: 20px;
+}
+
+.modal-body ul li {
+  margin-bottom: 5px;
+}
+
+.modal-footer {
+  border-top: 1px solid #dee2e6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-footer .btn {
+  padding: 6px 12px;
+  font-size: 14px;
+}
+
+#toolLogo {
+  max-width: 100px;
+  height: auto;
+  margin-bottom: 15px;
+}
+
+#toolLink {
+  display: block;
+  margin-top: 10px;
+  color: #007bff;
+  text-decoration: none;
+}
+
+#toolLink:hover {
+  text-decoration: underline;
 }
