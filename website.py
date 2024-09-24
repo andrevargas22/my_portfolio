@@ -255,7 +255,7 @@ def remedios():
             return redirect(url_for('remedios'))
 
         # Renderiza o template HTML com os dados
-        return render_template('remedios.html', dados=dados, headers=headers)
+        return render_template('eng/remedios.html', dados=dados, headers=headers)
 
     except Exception as e:
         return render_template('erro.html', mensagem=str(e)), 500
@@ -304,7 +304,7 @@ def calcular():
         ultimo_dia = hoje + timedelta(days=dias_restantes)
 
         # Renderiza o resultado em um template
-        return render_template('resultado.html', ultimo_dia=ultimo_dia.strftime('%d/%m/%Y'), dias_restantes=dias_restantes)
+        return render_template('eng/resultado.html', ultimo_dia=ultimo_dia.strftime('%d/%m/%Y'), dias_restantes=dias_restantes)
 
     except Exception as e:
         return render_template('erro.html', mensagem=str(e)), 500
