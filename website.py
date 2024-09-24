@@ -236,8 +236,6 @@ def remedios():
                 if 'n_tacrolimus' in item and 'n_azatioprina' in item:
                     item['n_tacrolimus'] = str(int(item['n_tacrolimus']) + n_tacrolimus_adicionar)
                     item['n_azatioprina'] = str(int(item['n_azatioprina']) + n_azatioprina_adicionar)
-                    # Atualiza a data para a data atual
-                    item['last_date'] = datetime.now().strftime('%Y-%m-%d')
                 else:
                     print("Item com chaves ausentes:", item)
 
@@ -257,7 +255,7 @@ def remedios():
             return redirect(url_for('remedios'))
 
         # Renderiza o template HTML com os dados
-        return render_template('eng/remedios.html', dados=dados, headers=headers)
+        return render_template('remedios.html', dados=dados, headers=headers)
 
     except Exception as e:
         return render_template('erro.html', mensagem=str(e)), 500
@@ -306,7 +304,7 @@ def calcular():
         ultimo_dia = hoje + timedelta(days=dias_restantes)
 
         # Renderiza o resultado em um template
-        return render_template('eng/resultado.html', ultimo_dia=ultimo_dia.strftime('%d/%m/%Y'), dias_restantes=dias_restantes)
+        return render_template('resultado.html', ultimo_dia=ultimo_dia.strftime('%d/%m/%Y'), dias_restantes=dias_restantes)
 
     except Exception as e:
         return render_template('erro.html', mensagem=str(e)), 500
