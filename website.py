@@ -211,12 +211,17 @@ def remedios():
         leitor_csv = csv.reader(io.StringIO(conteudo))
         dados = []
 
-        # Lê o cabeçalho do CSV
-        headers = next(leitor_csv)
+        # Lê o cabeçalho do CSV e padroniza
+        headers = [h.strip().lower() for h in next(leitor_csv)]
+        print("Cabeçalhos padronizados:", headers)  # Para depuração
 
         # Itera sobre as linhas e cria uma lista de dicionários
         for linha in leitor_csv:
+            if not linha or len(linha) != len(headers):
+                print("Linha inválida ou vazia ignorada:", linha)
+                continue
             item = dict(zip(headers, linha))
+            print("Item:", item)  # Para depuração
             dados.append(item)
 
         # Verifica se é uma requisição POST (formulário enviado)
@@ -227,17 +232,18 @@ def remedios():
 
             # Atualiza os valores
             for item in dados:
-                if item['nome'] == 'Tacrolimus':
-                    item['quantidade'] = str(int(item['quantidade']) + n_tacrolimus_adicionar)
-                elif item['nome'] == 'Azatioprina':
-                    item['quantidade'] = str(int(item['quantidade']) + n_azatioprina_adicionar)
+                if 'n_tacrolimus' in item and 'n_azatioprina' in item:
+                    item['n_tacrolimus'] = str(int(item['n_tacrolimus']) + n_tacrolimus_adicionar)
+                    item['n_azatioprina'] = str(int(item['n_azatioprina']) + n_azatioprina_adicionar)
+                else:
+                    print("Item com chaves ausentes:", item)
 
             # Converte os dados de volta para o formato CSV
             saida = io.StringIO()
             escritor_csv = csv.writer(saida)
             escritor_csv.writerow(headers)
             for item in dados:
-                linha = [item[header] for header in headers]
+                linha = [item.get(header, '') for header in headers]
                 escritor_csv.writerow(linha)
             conteudo_atualizado = saida.getvalue()
 
@@ -252,6 +258,7 @@ def remedios():
 
     except Exception as e:
         return render_template('erro.html', mensagem=str(e)), 500
+
     
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 8080))
