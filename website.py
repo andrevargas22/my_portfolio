@@ -12,7 +12,7 @@ import os
 import io
 from google.cloud import storage
 import csv
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for, request
 import feedparser
 import jsonify
     
@@ -197,7 +197,7 @@ client = storage.Client()
 bucket_name = 'remedios_andre'
 blob_name = 'data_remedios.csv'
 
-@app.route('/remedios')
+@app.route('/remedios', methods=['GET', 'POST'])
 def remedios():
     try:
         # Obtém o bucket e o blob (arquivo)
@@ -219,8 +219,36 @@ def remedios():
             item = dict(zip(headers, linha))
             dados.append(item)
 
+        # Verifica se é uma requisição POST (formulário enviado)
+        if request.method == 'POST':
+            # Obtém os valores do formulário
+            n_tacrolimus_adicionar = int(request.form.get('n_tacrolimus', 0))
+            n_azatioprina_adicionar = int(request.form.get('n_azatioprina', 0))
+
+            # Atualiza os valores
+            for item in dados:
+                if item['nome'] == 'Tacrolimus':
+                    item['quantidade'] = str(int(item['quantidade']) + n_tacrolimus_adicionar)
+                elif item['nome'] == 'Azatioprina':
+                    item['quantidade'] = str(int(item['quantidade']) + n_azatioprina_adicionar)
+
+            # Converte os dados de volta para o formato CSV
+            saida = io.StringIO()
+            escritor_csv = csv.writer(saida)
+            escritor_csv.writerow(headers)
+            for item in dados:
+                linha = [item[header] for header in headers]
+                escritor_csv.writerow(linha)
+            conteudo_atualizado = saida.getvalue()
+
+            # Faz o upload do conteúdo atualizado para o GCS
+            blob.upload_from_string(conteudo_atualizado, content_type='text/csv')
+
+            # Redireciona para a mesma página para evitar reenvio de formulário
+            return redirect(url_for('remedios'))
+
         # Renderiza o template HTML com os dados
-        return render_template('eng/remedios.html', dados=dados, headers=headers)
+        return render_template('remedios.html', dados=dados, headers=headers)
 
     except Exception as e:
         return render_template('erro.html', mensagem=str(e)), 500
