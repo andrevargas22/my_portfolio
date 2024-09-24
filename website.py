@@ -14,6 +14,7 @@ from google.cloud import storage
 import csv
 from flask import Flask, render_template, redirect, url_for, request
 import feedparser
+from datetime import datetime, timedelta
 import jsonify
     
 app = Flask(__name__)
@@ -235,6 +236,8 @@ def remedios():
                 if 'n_tacrolimus' in item and 'n_azatioprina' in item:
                     item['n_tacrolimus'] = str(int(item['n_tacrolimus']) + n_tacrolimus_adicionar)
                     item['n_azatioprina'] = str(int(item['n_azatioprina']) + n_azatioprina_adicionar)
+                    # Atualiza a data para a data atual
+                    item['last_date'] = datetime.now().strftime('%Y-%m-%d')
                 else:
                     print("Item com chaves ausentes:", item)
 
@@ -255,6 +258,55 @@ def remedios():
 
         # Renderiza o template HTML com os dados
         return render_template('eng/remedios.html', dados=dados, headers=headers)
+
+    except Exception as e:
+        return render_template('erro.html', mensagem=str(e)), 500
+
+@app.route('/calcular')
+def calcular():
+    try:
+        # Obtém o bucket e o blob (arquivo)
+        bucket = client.get_bucket(bucket_name)
+        blob = bucket.blob(blob_name)
+
+        # Faz o download do conteúdo do blob como string
+        conteudo = blob.download_as_text()
+
+        # Usa o módulo csv para ler o conteúdo
+        leitor_csv = csv.reader(io.StringIO(conteudo))
+
+        # Lê o cabeçalho do CSV e padroniza
+        headers = [h.strip().lower() for h in next(leitor_csv)]
+        print("Cabeçalhos padronizados:", headers)  # Para depuração
+
+        # Itera sobre as linhas e cria um dicionário com os dados
+        for linha in leitor_csv:
+            if not linha or len(linha) != len(headers):
+                print("Linha inválida ou vazia ignorada:", linha)
+                continue
+            item = dict(zip(headers, linha))
+            print("Item:", item)  # Para depuração
+
+        # Extrai as quantidades atuais dos remédios
+        n_tacrolimus = int(item.get('n_tacrolimus', 0))
+        n_azatioprina = int(item.get('n_azatioprina', 0))
+
+        # Consumo diário
+        consumo_tacrolimus = 6
+        consumo_azatioprina = 4
+
+        # Calcula o número de dias restantes para cada remédio
+        dias_tacrolimus = n_tacrolimus // consumo_tacrolimus if consumo_tacrolimus > 0 else 0
+        dias_azatioprina = n_azatioprina // consumo_azatioprina if consumo_azatioprina > 0 else 0
+
+        # Determina o último dia em que será possível tomar todos os remédios
+        dias_restantes = min(dias_tacrolimus, dias_azatioprina)
+        dias_restantes = max(dias_restantes, 0)  # Garante que não seja negativo
+        hoje = datetime.now().date()
+        ultimo_dia = hoje + timedelta(days=dias_restantes)
+
+        # Renderiza o resultado em um template
+        return render_template('eng/resultado.html', ultimo_dia=ultimo_dia.strftime('%d/%m/%Y'), dias_restantes=dias_restantes)
 
     except Exception as e:
         return render_template('erro.html', mensagem=str(e)), 500
