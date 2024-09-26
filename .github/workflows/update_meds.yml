@@ -35,4 +35,4 @@ jobs:
         env:
           GOOGLE_APPLICATION_CREDENTIALS: /dev/null
         run: |
-          python src/update_medications.py
+          python src/update_medicine.py
