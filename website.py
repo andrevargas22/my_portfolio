@@ -275,12 +275,10 @@ def calcular():
 
         # Lê o cabeçalho do CSV e padroniza
         headers = [h.strip().lower() for h in next(leitor_csv)]
-        print("Cabeçalhos padronizados:", headers)  # Para depuração
 
         # Itera sobre as linhas e cria um dicionário com os dados
         for linha in leitor_csv:
             if not linha or len(linha) != len(headers):
-                print("Linha inválida ou vazia ignorada:", linha)
                 continue
             item = dict(zip(headers, linha))
             print("Item:", item)  # Para depuração
