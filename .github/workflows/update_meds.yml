@@ -1,0 +1,38 @@
+name: Atualizar Medicações
+
+on:
+  schedule:
+    # Agendar para 10h e 22h no fuso horário local (UTC-3)
+    # GitHub Actions usa UTC, então ajustamos os horários
+    - cron: '0 13 * * *'  # 10h locais (13h UTC)
+    - cron: '0 1 * * *'   # 22h locais (1h UTC)
+  workflow_dispatch:  # Permite disparar manualmente o workflow
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v3
+
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Instalar dependências
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Autenticar com o Google Cloud
+        uses: google-github-actions/auth@v1
+        with: 
+          credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
+
+      - name: Executar o script de atualização
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: /dev/null
+        run: |
+          python update_medications.py
