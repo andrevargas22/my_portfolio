@@ -32,7 +32,5 @@ jobs:
           credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
 
       - name: Executar o script de atualização
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: /dev/null
         run: |
           python src/update_medicine.py
