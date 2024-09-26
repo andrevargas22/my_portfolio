@@ -9,8 +9,13 @@ Author: André Vargas
 """
 
 import os
-from flask import Flask, render_template
+import io
+from google.cloud import storage
+import csv
+from flask import Flask, render_template, redirect, url_for, request
 import feedparser
+from datetime import datetime, timedelta
+import jsonify
     
 app = Flask(__name__)
 
@@ -186,6 +191,123 @@ def render_map():
     """
     return render_template('common/folium.html')
 
+############################## TESTING ##############################
+
+# Inicializa o cliente do GCS fora da função
+client = storage.Client()
+bucket_name = 'remedios_andre'
+blob_name = 'data_remedios.csv'
+
+@app.route('/remedios', methods=['GET', 'POST'])
+def remedios():
+    try:
+        # Obtém o bucket e o blob (arquivo)
+        bucket = client.get_bucket(bucket_name)
+        blob = bucket.blob(blob_name)
+
+        # Faz o download do conteúdo do blob como string
+        conteudo = blob.download_as_text()
+
+        # Usa o módulo csv para ler o conteúdo
+        leitor_csv = csv.reader(io.StringIO(conteudo))
+        dados = []
+
+        # Lê o cabeçalho do CSV e padroniza
+        headers = [h.strip().lower() for h in next(leitor_csv)]
+        print("Cabeçalhos padronizados:", headers)  # Para depuração
+
+        # Itera sobre as linhas e cria uma lista de dicionários
+        for linha in leitor_csv:
+            if not linha or len(linha) != len(headers):
+                print("Linha inválida ou vazia ignorada:", linha)
+                continue
+            item = dict(zip(headers, linha))
+            print("Item:", item)  # Para depuração
+            dados.append(item)
+
+        # Verifica se é uma requisição POST (formulário enviado)
+        if request.method == 'POST':
+            # Obtém os valores do formulário
+            n_tacrolimus_adicionar = int(request.form.get('n_tacrolimus', 0))
+            n_azatioprina_adicionar = int(request.form.get('n_azatioprina', 0))
+
+            # Atualiza os valores
+            for item in dados:
+                if 'n_tacrolimus' in item and 'n_azatioprina' in item:
+                    item['n_tacrolimus'] = str(int(item['n_tacrolimus']) + n_tacrolimus_adicionar)
+                    item['n_azatioprina'] = str(int(item['n_azatioprina']) + n_azatioprina_adicionar)
+                else:
+                    print("Item com chaves ausentes:", item)
+
+            # Converte os dados de volta para o formato CSV
+            saida = io.StringIO()
+            escritor_csv = csv.writer(saida)
+            escritor_csv.writerow(headers)
+            for item in dados:
+                linha = [item.get(header, '') for header in headers]
+                escritor_csv.writerow(linha)
+            conteudo_atualizado = saida.getvalue()
+
+            # Faz o upload do conteúdo atualizado para o GCS
+            blob.upload_from_string(conteudo_atualizado, content_type='text/csv')
+
+            # Redireciona para a mesma página para evitar reenvio de formulário
+            return redirect(url_for('remedios'))
+
+        # Renderiza o template HTML com os dados
+        return render_template('eng/remedios.html', dados=dados, headers=headers)
+
+    except Exception as e:
+        return render_template('erro.html', mensagem=str(e)), 500
+
+@app.route('/calcular')
+def calcular():
+    try:
+        # Obtém o bucket e o blob (arquivo)
+        bucket = client.get_bucket(bucket_name)
+        blob = bucket.blob(blob_name)
+
+        # Faz o download do conteúdo do blob como string
+        conteudo = blob.download_as_text()
+
+        # Usa o módulo csv para ler o conteúdo
+        leitor_csv = csv.reader(io.StringIO(conteudo))
+
+        # Lê o cabeçalho do CSV e padroniza
+        headers = [h.strip().lower() for h in next(leitor_csv)]
+
+        # Itera sobre as linhas e cria um dicionário com os dados
+        for linha in leitor_csv:
+            if not linha or len(linha) != len(headers):
+                continue
+            item = dict(zip(headers, linha))
+            print("Item:", item)  # Para depuração
+
+        # Extrai as quantidades atuais dos remédios
+        n_tacrolimus = int(item.get('n_tacrolimus', 0))
+        n_azatioprina = int(item.get('n_azatioprina', 0))
+
+        # Consumo diário
+        consumo_tacrolimus = 6
+        consumo_azatioprina = 4
+
+        # Calcula o número de dias restantes para cada remédio
+        dias_tacrolimus = n_tacrolimus // consumo_tacrolimus if consumo_tacrolimus > 0 else 0
+        dias_azatioprina = n_azatioprina // consumo_azatioprina if consumo_azatioprina > 0 else 0
+
+        # Determina o último dia em que será possível tomar todos os remédios
+        dias_restantes = min(dias_tacrolimus, dias_azatioprina)
+        dias_restantes = max(dias_restantes, 0)  # Garante que não seja negativo
+        hoje = datetime.now().date()
+        ultimo_dia = hoje + timedelta(days=dias_restantes)
+
+        # Renderiza o resultado em um template
+        return render_template('eng/resultado.html', ultimo_dia=ultimo_dia.strftime('%d/%m/%Y'), dias_restantes=dias_restantes)
+
+    except Exception as e:
+        return render_template('erro.html', mensagem=str(e)), 500
+
+    
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 8080))
     app.run(host='0.0.0.0', port=port)
