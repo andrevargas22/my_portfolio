@@ -51,6 +51,7 @@ def update_medications():
                 item['n_tacrolimus'] = str(int(item['n_tacrolimus']) - 3)
     else:
         print("Fora do horário de atualização")
+        print(dados)
         return
 
     # Atualiza o arquivo no GCS
