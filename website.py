@@ -282,7 +282,7 @@ def calcular():
         )
 
     except Exception as e:
-        # Render an error template with the exception message
+        # Render an error template with the exception message if an error occurs
         return render_template('erro.html', mensagem=str(e)), 500
 
 
