@@ -1,27 +1,25 @@
-name: Atualizar Medicações
+name: Update Personal Medicine Counter
 
 on:
   schedule:
-    # Agendar para 10h e 22h no fuso horário local (UTC-3)
-    # GitHub Actions usa UTC, então ajustamos os horários
-    - cron: '0 13 * * *'  # 10h locais (13h UTC)
-    - cron: '0 1 * * *'   # 22h locais (1h UTC)
-  workflow_dispatch:  # Permite disparar manualmente o workflow
+    - cron: '0 13 * * *'  
+    - cron: '0 1 * * *'  
+  workflow_dispatch:  
 
 jobs:
   update:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout do repositório
+      - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Configurar Python
+      - name: Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
 
-      - name: Instalar dependências
+      - name: Install dependencies
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
@@ -31,6 +29,6 @@ jobs:
         with: 
           credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
 
-      - name: Executar o script de atualização
+      - name: Execute script
         run: |
           python src/update_medicine.py

@@ -22,7 +22,7 @@ body {
 /* Header Styles */
 .header-title {
   text-align: center;
-  font-family: 'Montserrat', sans-serif; /* Ensure the same font family */
+  font-family: 'Montserrat', sans-serif;
   font-size: 24px;
   font-weight: bold;
   border-bottom: 2px solid #000;
@@ -35,5 +35,3 @@ body {
   height: 600px;
   border: none;
 }
-
-/* Add any additional common styles here */

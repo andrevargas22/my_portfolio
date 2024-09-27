@@ -15,7 +15,6 @@ import csv
 from flask import Flask, render_template, redirect, url_for, request
 import feedparser
 from datetime import datetime, timedelta
-import jsonify
     
 app = Flask(__name__)
 
