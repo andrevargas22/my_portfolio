@@ -154,6 +154,138 @@ def mnist_pt():
     mnist_endpoint = os.getenv('MNIST_ENDPOINT')
     return render_template('pt/mnist.html', mnist_endpoint=mnist_endpoint)
 
+client = storage.Client()
+bucket_name = 'remedios_andre'
+blob_name = 'data_remedios.csv'
+
+@app.route('/remedios', methods=['GET', 'POST'])
+def remedios():
+    """
+    Handles the '/remedios' route for displaying and updating medication quantities.
+
+    - On GET request: Displays the current medication data.
+    - On POST request: Updates the medication quantities based on form input.
+    """
+    try:
+        
+        # Get the bucket and blob from Google Cloud Storage
+        bucket = client.get_bucket(bucket_name)
+        blob = bucket.blob(blob_name)
+
+        # Download the content of the blob as text
+        content = blob.download_as_text()
+
+        # Read CSV content
+        csv_reader = csv.reader(io.StringIO(content))
+        data = []
+
+        # Get headers from the CSV and convert them to lowercase
+        headers = [h.strip().lower() for h in next(csv_reader)]
+
+        # Read CSV data and create a list of dictionaries
+        for row in csv_reader:
+            if not row or len(row) != len(headers):
+                print("Invalid or empty row ignored:", row)
+                continue
+            item = dict(zip(headers, row))
+            print("Item:", item)  
+            data.append(item)
+
+        if request.method == 'POST':
+            # Get the values from the form submission, defaulting to 0 if not provided
+            n_tacrolimus_add = int(request.form.get('n_tacrolimus', 0))
+            n_azathioprine_add = int(request.form.get('n_azatioprina', 0))
+
+            # Update the medication quantities
+            for item in data:
+                if 'n_tacrolimus' in item and 'n_azatioprina' in item:
+                    item['n_tacrolimus'] = str(int(item['n_tacrolimus']) + n_tacrolimus_add)
+                    item['n_azatioprina'] = str(int(item['n_azatioprina']) + n_azathioprine_add)
+                else:
+                    print("Item with missing keys:", item)
+
+            # Write the updated data back to CSV
+            output = io.StringIO()
+            csv_writer = csv.writer(output)
+            csv_writer.writerow(headers)
+            for item in data:
+                row = [item.get(header, '') for header in headers]
+                csv_writer.writerow(row)
+            updated_content = output.getvalue()
+
+            # Upload the updated content back to the blob
+            blob.upload_from_string(updated_content, content_type='text/csv')
+
+            # Redirect to the same route to display updated data
+            return redirect(url_for('remedios'))
+
+        # Render the template with the current data
+        return render_template('pt/remedios.html', dados=data, headers=headers)
+
+    except Exception as e:
+        # Render an error template with the exception message
+        return render_template('erro.html', mensagem=str(e)), 500
+
+@app.route('/calcular')
+def calcular():
+    """
+    Handles the '/calcular' route to calculate and display the remaining days of medication supply.
+
+    - Reads medication quantities from a CSV file in Google Cloud Storage.
+    - Calculates how many days are left based on daily consumption rates.
+    - Renders a result template with the calculated data.
+    """
+    try:
+        # Get the bucket and blob from Google Cloud Storage
+        bucket = client.get_bucket(bucket_name)
+        blob = bucket.blob(blob_name)
+
+        # Download the content of the blob as text
+        content = blob.download_as_text()
+
+        # Read CSV content
+        csv_reader = csv.reader(io.StringIO(content))
+
+        # Get headers from the CSV and convert them to lowercase
+        headers = [h.strip().lower() for h in next(csv_reader)]
+
+        # Read the last valid row from the CSV (assuming it contains current quantities)
+        for row in csv_reader:
+            if not row or len(row) != len(headers):
+                continue
+            item = dict(zip(headers, row))
+
+        # Get medication quantities, defaulting to 0 if not present
+        n_tacrolimus = int(item.get('n_tacrolimus', 0))
+        n_azathioprine = int(item.get('n_azatioprina', 0))
+
+        # Define daily consumption rates
+        tacrolimus_consumption = 6
+        azathioprine_consumption = 4
+
+        # Calculate the number of days left for each medication
+        days_tacrolimus = n_tacrolimus // tacrolimus_consumption if tacrolimus_consumption > 0 else 0
+        days_azathioprine = n_azathioprine // azathioprine_consumption if azathioprine_consumption > 0 else 0
+
+        # Determine the minimum days left between the two medications
+        days_remaining = min(days_tacrolimus, days_azathioprine)
+        days_remaining = max(days_remaining, 0)  # Ensure non-negative value
+
+        today = datetime.now().date()
+        last_day = today + timedelta(days=days_remaining)
+
+        # Render the result template with the calculated data
+        return render_template(
+            'pt/resultado.html',
+            ultimo_dia=last_day.strftime('%d/%m/%Y'),
+            dias_restantes=days_remaining
+        )
+
+    except Exception as e:
+        # Render an error template with the exception message
+        return render_template('erro.html', mensagem=str(e)), 500
+
+
 ############################## COMMON FUNCTIONS ##############################
 
 def fetch_articles():
@@ -189,123 +321,6 @@ def render_map():
         Template: The folium.html template for displaying the map.
     """
     return render_template('common/folium.html')
-
-############################## TESTING ##############################
-
-# Inicializa o cliente do GCS fora da função
-client = storage.Client()
-bucket_name = 'remedios_andre'
-blob_name = 'data_remedios.csv'
-
-@app.route('/remedios', methods=['GET', 'POST'])
-def remedios():
-    try:
-        # Obtém o bucket e o blob (arquivo)
-        bucket = client.get_bucket(bucket_name)
-        blob = bucket.blob(blob_name)
-
-        # Faz o download do conteúdo do blob como string
-        conteudo = blob.download_as_text()
-
-        # Usa o módulo csv para ler o conteúdo
-        leitor_csv = csv.reader(io.StringIO(conteudo))
-        dados = []
-
-        # Lê o cabeçalho do CSV e padroniza
-        headers = [h.strip().lower() for h in next(leitor_csv)]
-        print("Cabeçalhos padronizados:", headers)  # Para depuração
-
-        # Itera sobre as linhas e cria uma lista de dicionários
-        for linha in leitor_csv:
-            if not linha or len(linha) != len(headers):
-                print("Linha inválida ou vazia ignorada:", linha)
-                continue
-            item = dict(zip(headers, linha))
-            print("Item:", item)  # Para depuração
-            dados.append(item)
-
-        # Verifica se é uma requisição POST (formulário enviado)
-        if request.method == 'POST':
-            # Obtém os valores do formulário
-            n_tacrolimus_adicionar = int(request.form.get('n_tacrolimus', 0))
-            n_azatioprina_adicionar = int(request.form.get('n_azatioprina', 0))
-
-            # Atualiza os valores
-            for item in dados:
-                if 'n_tacrolimus' in item and 'n_azatioprina' in item:
-                    item['n_tacrolimus'] = str(int(item['n_tacrolimus']) + n_tacrolimus_adicionar)
-                    item['n_azatioprina'] = str(int(item['n_azatioprina']) + n_azatioprina_adicionar)
-                else:
-                    print("Item com chaves ausentes:", item)
-
-            # Converte os dados de volta para o formato CSV
-            saida = io.StringIO()
-            escritor_csv = csv.writer(saida)
-            escritor_csv.writerow(headers)
-            for item in dados:
-                linha = [item.get(header, '') for header in headers]
-                escritor_csv.writerow(linha)
-            conteudo_atualizado = saida.getvalue()
-
-            # Faz o upload do conteúdo atualizado para o GCS
-            blob.upload_from_string(conteudo_atualizado, content_type='text/csv')
-
-            # Redireciona para a mesma página para evitar reenvio de formulário
-            return redirect(url_for('remedios'))
-
-        # Renderiza o template HTML com os dados
-        return render_template('eng/remedios.html', dados=dados, headers=headers)
-
-    except Exception as e:
-        return render_template('erro.html', mensagem=str(e)), 500
-
-@app.route('/calcular')
-def calcular():
-    try:
-        # Obtém o bucket e o blob (arquivo)
-        bucket = client.get_bucket(bucket_name)
-        blob = bucket.blob(blob_name)
-
-        # Faz o download do conteúdo do blob como string
-        conteudo = blob.download_as_text()
-
-        # Usa o módulo csv para ler o conteúdo
-        leitor_csv = csv.reader(io.StringIO(conteudo))
-
-        # Lê o cabeçalho do CSV e padroniza
-        headers = [h.strip().lower() for h in next(leitor_csv)]
-
-        # Itera sobre as linhas e cria um dicionário com os dados
-        for linha in leitor_csv:
-            if not linha or len(linha) != len(headers):
-                continue
-            item = dict(zip(headers, linha))
-            print("Item:", item)  # Para depuração
-
-        # Extrai as quantidades atuais dos remédios
-        n_tacrolimus = int(item.get('n_tacrolimus', 0))
-        n_azatioprina = int(item.get('n_azatioprina', 0))
-
-        # Consumo diário
-        consumo_tacrolimus = 6
-        consumo_azatioprina = 4
-
-        # Calcula o número de dias restantes para cada remédio
-        dias_tacrolimus = n_tacrolimus // consumo_tacrolimus if consumo_tacrolimus > 0 else 0
-        dias_azatioprina = n_azatioprina // consumo_azatioprina if consumo_azatioprina > 0 else 0
-
-        # Determina o último dia em que será possível tomar todos os remédios
-        dias_restantes = min(dias_tacrolimus, dias_azatioprina)
-        dias_restantes = max(dias_restantes, 0)  # Garante que não seja negativo
-        hoje = datetime.now().date()
-        ultimo_dia = hoje + timedelta(days=dias_restantes)
-
-        # Renderiza o resultado em um template
-        return render_template('eng/resultado.html', ultimo_dia=ultimo_dia.strftime('%d/%m/%Y'), dias_restantes=dias_restantes)
-
-    except Exception as e:
-        return render_template('erro.html', mensagem=str(e)), 500
-
     
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 8080))
