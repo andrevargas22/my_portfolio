@@ -16,5 +16,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Expose the port that Flask runs on
 EXPOSE 8080
 
-# Define the command to run your Flask application when the container starts
+# Command to run the Flask application when the container starts
 CMD ["python", "website.py"]

@@ -1,25 +1,32 @@
-from google.cloud import storage
+"""
+This script reads a CSV file from a Google Cloud Storage bucket, updates the medication quantities based on the current time, 
+and uploads the updated data back to the bucket. It is triggered by GitHub Actions at 10:00 and 22:00 UTC-3.
+
+This is only for personal use and should not be used as a reference for best practices.
+"""
+
 import csv
 import io
-from datetime import datetime, timedelta
+from google.cloud import storage
+from datetime import datetime
 
 def update_medications():
     
-    # Nome do bucket e arquivo CSV
+    # Bucket and blob names
     bucket_name = 'remedios_andre'
     blob_name = 'data_remedios.csv'
 
-    # Inicializa o cliente do GCS usando as credenciais fornecidas pelo ambiente
+    # Connects to the bucket and blob
     client = storage.Client()
 
     bucket = client.bucket(bucket_name)
     blob = bucket.blob(blob_name)
 
-    # Faz o download do conteúdo do CSV
+    # Downloads the CSV file
     conteudo = blob.download_as_text()
     leitor_csv = csv.reader(io.StringIO(conteudo))
 
-    # Lê o cabeçalho e os dados
+    # Reads the CSV file
     headers = [h.strip().lower() for h in next(leitor_csv)]
     dados = []
     for linha in leitor_csv:
@@ -28,33 +35,30 @@ def update_medications():
         item = dict(zip(headers, linha))
         dados.append(item)
 
-    # Checa horário
+    # Updates the medication quantities based on the current time
     now = datetime.utcnow()
-    hora_local = (now.hour - 3) % 24  # Ajuste para UTC-3
+    hora_local = (now.hour - 3) % 24  # UTC-3
     current_time = now.strftime("%H:%M:%S")
     print("Hora UTC =", current_time)
     print("Hora Local =", f"{hora_local:02d}:{now.minute:02d}:{now.second:02d}")
 
     if hora_local == 10:
-        print("Atualizando para o horário das 10h")
-        # Diminui a quantidade de Tacrolimus em 3 e de Azatioprina em 4
+        print("10h update")
         for item in dados:
             if 'n_tacrolimus' in item and 'n_azatioprina' in item:
                 item['n_tacrolimus'] = str(int(item['n_tacrolimus']) - 3)
                 item['n_azatioprina'] = str(int(item['n_azatioprina']) - 4)
                 
     elif hora_local == 22:
-        print("Atualizando para o horário das 22h")
-        # Diminui apenas a quantidade de Tacrolimus em 3
+        print("22h update")
         for item in dados:
             if 'n_tacrolimus' in item:
                 item['n_tacrolimus'] = str(int(item['n_tacrolimus']) - 3)
     else:
-        print("Fora do horário de atualização")
-        print(dados)
+        print("Out of update hours")
         return
 
-    # Atualiza o arquivo no GCS
+    # Updates the CSV file
     novo_conteudo = io.StringIO()
     escritor_csv = csv.writer(novo_conteudo)
     escritor_csv.writerow(headers)
@@ -63,7 +67,6 @@ def update_medications():
         escritor_csv.writerow(linha)
 
     blob.upload_from_string(novo_conteudo.getvalue(), content_type='text/csv')
-    print("Dados atualizados")
 
 if __name__ == '__main__':
     update_medications()

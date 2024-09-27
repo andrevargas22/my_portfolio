@@ -1,6 +1,6 @@
 jQuery(document).ready(function($) {
     var timelines = $('.cd-horizontal-timeline'),
-        eventsMinDistance = 100; // Ajuste este valor conforme necessário
+        eventsMinDistance = 100; // Adjust this value as needed
 
     if (timelines.length > 0) initTimeline(timelines);
 
@@ -9,7 +9,7 @@ jQuery(document).ready(function($) {
             var timeline = $(this),
                 timelineComponents = {};
 
-            // Cache dos componentes da timeline
+            // Cache timeline components
             timelineComponents['timelineWrapper'] = timeline.find('.events-wrapper');
             timelineComponents['eventsWrapper'] = timelineComponents['timelineWrapper'].children('.events');
             timelineComponents['fillingLine'] = timelineComponents['eventsWrapper'].children('.filling-line');
@@ -17,25 +17,25 @@ jQuery(document).ready(function($) {
             timelineComponents['timelineNavigation'] = timeline.find('.cd-timeline-navigation');
             timelineComponents['eventsContent'] = timeline.children('.events-content');
 
-            // Configurações iniciais
+            // Initial settings
             setEqualPosition(timelineComponents);
             var timelineTotWidth = setTimelineWidth(timelineComponents);
             timeline.addClass('loaded');
 
-            // Seleciona o evento mais recente por padrão
+            // Select the most recent event by default
             var lastEvent = timelineComponents['timelineEvents'].last();
             lastEvent.addClass('selected');
             updateFilling(lastEvent, timelineComponents['fillingLine'], timelineTotWidth);
             updateVisibleContent(lastEvent, timelineComponents['eventsContent']);
 
-            // Mostra o conteúdo do evento mais recente por padrão
+            // Show the content of the most recent event by default
             timelineComponents['eventsContent'].find('li').removeClass('selected');
             timelineComponents['eventsContent'].find('[data-date="' + lastEvent.data('date') + '"]').addClass('selected');
 
-            // Define a altura máxima para o contêiner de conteúdo
+            // Set the maximum height for the content container
             setMaxHeight(timelineComponents['eventsContent']);
 
-            // Detecta clique em um evento - mostra o novo conteúdo
+            // Detect click on an event - show new content
             timelineComponents['eventsWrapper'].on('click', 'a', function(event) {
                 event.preventDefault();
                 timelineComponents['timelineEvents'].removeClass('selected');
@@ -44,7 +44,7 @@ jQuery(document).ready(function($) {
                 updateVisibleContent($(this), timelineComponents['eventsContent']);
             });
 
-            // Navegação por teclado
+            // Keyboard navigation
             $(document).keyup(function(event) {
                 if (event.which == '37' && elementInViewport(timeline.get(0))) {
                     showNewContent(timelineComponents, timelineTotWidth, 'prev');
@@ -55,7 +55,7 @@ jQuery(document).ready(function($) {
         });
     }
 
-    // Função para definir a altura máxima dos blocos de conteúdo
+    // Function to set the maximum height of content blocks
     function setMaxHeight(eventsContent) {
         var maxHeight = 0;
         eventsContent.find('li').each(function() {
@@ -67,7 +67,7 @@ jQuery(document).ready(function($) {
         eventsContent.css('min-height', maxHeight + 'px');
     }
 
-    // Função para posicionar os eventos igualmente na timeline
+    // Function to position events equally on the timeline
     function setEqualPosition(timelineComponents) {
         var totalEvents = timelineComponents['timelineEvents'].length;
         var totalWidth = Number(timelineComponents['timelineWrapper'].css('width').replace('px', ''));
@@ -77,17 +77,17 @@ jQuery(document).ready(function($) {
         timelineComponents['timelineEvents'].each(function(index) {
             var position;
             if (totalEvents % 2 === 0) {
-                // Número par de eventos
+                // Even number of events
                 position = (index - centerIndex + 0.5) * distance + totalWidth / 2;
             } else {
-                // Número ímpar de eventos
+                // Odd number of events
                 position = (index - centerIndex) * distance + totalWidth / 2;
             }
             $(this).css('left', position + 'px');
         });
     }
 
-    // Função para definir a largura total da timeline
+    // Function to set the total width of the timeline
     function setTimelineWidth(timelineComponents) {
         var totalEvents = timelineComponents['timelineEvents'].length;
         var totalWidth = Number(timelineComponents['timelineWrapper'].css('width').replace('px', ''));
@@ -97,7 +97,7 @@ jQuery(document).ready(function($) {
         return width;
     }
 
-    // Função para atualizar o conteúdo visível
+    // Function to update visible content
     function updateVisibleContent(event, eventsContent) {
         var eventDate = event.data('date'),
             visibleContent = eventsContent.find('.selected'),
@@ -116,12 +116,9 @@ jQuery(document).ready(function($) {
             visibleContent.removeClass('leave-right leave-left');
             selectedContent.removeClass('enter-left enter-right');
         });
-
-        // Remova ou comente a linha abaixo para não ajustar a altura dinamicamente
-        // eventsContent.css('height', selectedContentHeight + 'px');
     }
 
-    // Função para mostrar novo conteúdo ao navegar
+    // Function to show new content when navigating
     function showNewContent(timelineComponents, timelineTotWidth, string) {
         var visibleContent = timelineComponents['eventsContent'].find('.selected'),
             newContent = (string == 'next') ? visibleContent.next() : visibleContent.prev();
@@ -137,17 +134,17 @@ jQuery(document).ready(function($) {
         }
     }
 
-    // Função para atualizar a linha de preenchimento
+    // Function to update the filling line
     function updateFilling(selectedEvent, filling, totWidth) {
         var eventStyle = window.getComputedStyle(selectedEvent.get(0), null),
             eventLeft = eventStyle.getPropertyValue("left"),
             eventWidth = eventStyle.getPropertyValue("width");
         eventLeft = Number(eventLeft.replace('px', '')) + Number(eventWidth.replace('px', '')) / 2;
-        var scaleValue = eventLeft / totWidth; // Valor de escala
+        var scaleValue = eventLeft / totWidth; // Scale value
         setTransformValue(filling.get(0), 'scaleX', scaleValue);
     }
 
-    // Função para definir o valor de transformação de um elemento
+    // Function to set the transform value of an element
     function setTransformValue(element, property, value) {
         element.style["-webkit-transform"] = property + "(" + value + ")";
         element.style["-moz-transform"] = property + "(" + value + ")";
@@ -156,7 +153,7 @@ jQuery(document).ready(function($) {
         element.style["transform"] = property + "(" + value + ")";
     }
 
-    // Função para verificar se um elemento está na viewport
+    // Function to check if an element is in the viewport
     function elementInViewport(el) {
         var top = el.offsetTop;
         var left = el.offsetLeft;
@@ -175,31 +172,5 @@ jQuery(document).ready(function($) {
             (top + height) > window.pageYOffset &&
             (left + width) > window.pageXOffset
         );
-    }
-
-    // Função para obter o valor de tradução da timeline
-    function getTranslateValue(timeline) {
-        var timelineStyle = window.getComputedStyle(timeline.get(0), null),
-            timelineTranslate = timelineStyle.getPropertyValue("-webkit-transform") ||
-            timelineStyle.getPropertyValue("-moz-transform") ||
-            timelineStyle.getPropertyValue("-ms-transform") ||
-            timelineStyle.getPropertyValue("-o-transform") ||
-            timelineStyle.getPropertyValue("transform");
-
-        if (timelineTranslate.indexOf('(') >= 0) {
-            var timelineTranslate = timelineTranslate.split('(')[1];
-            timelineTranslate = timelineTranslate.split(')')[0];
-            timelineTranslate = timelineTranslate.split(',');
-            var translateValue = timelineTranslate[4];
-        } else {
-            var translateValue = 0;
-        }
-
-        return Number(translateValue);
-    }
-
-    // Função para verificar a mídia query
-    function checkMQ() {
-        return window.getComputedStyle(document.querySelector('.cd-horizontal-timeline'), '::before').getPropertyValue('content').replace(/'/g, "").replace(/"/g, "");
     }
 });
