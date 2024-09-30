@@ -9,12 +9,8 @@ Author: André Vargas
 """
 
 import os
-import io
-from google.cloud import storage
-import csv
-from flask import Flask, render_template, redirect, url_for, request
+from flask import Flask, render_template
 import feedparser
-from datetime import datetime, timedelta
     
 app = Flask(__name__)
 
