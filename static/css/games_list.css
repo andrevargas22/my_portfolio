@@ -137,6 +137,10 @@ body {
   background-color: #7c8588; 
 }
 
+.tag.gc {
+  background-color: #307d97; 
+}
+
 .tag.dplat {
   background-color: #972284; 
 }
