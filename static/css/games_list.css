@@ -208,3 +208,7 @@ body {
 .tag.shooter {
   background-color: #32ee61; 
 }
+
+.tag.beaten {
+  background-color: #746f6f; 
+}
