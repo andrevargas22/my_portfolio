@@ -9,7 +9,7 @@ COPY requirements.txt .
 COPY static static
 COPY templates templates
 COPY website.py .
-COPY cidades.csv
+COPY cidades.csv .
 
 # Install any dependencies specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
