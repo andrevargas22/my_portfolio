@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lista de Cidades</title>
+  <style>
+    table {
+      width: 90%;
+      border-collapse: collapse;
+      margin: 20px auto;
+    }
+    th, td {
+      border: 1px solid #333;
+      padding: 8px 12px;
+      vertical-align: top;
+    }
+    thead {
+      background-color: #f4f4f4;
+    }
+    /* Apenas para dar um espaço visual */
+    .menu {
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Lista de Cidades</h1>
+
+  <!-- Botões para trocar de visualização -->
+  <div class="menu">
+    <button onclick="window.location.href='/cidades'">Lista</button>
+    <button onclick="window.location.href='/cidades/ordem'">Ordem</button>
+  </div>
+  
+  {% if data %}
+    <table>
+      <thead>
+        <tr>
+          {% for header_cell in data[0] %}
+            <th>{{ header_cell }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in data[1:] %}
+          {% set row_index = loop.index0 + 1 %}
+          <tr>
+            {% for cell in row %}
+              <!-- loop.index0 é o índice da coluna -->
+              <td
+                contenteditable="true"
+                data-row="{{ row_index }}"
+                data-col="{{ loop.index0 }}"
+                onkeydown="checkEnter(event)"
+              >
+                {{ cell }}
+              </td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>Nenhuma cidade encontrada!</p>
+  {% endif %}
+
+  <script>
+    function checkEnter(event) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        const cell = event.target;
+        const newValue = cell.innerText.trim();
+        const rowIndex = cell.getAttribute('data-row');
+        const colIndex = cell.getAttribute('data-col');
+        updateCell(rowIndex, colIndex, newValue);
+        cell.blur();
+      }
+    }
+
+    async function updateCell(rowIndex, colIndex, newValue) {
+      const payload = { rowIndex, colIndex, newValue };
+      try {
+        const response = await fetch('/update_cell', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(payload)
+        });
+        const data = await response.json();
+        console.log(data);
+        window.location.reload();
+      } catch (error) {
+        console.error('Erro:', error);
+      }
+    }
+  </script>
+</body>
+</html>
