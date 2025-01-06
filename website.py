@@ -9,13 +9,32 @@ Author: André Vargas
 
 import os
 import csv
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, Response
 import feedparser
     
 app = Flask(__name__)
 
 CSV_FILE = 'cidades.csv'
 
+USERNAME = 'maria'
+PASSWORD = '9f}/!kT1P-R3'
+
+def check_auth(username, password):
+    return username == USERNAME and password == PASSWORD
+
+def authenticate():
+    return Response(
+        'Acesso restrito.\n',
+        401,
+        {'WWW-Authenticate': 'Basic realm="Login Required"'}
+    )
+
+@app.before_request
+def require_auth():
+    auth = request.authorization
+    if not auth or not check_auth(auth.username, auth.password):
+        return authenticate()
+    
 ############################## PAGE ROUTES ##############################
 @app.route('/')
 def home():
