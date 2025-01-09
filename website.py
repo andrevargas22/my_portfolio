@@ -8,16 +8,17 @@ Author: André Vargas
 """
 
 import os
-import csv
-from flask import Flask, render_template, request, jsonify, Response
+from flask import Flask, render_template, request, Response, jsonify
+from google.cloud import storage
+import pandas as pd
+from io import BytesIO
 import feedparser
     
 app = Flask(__name__)
 
-CSV_FILE = 'cidades.csv'
-
-USERNAME = 'maria'
-PASSWORD = '9f}/!kT1P-R3'
+############################## TEMPORARY AUTH ##############################
+USERNAME = 'admin'
+PASSWORD = '123'
 
 def check_auth(username, password):
     return username == USERNAME and password == PASSWORD
@@ -108,130 +109,6 @@ def mlops():
     """
     return render_template('eng/mlops.html')
 
-@app.route('/cidades')
-def cidades():
-    """
-    Lê o CSV e envia ao template.
-    """
-    with open(CSV_FILE, 'r', encoding='utf-8', newline='') as f:
-        reader = csv.reader(f)
-        data = list(reader)
-    return render_template('eng/cidades.html', data=data)
-
-@app.route('/cidades/ordem')
-def cidades_ordem():
-    """
-    Mostra APENAS 'Ordem' (coluna "Ordem pref.") e 'Cidade' (coluna "Lotação")
-    em ordem crescente de acordo com a coluna "Ordem pref.".
-    """
-    with open(CSV_FILE, 'r', encoding='utf-8', newline='') as f:
-        reader = csv.reader(f)
-        data = list(reader)
-
-    # data[0] é o cabeçalho, data[1:] são as linhas de dados
-    header = data[0]  # ["Lotação", "Ordem pref.", "Informações...", ...]
-    rows = data[1:]
-
-    # Precisamos identificar em qual índice está "Lotação" e "Ordem pref."
-    # Supondo que:  "Lotação"     => índice 0
-    #              "Ordem pref." => índice 1
-    # (É como você descreveu nos exemplos anteriores.)
-    idx_lotacao = 0
-    idx_pref = 1
-
-    # Ordenar as linhas pelo valor numérico da coluna idx_pref
-    def to_int_or_large(s):
-        try:
-            return int(s)
-        except:
-            return 999999  # se não for número, joga pro fim
-    
-    sorted_rows = sorted(
-        rows,
-        key=lambda r: to_int_or_large(r[idx_pref])
-    )
-
-    return render_template('eng/cidades_ordem.html',
-                           sorted_rows=sorted_rows,
-                           idx_lotacao=idx_lotacao,
-                           idx_pref=idx_pref)
-    
-@app.route('/update_cell', methods=['POST'])
-def update_cell():
-    content = request.json
-    row_index = int(content['rowIndex'])  # 1-based, pois pulamos cabeçalho
-    col_index = int(content['colIndex'])
-    new_value = content['newValue']
-
-    with open(CSV_FILE, 'r', encoding='utf-8', newline='') as f:
-        data = list(csv.reader(f))
-
-    header = data[0]
-    rows = data[1:]  # só as linhas de dados
-
-    # Se for outra coluna que não seja "Ordem pref." (col_index=1), faz o normal:
-    if col_index != 1:
-        data[row_index][col_index] = new_value
-        with open(CSV_FILE, 'w', encoding='utf-8', newline='') as f:
-            csv.writer(f).writerows(data)
-        return jsonify({'status':'success','message':'Célula atualizada (sem shift).'})
-    
-    # Agora, col_index=1 => SHIFT em cadeia
-    changed_idx = row_index - 1  # pois rows[0] é a 1ª linha de dados
-    try:
-        old_pref = int(rows[changed_idx][1])
-        new_pref = int(new_value)
-    except ValueError:
-        # Se não dá pra converter, simplesmente salva
-        data[row_index][col_index] = new_value
-        with open(CSV_FILE, 'w', encoding='utf-8', newline='') as f:
-            csv.writer(f).writerows(data)
-        return jsonify({'status':'success','message':'Não é número, salvando sem shift.'})
-
-    if old_pref == new_pref:
-        return jsonify({'status':'success','message':'Preferência não alterada.'})
-
-    def get_pref(r):
-        try:
-            return int(r[1])
-        except:
-            return None
-
-    if new_pref < old_pref:
-        # Ex.: 3 -> 1
-        current = old_pref
-        while current > new_pref:
-            looking_for = current - 1
-            # Achar EXATAMENTE a linha que tem 'looking_for' e transformá-la em 'current'
-            for r in rows:
-                if get_pref(r) == looking_for:
-                    r[1] = str(current)
-                    break
-            current -= 1
-        # No fim, atribuir new_pref à linha editada
-        rows[changed_idx][1] = str(new_pref)
-
-    else:  # new_pref > old_pref
-        # Ex.: 1 -> 3
-        current = old_pref
-        while current < new_pref:
-            looking_for = current + 1
-            # Achar EXATAMENTE a linha que tem 'looking_for' e transformar em (looking_for - 1)
-            for r in rows:
-                if get_pref(r) == looking_for:
-                    r[1] = str(looking_for - 1)
-                    break
-            current += 1
-        rows[changed_idx][1] = str(new_pref)
-
-    # Salva de volta
-    new_data = [header] + rows
-    with open(CSV_FILE, 'w', encoding='utf-8', newline='') as f:
-        csv.writer(f).writerows(new_data)
-    
-    return jsonify({'status':'success','message':'Shift em cadeia aplicado.'})
-
-
 ############################## FUNCTIONS USED BY PAGES ##############################
 
 def fetch_articles():
@@ -267,7 +144,116 @@ def render_map():
         Template: The folium.html template for displaying the map.
     """
     return render_template('common/folium.html')
-    
+
+############################## TEMPORARY FEATURE ##############################
+
+# Função para baixar o CSV do bucket
+def download_csv_from_gcs(bucket_name, blob_name):
+    client = storage.Client()
+    bucket = client.bucket(bucket_name)
+    blob = bucket.blob(blob_name)
+    csv_data = blob.download_as_bytes()
+    df = pd.read_csv(BytesIO(csv_data), dtype={
+        "Ordem pref.": "Int64",
+        "Habitantes": "Int64",
+        "Nº. defensores": "Int64"
+    })
+    return df
+
+# Função para atualizar o CSV no bucket
+def upload_csv_to_gcs(df, bucket_name, blob_name):
+    client = storage.Client()
+    bucket = client.bucket(bucket_name)
+    blob = bucket.blob(blob_name)
+    csv_data = df.to_csv(index=False).encode("utf-8")
+    blob.upload_from_string(csv_data, content_type="text/csv")
+
+@app.route("/cidades")
+def cidades():
+    bucket_name = "data_cidades"
+    blob_name = "cidades.csv"
+
+    # Baixar o CSV e converter em DataFrame
+    df = download_csv_from_gcs(bucket_name, blob_name)
+
+    # Ordenar pelo campo "Ordem pref." de forma crescente
+    df = df.sort_values(by="Ordem pref.", na_position="last")
+
+    # Substituir NaN por string vazia em colunas que não são numéricas
+    non_numeric_cols = df.columns.difference(["Ordem pref.", "Habitantes", "Nº. defensores"])
+    df[non_numeric_cols] = df[non_numeric_cols].fillna("")
+
+    for col in non_numeric_cols:
+        df[col] = df[col].astype(str).str.replace(r'\s+', ' ', regex=True).str.strip()
+   
+    # Converter DataFrame para HTML
+    table_html = df.to_html(classes="table table-striped table-bordered", index=False, escape=False)
+
+    return render_template("eng/cidades.html", table_html=table_html)
+
+@app.route("/update_cell", methods=["POST"])
+@app.route("/update_cell", methods=["POST"])
+def update_cell():
+    data = request.json
+    bucket_name = "data_cidades"
+    blob_name = "cidades.csv"
+
+    # Parâmetros recebidos
+    row_index = int(data["row_index"])
+    column_name = data["column_name"]
+    new_value = data["new_value"]
+
+    # Baixa o CSV e atualiza
+    df = download_csv_from_gcs(bucket_name, blob_name)
+
+    # Verifica se a coluna é "Ordem pref."
+    if column_name == "Ordem pref.":
+        if new_value == "":
+            new_value = None  # Deixa o valor como NaN se vazio
+        else:
+            new_value = int(new_value)  # Converte para número
+
+        # Identifica a cidade a ser movida
+        current_city = df.iloc[row_index]
+        current_order = current_city["Ordem pref."]
+
+        if pd.isna(current_order):
+            current_order = None
+
+        if new_value != current_order:
+            # Remove a cidade temporariamente
+            df = df.drop(row_index).reset_index(drop=True)
+
+            if new_value is not None:
+                # Ajusta as posições das outras cidades
+                df.loc[(df["Ordem pref."].notna()) & (df["Ordem pref."] >= new_value), "Ordem pref."] += 1
+
+            # Adiciona a cidade com a nova ordem ou em branco
+            new_row = current_city.copy()
+            new_row["Ordem pref."] = new_value
+            df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
+
+        # Ordena a tabela com `na_position="last"`
+        df = df.sort_values(by="Ordem pref.", na_position="last").reset_index(drop=True)
+
+        # Salva o CSV atualizado no bucket
+        upload_csv_to_gcs(df, bucket_name, blob_name)
+
+        return jsonify({"message": "CSV atualizado com sucesso!"}), 200
+    else:
+        if new_value == "":
+            new_value = None
+
+        if column_name in ["Habitantes", "Nº. defensores"]:
+            new_value = pd.to_numeric(new_value, errors="coerce")
+            if pd.notna(new_value):
+                new_value = int(new_value)
+
+        df.iloc[row_index, df.columns.get_loc(column_name)] = new_value
+
+        upload_csv_to_gcs(df, bucket_name, blob_name)
+        return jsonify({"message": "CSV atualizado com sucesso!"}), 200
+
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 8080))
     app.run(host='0.0.0.0', port=port)

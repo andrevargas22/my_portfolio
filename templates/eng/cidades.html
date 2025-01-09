@@ -1,97 +1,101 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <title>Lista de Cidades</title>
-  <style>
-    table {
-      width: 90%;
-      border-collapse: collapse;
-      margin: 20px auto;
-    }
-    th, td {
-      border: 1px solid #333;
-      padding: 8px 12px;
-      vertical-align: top;
-    }
-    thead {
-      background-color: #f4f4f4;
-    }
-    /* Apenas para dar um espaço visual */
-    .menu {
-      margin: 10px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela Interativa</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        td {
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-  <h1>Lista de Cidades</h1>
+    <div class="container mt-5">
+        <h1 class="mb-4">Tabela Interativa - Edição de CSV</h1>
+        <div class="table-responsive">
+            {{ table_html | safe }}
+        </div>
+        <div id="message" class="alert d-none mt-3" role="alert"></div>
+    </div>
 
-  <!-- Botões para trocar de visualização -->
-  <div class="menu">
-    <button onclick="window.location.href='/cidades'">Lista</button>
-    <button onclick="window.location.href='/cidades/ordem'">Ordem</button>
-  </div>
-  
-  {% if data %}
-    <table>
-      <thead>
-        <tr>
-          {% for header_cell in data[0] %}
-            <th>{{ header_cell }}</th>
-          {% endfor %}
-        </tr>
-      </thead>
-      <tbody>
-        {% for row in data[1:] %}
-          {% set row_index = loop.index0 + 1 %}
-          <tr>
-            {% for cell in row %}
-              <!-- loop.index0 é o índice da coluna -->
-              <td
-                contenteditable="true"
-                data-row="{{ row_index }}"
-                data-col="{{ loop.index0 }}"
-                onkeydown="checkEnter(event)"
-              >
-                {{ cell }}
-              </td>
-            {% endfor %}
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  {% else %}
-    <p>Nenhuma cidade encontrada!</p>
-  {% endif %}
+    <script>
+        // Função para recarregar a tabela sem precisar dar F5
+        function reloadTable() {
+            fetch("/cidades")
+                .then(response => response.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, "text/html");
+                    const newTableHtml = doc.querySelector(".table-responsive").innerHTML;
+                    document.querySelector(".table-responsive").innerHTML = newTableHtml;
+                });
+        }
 
-  <script>
-    function checkEnter(event) {
-      if (event.key === 'Enter') {
-        event.preventDefault();
-        const cell = event.target;
-        const newValue = cell.innerText.trim();
-        const rowIndex = cell.getAttribute('data-row');
-        const colIndex = cell.getAttribute('data-col');
-        updateCell(rowIndex, colIndex, newValue);
-        cell.blur();
-      }
-    }
+        document.addEventListener("DOMContentLoaded", function () {
+            const tableContainer = document.querySelector(".table-responsive");
 
-    async function updateCell(rowIndex, colIndex, newValue) {
-      const payload = { rowIndex, colIndex, newValue };
-      try {
-        const response = await fetch('/update_cell', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify(payload)
+            tableContainer.addEventListener("click", function (event) {
+                if (event.target.tagName === "TD") {
+                    const cell = event.target;
+                    const originalValue = cell.innerText.trim();
+                    const rowIndex = cell.parentNode.rowIndex - 1;  // Ignora header
+                    const columnName = tableContainer.querySelector("table").rows[0].cells[cell.cellIndex].innerText.trim();
+
+                    const input = document.createElement("input");
+                    input.type = "text";
+                    input.value = originalValue;
+                    input.classList.add("form-control");
+                    cell.innerHTML = "";
+                    cell.appendChild(input);
+                    input.focus();
+
+                    input.addEventListener("keypress", function (e) {
+                        if (e.key === "Enter") {
+                            const newValue = input.value.trim();
+
+                            fetch("/update_cell", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify({
+                                    row_index: rowIndex,
+                                    column_name: columnName,
+                                    new_value: newValue
+                                })
+                            }).then(response => {
+                                if (response.ok) {
+                                    showMessage("success", "Valor atualizado com sucesso!");
+                                    reloadTable();  // Recarrega a tabela após a atualização bem-sucedida
+                                } else {
+                                    showMessage("danger", "Erro ao atualizar o valor.");
+                                    cell.innerText = originalValue;  // Reverte ao valor original em caso de erro
+                                }
+                            }).catch(error => {
+                                showMessage("danger", "Erro de conexão: " + error);
+                                cell.innerText = originalValue;
+                            });
+                        }
+                    });
+
+                    input.addEventListener("blur", function () {
+                        cell.innerText = originalValue;
+                    });
+                }
+            });
+
+            function showMessage(type, message) {
+                const messageDiv = document.getElementById("message");
+                messageDiv.className = `alert alert-${type}`;
+                messageDiv.innerText = message;
+                messageDiv.classList.remove("d-none");
+                setTimeout(() => {
+                    messageDiv.classList.add("d-none");
+                }, 3000);
+            }
         });
-        const data = await response.json();
-        console.log(data);
-        window.location.reload();
-      } catch (error) {
-        console.error('Erro:', error);
-      }
-    }
-  </script>
+    </script>
 </body>
 </html>
