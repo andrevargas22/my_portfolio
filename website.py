@@ -1,7 +1,6 @@
 """
 This module defines the Flask web application for André Vargas's personal website. The application serves different 
-routes to render templates for various sections of the website, including English and Portuguese (PT-BR) versions 
-of the homepage and other pages.
+routes to render templates for various sections of the website.
 
 The deployed application is hosted on Google Cloud Run and can be accessed at the following URL: andrevargas.com.br
 
@@ -13,8 +12,8 @@ from flask import Flask, render_template
 import feedparser
     
 app = Flask(__name__)
-
-############################## ENGLISH ROUTES ##############################
+    
+############################## PAGE ROUTES ##############################
 @app.route('/')
 def home():
     """
@@ -87,70 +86,7 @@ def mlops():
     """
     return render_template('eng/mlops.html')
 
-############################## PORTUGUESE ROUTES ##############################
-@app.route('/br')
-def home_pt():
-    """
-    Renders the Portuguese homepage.
-
-    Returns:
-        Template: The index.html template for the Portuguese homepage.
-    """
-    return render_template('pt/index.html')
-
-@app.route('/br/about')
-def about_pt():
-    """
-    Renders the Portuguese 'About' page.
-
-    Returns:
-        Template: The about.html template for the Portuguese section.
-    """
-    return render_template('pt/about.html')
-
-@app.route('/br/blog')
-def blog_pt():
-    """
-    Renders the Portuguese blog page with articles fetched from the Medium feed.
-
-    Returns:
-        Template: The blog.html template populated with Medium articles in Portuguese.
-    """
-    articles = fetch_articles()
-    return render_template('pt/blog.html', articles=articles)
-
-@app.route('/br/map')
-def world_pt():
-    """
-    Renders the Portuguese map page.
-
-    Returns:
-        Template: The map.html template for the Portuguese section.
-    """
-    return render_template('pt/map.html')
-
-@app.route('/br/games')
-def games_pt():
-    """
-    Renders the Portuguese games page.
-
-    Returns:
-        Template: The game.html template for the Portuguese section.
-    """
-    return render_template('pt/game.html')
-
-@app.route('/br/mnist_api')
-def mnist_pt():
-    """
-    Renders the MNIST page in Portuguese and passes the MNIST API endpoint.
-
-    Returns:
-        Template: The mnist.html template with the MNIST API endpoint for the Portuguese section.
-    """
-    mnist_endpoint = os.getenv('MNIST_ENDPOINT')
-    return render_template('pt/mnist.html', mnist_endpoint=mnist_endpoint)
-
-############################## COMMON FUNCTIONS ##############################
+############################## FUNCTIONS USED BY PAGES ##############################
 
 def fetch_articles():
     """
@@ -185,7 +121,7 @@ def render_map():
         Template: The folium.html template for displaying the map.
     """
     return render_template('common/folium.html')
-    
+
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 8080))
     app.run(host='0.0.0.0', port=port)
