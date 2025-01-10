@@ -1,5 +1,8 @@
 # Personal Website
 
-This repository contains the source code for my personal website, which is built using Flask. The website showcases my professional portfolio, blog, and other projects. It is available in both English and Portuguese.
+This repository contains the source code for my personal website.
+
+Backend: Flask (Python)
+Frontend: HTML, CSS and JavaScript
 
 [https://andrevargas.com.br](https://andrevargas.com.br)
