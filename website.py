@@ -17,53 +17,53 @@ app = Flask(__name__)
 @app.route('/')
 def home():
     """
-    Renders the English homepage.
+    Renders the homepage.
 
     Returns:
-        Template: The index.html template for the English homepage.
+        Template: The index.html template for the homepage.
     """
-    return render_template('eng/index.html')
+    return render_template('pages/index.html')
 
 @app.route('/about')
 def about():
     """
-    Renders the English 'About' page.
+    Renders the 'About' page.
 
     Returns:
-        Template: The about.html template for the English section.
+        Template: The about.html template for the About section.
     """
-    return render_template('eng/about.html')
+    return render_template('pages/about.html')
 
 @app.route('/blog')
 def blog():
     """
-    Renders the English blog page with articles fetched from the Medium feed.
+    Renders the blog page with articles fetched from the Medium feed.
 
     Returns:
         Template: The blog.html template populated with Medium articles.
     """
     articles = fetch_articles()
-    return render_template('eng/blog.html', articles=articles)
+    return render_template('pages/blog.html', articles=articles)
 
 @app.route('/map')
 def world():
     """
-    Renders the English map page.
+    Renders the map page.
 
     Returns:
-        Template: The map.html template for the English section.
+        Template: The map.html template for the Map section.
     """
-    return render_template('eng/map.html')
+    return render_template('pages/map.html')
 
 @app.route('/games')
 def games():
     """
-    Renders the English games page.
+    Renders the finished games page.
 
     Returns:
-        Template: The game.html template for the English section.
+        Template: The game.html template for the Games section.
     """
-    return render_template('eng/game.html')
+    return render_template('pages/game.html')
 
 @app.route('/mnist_api')
 def mnist():
@@ -74,20 +74,20 @@ def mnist():
         Template: The mnist.html template with the MNIST API endpoint.
     """
     mnist_endpoint = os.getenv('MNIST_ENDPOINT')
-    return render_template('eng/mnist.html', mnist_endpoint=mnist_endpoint)
+    return render_template('pages/mnist.html', mnist_endpoint=mnist_endpoint)
 
+############################## TESTING FEATURES ##############################
 @app.route('/mlops')
 def mlops():
     """
-    Renders the English MLOps Builder page.
+    Renders the MLOps Builder page.
 
     Returns:
-        Template: The mlops.html template for the English section.
+        Template: The mlops.html template for the section.
     """
-    return render_template('eng/mlops.html')
+    return render_template('pages/mlops.html')
 
 ############################## FUNCTIONS USED BY PAGES ##############################
-
 def fetch_articles():
     """
     Fetches articles from the user's Medium RSS feed and returns them as a list of dictionaries.
@@ -115,13 +115,14 @@ def fetch_articles():
 @app.route('/render_map')
 def render_map():
     """
-    Renders the common map page using Folium.
+    Renders the map page using Folium.
 
     Returns:
         Template: The folium.html template for displaying the map.
     """
-    return render_template('common/folium.html')
+    return render_template('base/folium.html')
 
+############################## MAIN EXECUTION ##############################
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 8080))
     app.run(host='0.0.0.0', port=port)
