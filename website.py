@@ -76,6 +76,16 @@ def mnist():
     mnist_endpoint = os.getenv('MNIST_ENDPOINT')
     return render_template('pages/mnist.html', mnist_endpoint=mnist_endpoint)
 
+@app.route('/game_of_life')
+def game_of_life():
+    """
+    Renders the Game of Life page.
+
+    Returns:
+        Template: The game_of_life.html template for the section.
+    """
+    return render_template('pages/game_of_life.html')
+
 ############################## TESTING FEATURES ##############################
 @app.route('/mlops')
 def mlops():
@@ -86,16 +96,6 @@ def mlops():
         Template: The mlops.html template for the section.
     """
     return render_template('pages/mlops.html')
-
-@app.route('/game_of_life')
-def game_of_life():
-    """
-    Renders the Game of Life page.
-
-    Returns:
-        Template: The game_of_life.html template for the section.
-    """
-    return render_template('pages/game_of_life.html')
 
 ############################## FUNCTIONS USED BY PAGES ##############################
 def fetch_articles():
