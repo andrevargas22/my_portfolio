@@ -1,13 +1,45 @@
-/* CSS file for index page */
+/*
+ * Personal Website - Index Page Styles
+ * Author: André Vargas
+ * Description: Main styling for the landing page featuring a video background,
+ * animated content overlay, and social media links. Uses CSS variables for
+ * consistent theming.
+ */
 
+/* Import external fonts */
 @import 'https://fonts.googleapis.com/css?family=Roboto';
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap");
 
-/* General body styles: Set background color and base styles */
+/* Theme variables */
+:root {
+  --primary-color: #3a4052;
+  --secondary-color: #9aa1aac7;
+  --accent-color: #ff6347;
+}
+
+/* Base styles */
 html, body {
   background-color: #FFFAF0;
 }
 
-/* Navbar: Adjust alignment and spacing for navigation items */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Open Sans", sans-serif;
+  line-height: 1.5;
+  color: var(--secondary-color);
+}
+
+a {
+  text-decoration: none;
+  color: var(--accent-color);
+}
+
+/* Layout Components */
 .navbar-nav {
   margin-left: auto;
 }
@@ -17,36 +49,6 @@ html, body {
   margin-right: 30px;
 }
 
-@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap");
-
-/* Root variables for colors used throughout the page */
-:root {
-  --primary-color: #3a4052;
-  --secondary-color: #9aa1aac7;
-  --accent-color: #ff6347;
-}
-
-/* Reset margin, padding, and box-sizing for all elements */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-/* Body font and text settings */
-body {
-  font-family: "Open Sans", sans-serif;
-  line-height: 1.5;
-  color: var(--secondary-color);
-}
-
-/* Hyperlinks: Use the accent color for links */
-a {
-  text-decoration: none;
-  color: var(--accent-color);
-}
-
-/* Headings: Lighter font weight and adjusted size */
 h1 {
   font-weight: 300;
   font-size: 3rem;
@@ -55,7 +57,6 @@ h1 {
   color: #9aa1aac7; /* Light blue or light gray */
 }
 
-/* Showcase Section: Full-screen height with centered content */
 .showcase {
   position: relative;
   height: 100vh;
@@ -68,7 +69,7 @@ h1 {
   color: var(--secondary-color);
 }
 
-/* Video container styles: Full screen video background */
+/* Video Background */
 .video-container {
   position: absolute;
   top: 0;
@@ -79,7 +80,6 @@ h1 {
   background: var(--primary-color) no-repeat center center/cover;
 }
 
-/* Video settings: Ensure the video covers the screen and stays centered */
 .video-container video {
   min-width: 100%;
   min-height: 100%;
@@ -90,7 +90,6 @@ h1 {
   transform: translate(-50%, -50%);
 }
 
-/* Overlay on top of the video for better text contrast */
 .video-container:after {
   content: "";
   position: absolute;
@@ -101,7 +100,7 @@ h1 {
   background: rgba(0, 0, 0, 0.6); /* Semi-transparent overlay */
 }
 
-/* Content on top of the video: Centered and text-styled */
+/* Content Overlay */
 .content {
   z-index: 10;
   color: #9aa1aac7; /* Light blue or light gray */
@@ -113,19 +112,17 @@ h1 {
   margin: 0 auto 25px;
 }
 
-/* Social media icons */
+/* Social Media Section */
 .social {
   margin-top: 25px;
 }
 
-/* Social media links with hover effect */
 .social a {
   margin: 0 10px;
   color: var(--secondary-color);
   transition: color 0.3s;
 }
 
-/* Change color on hover to accent color */
 .social a:hover {
   color: var(--accent-color);
 }
