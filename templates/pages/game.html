@@ -1,91 +1,113 @@
+<!--
+	Personal Website - Games Archive
+	Author: André Vargas
+	Description: Interactive gallery of completed video games with filtering
+	by platform and popup previews.
+-->
+	
 <!doctype html>
 <html lang="en">
+	<head>
+		<!-- Header File -->
+		{% include 'base/header.html' %} 
+		<!-- Page CSS -->
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/games_list.css') }}">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.css" />
+		<meta name="description" content="Personal archive of completed video games with interactive filtering">
+	</head>
 
-    <head>
-        <!-- Header File -->
-        {% include 'base/header.html' %} 
-        <!-- Page CSS -->
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/games_list.css') }}">
-    </head>
+	<body>
+		
+		<!-- Navigation Bar -->
+		{% include 'base/navbar.html' %} 
 
-    <body>
-        
-        <!-- Navigation Bar -->
-        {% include 'base/navbar.html' %} 
+		<!-- Required CSS -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js"></script>
 
-        <!-- Required CSS -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.css" />
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js"></script>
+		<div class="container">
+			<!-- Page Header -->
+			<div class="row">
+				<div class="col-lg-12 text-center my-2">
+					<h4 class="border-bottom border-dark p-2">Finished Games Archive</h4>
+					<center>I've always loved video games since I was a child, so I decided to 
+						craft this personal list of videogames I ever finished 
+						(Effectively finished! Credits roll, The End on the screen). 
+						I used this as an experiment to create this interactive menu with HTML, CSS and JS.
+					</center>
+					<center>2025 updates: Nothing yet...<br>
+					</center>
+				</div>
+			</div>
+			
+			<!-- Menu -->
+			<div class="portfolio-menu mt-2 mb-4">
+				<ul>
+					<li class="btn btn-outline-dark active" data-filter="*">All</li>
+					<li class="btn btn-outline-dark" data-filter=".pc">PC</li>
+					<li class="btn btn-outline-dark" data-filter=".nes">NES</li>
+					<li class="btn btn-outline-dark" data-filter=".snes">SNES</li>
+					<li class="btn btn-outline-dark" data-filter=".n64">N64</li>
+					<li class="btn btn-outline-dark" data-filter=".switch">Switch</li>
+					<li class="btn btn-outline-dark" data-filter=".gc">NGC</li>
+					<li class="btn btn-outline-dark" data-filter=".gb">GB</li>
+					<li class="btn btn-outline-dark" data-filter=".gba">GBA</li>
+					<li class="btn btn-outline-dark" data-filter=".ds3">3DS</li>
+					<li class="btn btn-outline-dark" data-filter=".mega">Mega Drive</li>
+					<li class="btn btn-outline-dark" data-filter=".ps1">PS1</li>
+					<li class="btn btn-outline-dark" data-filter=".ps2">PS2</li>
+				</ul>
+			</div>
 
-        <div class="container">
-            <!-- Page Header -->
-            <div class="row">
-                <div class="col-lg-12 text-center my-2">
-                    <h4 class="border-bottom border-dark p-2">Finished Games Archive</h4>
-                    <center>I've always loved video games since I was a child, so I decided to 
-                        craft this personal list of videogames I ever finished 
-                        (Effectively finished! Credits roll, The End on the screen). 
-                        I used this as an experiment to create this interactive menu with HTML, CSS and JS.
-                    </center>
-                    <center>2025 updates: Nothing yet...<br>
-                    </center>
-                </div>
-            </div>
-            
-            <!-- Menu -->
-            <div class="portfolio-menu mt-2 mb-4">
-                <ul>
-                    <li class="btn btn-outline-dark active" data-filter="*">All</li>
-                    <li class="btn btn-outline-dark" data-filter=".pc">PC</li>
-                    <li class="btn btn-outline-dark" data-filter=".nes">NES</li>
-                    <li class="btn btn-outline-dark" data-filter=".snes">SNES</li>
-                    <li class="btn btn-outline-dark" data-filter=".n64">N64</li>
-                    <li class="btn btn-outline-dark" data-filter=".switch">Switch</li>
-                    <li class="btn btn-outline-dark" data-filter=".gc">NGC</li>
-                    <li class="btn btn-outline-dark" data-filter=".gb">GB</li>
-                    <li class="btn btn-outline-dark" data-filter=".gba">GBA</li>
-                    <li class="btn btn-outline-dark" data-filter=".ds3">3DS</li>
-                    <li class="btn btn-outline-dark" data-filter=".mega">Mega Drive</li>
-                    <li class="btn btn-outline-dark" data-filter=".ps1">PS1</li>
-                    <li class="btn btn-outline-dark" data-filter=".ps2">PS2</li>
-                </ul>
-            </div>
+			<!-- Items -->
+			<div class="portfolio-item row">
+				{% for letter in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' %}
+					{% with games = get_games_by_letter(letter) %}
+						{% if games %}
+							{% for game in games %}
+								{% set platform_class = game.platform|replace("Super Nintendo", "snes")
+                                                   |replace("Nintendo Switch", "switch")
+                                                   |replace("Nintendo 64", "n64")
+                                                   |replace("PlayStation 1", "ps1")
+                                                   |replace("PlayStation 2", "ps2")
+                                                   |replace("Game Boy Advanced", "gba")
+                                                   |replace("Game Boy", "gb")
+                                                   |replace("Nintendo GameCube", "gc")
+                                                   |replace("Nintendo 3DS", "ds3")
+                                                   |lower %}
+								{% set genre_class = game.genre|replace("3D Platformer", "dplat")
+                                             |replace("Beat 'em up", "beat-em-up")
+                                             |replace("Run and Gun", "run-and-gun")
+                                             |replace(" ", "-")
+                                             |lower %}
+								{% set display_genre = game.genre %}
+								<div class="item {{platform_class}} col-lg-3 col-md-4 col-6 col-sm">
+									<div class="image-container">
+										<p class="image-description">{{game.title}} ({{game.year}})</p>
+										<div class="tags">
+											<span class="tag {{platform_class}}">{{game.platform}}</span>
+											<span class="tag {{genre_class}}">{{display_genre}}</span>
+											<span class="tag beaten">Beaten in: {{game.beaten}}</span>
+										</div>
+										<a href="{{ url_for('static', filename='images/games/' + game.image) }}" class="fancylight popup-btn" data-fancybox-group="light">
+											<img class="img-fluid" src="{{ url_for('static', filename='images/games/' + game.image) }}" alt="{{game.title}} ({{game.year}})">
+										</a>
+									</div>
+								</div>
+							{% endfor %}
+						{% endif %}
+					{% endwith %}
+				{% endfor %}
+			</div>
+		</div>
+		
+		<!-- Bootstrap Bundle with Popper -->
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+		
+		<!-- My own JS -->
+		<script src="{{ url_for('static', filename='js/game_list.js') }}"></script>
 
-            <!-- Items -->
-            <div class="portfolio-item row">
-                
-                {% include 'base/game_A.html' %}
-                {% include 'base/game_B.html' %}
-                {% include 'base/game_C.html' %}
-                {% include 'base/game_D.html' %}
-                {% include 'base/game_F.html' %}
-                {% include 'base/game_G.html' %}
-                {% include 'base/game_H.html' %}
-                {% include 'base/game_I.html' %}
-                {% include 'base/game_J.html' %}
-                {% include 'base/game_K.html' %}
-                {% include 'base/game_L.html' %}
-                {% include 'base/game_M.html' %}
-                {% include 'base/game_N.html' %}
-                {% include 'base/game_O.html' %}
-                {% include 'base/game_P.html' %}
-                {% include 'base/game_S.html' %}
-                {% include 'base/game_T.html' %}
-                {% include 'base/game_U.html' %}
-                {% include 'base/game_W.html' %}
-                {% include 'base/game_X.html' %}
-
-            </div>
-        </div>
-        
-        <!-- Bootstrap Bundle with Popper -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-        
-        <!-- My own JS -->
-        <script src="{{ url_for('static', filename='js/game_list.js') }}"></script>
-
-    </body>
+	</body>
 
 </html>

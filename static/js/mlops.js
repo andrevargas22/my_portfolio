@@ -1,3 +1,19 @@
+/**
+ * MLOps Stack Builder Visualization
+ * 
+ * Interactive visualization tool for building and understanding MLOps stacks.
+ * Features:
+ * - Interactive graph visualization using Cytoscape.js
+ * - Tool selection and information display
+ * - Modal-based detailed tool information
+ * - Visual feedback for selected components
+ * 
+ * Graph Structure:
+ * - Nodes represent different MLOps components
+ * - Edges show relationships and dependencies
+ * - Tools can be added to each component
+ */
+
 document.addEventListener("DOMContentLoaded", function() {
     let previousNode = null;
 
@@ -89,6 +105,10 @@ document.addEventListener("DOMContentLoaded", function() {
         updateSidebar(node.data('label'));
     });
 
+    /**
+     * Updates the sidebar with information about the selected component
+     * @param {string} title - The name of the selected component
+     */
     function updateSidebar(title) {
         const sidebarTitle = document.querySelector('.sidebar h5');
         const sidebarContent = document.querySelector('.sidebar');
@@ -145,6 +165,10 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+    /**
+     * Displays detailed information about a selected tool
+     * @param {string} tool - The tool identifier
+     */
     function openToolModal(tool) {
         const toolInfo = getToolInfo(tool);
 
@@ -191,6 +215,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
+    // Tool information definitions
     function getToolInfo(tool) {
         switch(tool) {
             case 'MLFlow':

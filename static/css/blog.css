@@ -1,67 +1,87 @@
-/* CSS file for blog page */
+/*
+ * Personal Website - Blog Page Styles
+ * Author: André Vargas
+ * Description: Styling for blog posts and articles, including typography,
+ * code blocks, images, and responsive design considerations.
+ */
 
-/* Navbar */
+/* ############################## VARIABLES ############################## */
+:root {
+  --bg-color: #FFFAF0;
+  --text-color: #666;
+  --code-bg: #f5f5f5;
+  --code-border: #e1e1e8;
+  --code-text: #d63384;
+  --nav-spacing: 30px;
+  --content-spacing: 15px;
+  --font-size-base: 15px;
+  --font-size-article: 18px;
+  --font-size-caption: 14px;
+}
+
+/* ############################## BASE STYLES ############################## */
+body {
+  background: var(--bg-color);
+  font-size: var(--font-size-base);
+  height: 100%;
+  width: 100%;
+}
+
+/* ############################## NAVBAR ############################## */
 .navbar-nav {
-    margin-left: auto;
+  margin-left: auto;
 }
 
 .navbar-nav > li {
-    margin-left: 30px;
-    margin-right: 30px;
+  margin: 0 var(--nav-spacing);
 }
 
-/* Typography */
-body {
-    font-size: 15px;
-    width: 100%;
-    height: 100%;
-    background: #FFFAF0;
-}
-
+/* ############################## TYPOGRAPHY ############################## */
 .text {
-    text-align: justify;
+  text-align: justify;
 }
 
 .list-group-item {
-    font-size: 18px;
-    background-color: #FFFAF0; /* Match the background color */
-    border: none; /* Remove the border */
-    padding: 15px;
-    margin-bottom: 10px;
-    transition: background-color 0.3s ease;
+  font-size: var(--font-size-article);
+  background-color: var(--bg-color);
+  border: none;
+  padding: var(--content-spacing);
+  margin-bottom: 10px;
+  transition: background-color 0.3s ease;
 }
 
+/* ############################## ARTICLE COMPONENTS ############################## */
 .article-content img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-    margin: 0 auto;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
 }
 
 .article-content figcaption {
-    font-size: 14px; /* Adjust the font size to make it smaller */
-    color: #666; /* Change the color to a lighter shade for a subtitle effect */
-    text-align: center; /* Center align the text */
-    margin-top: 5px; /* Add some margin to separate it from the image */
+  font-size: var(--font-size-caption);
+  color: var(--text-color);
+  text-align: center;
+  margin-top: 5px;
 }
 
-/* Code Block Styling */
+/* ############################## CODE BLOCK STYLING ############################## */
 .article-content pre {
-    background-color: #f5f5f5; /* Light gray background */
-    padding: 15px; /* Padding around the code block */
-    border-radius: 5px; /* Rounded corners */
-    overflow-x: auto; /* Horizontal scroll if the code is too wide */
-    font-family: 'Courier New', Courier, monospace; /* Monospaced font */
-    font-size: 14px; /* Font size */
-    border: 1px solid #e1e1e8; /* Border to separate from the rest of the content */
-    margin-bottom: 15px; /* Space below the code block */
+  background-color: var(--code-bg);
+  padding: var(--content-spacing);
+  border-radius: 5px;
+  overflow-x: auto;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 14px;
+  border: 1px solid var(--code-border);
+  margin-bottom: 15px;
 }
 
 .article-content code {
-    background-color: #f5f5f5; /* Match the pre background */
-    padding: 2px 4px; /* Padding around inline code */
-    border-radius: 3px; /* Rounded corners for inline code */
-    font-family: 'Courier New', Courier, monospace; /* Monospaced font */
-    font-size: 14px; /* Font size */
-    color: #d63384; /* Optional: Add color to inline code */
+  background-color: var(--code-bg);
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 14px;
+  color: var(--code-text);
 }
