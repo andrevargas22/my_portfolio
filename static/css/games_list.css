@@ -168,7 +168,7 @@ body {
 .tag.party { background-color: var(--tag-party); }
 .tag.metroidvania { background-color: var(--tag-metroidvania); }
 .tag.beat-em-up { background-color: var(--tag-beat-em-up); }
-.tag.run_gun { background-color: var(--tag-run-gun); }
+.tag.run-and-gun { background-color: var(--tag-run-gun); }  
 .tag.dplat { background-color: var(--tag-dplat); }
 
 /* Status Tags */

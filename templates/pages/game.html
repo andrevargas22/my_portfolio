@@ -62,28 +62,43 @@
 
 			<!-- Items -->
 			<div class="portfolio-item row">
-				
-				{% include 'base/game_A.html' %}
-				{% include 'base/game_B.html' %}
-				{% include 'base/game_C.html' %}
-				{% include 'base/game_D.html' %}
-				{% include 'base/game_F.html' %}
-				{% include 'base/game_G.html' %}
-				{% include 'base/game_H.html' %}
-				{% include 'base/game_I.html' %}
-				{% include 'base/game_J.html' %}
-				{% include 'base/game_K.html' %}
-				{% include 'base/game_L.html' %}
-				{% include 'base/game_M.html' %}
-				{% include 'base/game_N.html' %}
-				{% include 'base/game_O.html' %}
-				{% include 'base/game_P.html' %}
-				{% include 'base/game_S.html' %}
-				{% include 'base/game_T.html' %}
-				{% include 'base/game_U.html' %}
-				{% include 'base/game_W.html' %}
-				{% include 'base/game_X.html' %}
-
+				{% for letter in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' %}
+					{% with games = get_games_by_letter(letter) %}
+						{% if games %}
+							{% for game in games %}
+								{% set platform_class = game.platform|replace("Super Nintendo", "snes")
+                                                   |replace("Nintendo Switch", "switch")
+                                                   |replace("Nintendo 64", "n64")
+                                                   |replace("PlayStation 1", "ps1")
+                                                   |replace("PlayStation 2", "ps2")
+                                                   |replace("Game Boy Advanced", "gba")
+                                                   |replace("Game Boy", "gb")
+                                                   |replace("Nintendo GameCube", "gc")
+                                                   |replace("Nintendo 3DS", "ds3")
+                                                   |lower %}
+								{% set genre_class = game.genre|replace("3D Platformer", "dplat")
+                                             |replace("Beat 'em up", "beat-em-up")
+                                             |replace("Run and Gun", "run-and-gun")
+                                             |replace(" ", "-")
+                                             |lower %}
+								{% set display_genre = game.genre %}
+								<div class="item {{platform_class}} col-lg-3 col-md-4 col-6 col-sm">
+									<div class="image-container">
+										<p class="image-description">{{game.title}} ({{game.year}})</p>
+										<div class="tags">
+											<span class="tag {{platform_class}}">{{game.platform}}</span>
+											<span class="tag {{genre_class}}">{{display_genre}}</span>
+											<span class="tag beaten">Beaten in: {{game.beaten}}</span>
+										</div>
+										<a href="{{ url_for('static', filename='images/games/' + game.image) }}" class="fancylight popup-btn" data-fancybox-group="light">
+											<img class="img-fluid" src="{{ url_for('static', filename='images/games/' + game.image) }}" alt="{{game.title}} ({{game.year}})">
+										</a>
+									</div>
+								</div>
+							{% endfor %}
+						{% endif %}
+					{% endwith %}
+				{% endfor %}
 			</div>
 		</div>
 		
