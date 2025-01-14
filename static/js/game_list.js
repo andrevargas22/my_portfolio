@@ -1,3 +1,20 @@
+/**
+ * Games Portfolio Gallery Handler
+ * 
+ * Manages the interactive games portfolio with filtering and image popups.
+ * Features:
+ * - Isotope grid layout
+ * - Category filtering
+ * - Image gallery popups
+ * - Responsive grid
+ * 
+ * Dependencies:
+ * - jQuery
+ * - Isotope
+ * - Magnific Popup
+ * - ImagesLoaded
+ */
+
 $(document).ready(function() {
     // Initialize Magnific Popup
     var popup_btn = $('.popup-btn');

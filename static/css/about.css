@@ -1,28 +1,46 @@
-/* CSS file for about page */
+/*
+ * Personal Website - About Page Styles
+ * Author: André Vargas
+ * Description: Styles for the about page featuring a horizontal timeline,
+ * experience sections, and responsive layout adjustments for various screen sizes.
+ */
 
-/* Navbar */
+/* ############################## VARIABLES ############################## */
+:root {
+  --primary-color: #008080;
+  --primary-hover: #016363;
+  --accent-color: #40E0D0;
+  --bg-color: #FFFAF0;
+  --text-color: #383838;
+  --timeline-color: #dfdfdf;
+  --timeline-dot-size: 12px;
+  --section-spacing: 2em;
+  --nav-spacing: 30px;
+}
+
+/* ############################## BASE STYLES ############################## */
+body {
+  background: var(--bg-color);
+  font-size: 15px;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Navigation */
 .navbar-nav {
-    margin-left: auto;
+  margin-left: auto;
 }
 
 .navbar-nav > li {
-    margin-left: 30px;
-    margin-right: 30px;
+  margin: 0 var(--nav-spacing);
 }
 
 /* Typography */
-body {
-    font-size: 15px;
-    width: 100%;
-    height: 100%;
-    background: #FFFAF0;
-}
-
 .text {
     text-align: justify;
 }
 
-/* About Work Experience */
+/* ############################## EXPERIENCE SECTION ############################## */
 .experience h4 {
     text-align: left;
 }
@@ -34,7 +52,7 @@ body {
 }
 
 .experience h5 {
-    color: #008080;
+    color: var(--primary-color);
     font-size: 22px;
     text-transform: uppercase;
 }
@@ -54,7 +72,7 @@ body {
 }
 
 .experience .fa {
-    color: #40E0D0;
+    color: var(--accent-color);
     font-size: 35px;
 }
 
@@ -62,11 +80,11 @@ body {
     font-size: 30px;
 }
 
-/* Horizontal Timeline */
+/* ############################## TIMELINE ############################## */
 .cd-horizontal-timeline {
     position: relative;
     width: 100%;
-    margin: 2em auto;
+    margin: var(--section-spacing) auto;
     overflow-x: hidden; /* Prevent horizontal overflow */
 }
 
@@ -91,7 +109,7 @@ body {
     top: 49px;
     height: 2px;
     width: 100%;
-    background: #dfdfdf;
+    background: var(--timeline-color);
     transition: transform 0.4s;
 }
 
@@ -102,7 +120,7 @@ body {
     top: 0;
     height: 100%;
     width: 100%;
-    background-color: #008080;
+    background-color: var(--primary-color);
     transform: scaleX(0);
     transform-origin: left center;
     transition: transform 0.3s;
@@ -115,7 +133,7 @@ body {
     text-align: center;
     font-size: 1.3rem;
     padding-bottom: 15px;
-    color: #383838;
+    color: var(--text-color);
     transform: translateZ(0);
 }
 
@@ -124,17 +142,17 @@ body {
     position: absolute;
     left: 50%;
     bottom: -5px;
-    height: 12px;
-    width: 12px;
+    height: var(--timeline-dot-size);
+    width: var(--timeline-dot-size);
     border-radius: 50%;
-    border: 2px solid #dfdfdf;
+    border: 2px solid var(--timeline-color);
     background-color: #f8f8f8;
     transition: background-color 0.3s, border-color 0.3s;
 }
 
 .cd-horizontal-timeline .events a.selected::after {
-    background-color: #008080;
-    border-color: #008080;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
 }
 
 .cd-horizontal-timeline .events-content {
@@ -165,6 +183,44 @@ body {
     transform: translateX(0);
 }
 
+/* ############################## BUTTONS ############################## */
+.btn-primary {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background-color: var(--primary-color);
+    border: none;
+    text-decoration: none;
+    margin-top: 3%;
+    transition: background-color 0.3s ease;
+    max-width: 100%;
+    white-space: nowrap; 
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+}
+
+.btn-resume {
+    margin: 20px auto; /* Add some margin to center the button */
+}
+
+.row.justify-content-center {
+    margin: 0; /* Reset margin */
+}
+
+/* ############################## IMAGES ############################## */
+.about-img {
+    border-radius: 50%; 
+    width: 450px; 
+    height: 450px; 
+    object-fit: cover; 
+    margin-left: 20px;
+}
+
+/* ############################## RESPONSIVE ############################## */
 @media only screen and (max-width: 768px) {
     .cd-horizontal-timeline .events-wrapper {
         width: 100%;
@@ -186,40 +242,11 @@ body {
     .cd-horizontal-timeline .filling-line {
         width: 100%;
     }
-}
 
-/* Button */
-.btn-primary {
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: bold;
-    color: #fff;
-    background-color: #008080;
-    border: none;
-    text-decoration: none;
-    margin-top: 3%;
-    transition: background-color 0.3s ease;
-    max-width: 100%;
-    white-space: nowrap; 
-}
-
-.btn-primary:hover {
-    background-color: #016363;
-}
-
-.btn-resume {
-    margin: 20px auto; /* Add some margin to center the button */
-}
-
-.row.justify-content-center {
-    margin: 0; /* Reset margin */
-}
-
-.about-img {
-    border-radius: 50%; 
-    width: 450px; 
-    height: 450px; 
-    object-fit: cover; 
-    margin-left: 20px;
+    .about-img {
+        width: 300px;
+        height: 300px;
+        margin: 20px auto;
+        display: block;
+    }
 }

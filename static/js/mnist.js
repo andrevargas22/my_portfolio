@@ -1,3 +1,21 @@
+/**
+ * MNIST Digit Recognition Drawing Interface
+ * 
+ * This script provides an interactive canvas interface for drawing digits
+ * and sending them to a machine learning model for recognition.
+ * Features:
+ * - Drawing interface with touch and mouse support
+ * - Canvas clearing functionality
+ * - AJAX-based API communication
+ * - Animated results display with confidence scores
+ * 
+ * The drawing interface supports:
+ * - Mouse and touch events
+ * - Stroke width optimization for digit recognition
+ * - Prevention of canvas scrolling on mobile devices
+ * - Real-time drawing feedback
+ */
+
 // Set up the canvas
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
@@ -125,6 +143,12 @@ function clean() {
     resultDiv.innerHTML = "";
 }
 
+/**
+ * Animates a progress bar to show prediction confidence
+ * @param {Element} element - The progress bar element
+ * @param {number} targetPercentage - Final percentage to animate to
+ * @param {string} progressBarColor - CSS class for bar color
+ */
 function animateProgressBar(element, targetPercentage, progressBarColor) {
     element.classList.add(progressBarColor);
     let width = 0;
@@ -140,8 +164,13 @@ function animateProgressBar(element, targetPercentage, progressBarColor) {
     }, 10);
 }
 
-
-// On call, send data to server
+/**
+ * Handles the prediction request and UI updates
+ * Steps:
+ * 1. Captures canvas content
+ * 2. Sends to API endpoint
+ * 3. Displays animated results
+ */
 function predict() {
     var resultDiv = document.getElementById("result");
     

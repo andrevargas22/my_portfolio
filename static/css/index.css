@@ -1,61 +1,60 @@
-/* CSS file for index page */
+/*
+ * Personal Website - Index Page Styles
+ * Author: André Vargas
+ * Description: Main styling for the landing page featuring a video background,
+ * animated content overlay, and social media links. Uses CSS variables for
+ * consistent theming.
+ */
 
+/* ############################## IMPORTS & VARIABLES ############################## */
+/* Font imports for typography */
 @import 'https://fonts.googleapis.com/css?family=Roboto';
-
-/* General body styles: Set background color and base styles */
-html, body {
-  background-color: #FFFAF0;
-}
-
-/* Navbar: Adjust alignment and spacing for navigation items */
-.navbar-nav {
-  margin-left: auto;
-}
-
-.navbar-nav > li {
-  margin-left: 30px;
-  margin-right: 30px;
-}
-
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap");
 
-/* Root variables for colors used throughout the page */
+/* Theme color variables for consistent styling */
 :root {
   --primary-color: #3a4052;
   --secondary-color: #9aa1aac7;
   --accent-color: #ff6347;
+  --overlay-color: rgba(0, 0, 0, 0.6);
+  --font-primary: "Open Sans", sans-serif;
+  --section-spacing: 25px;
+  --nav-spacing: 30px;
 }
 
-/* Reset margin, padding, and box-sizing for all elements */
+/* ############################## BASE STYLES ############################## */
+/* Reset and base styling for all elements */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-/* Body font and text settings */
 body {
-  font-family: "Open Sans", sans-serif;
+  font-family: var(--font-primary);
   line-height: 1.5;
   color: var(--secondary-color);
+  background-color: #FFFAF0;
 }
 
-/* Hyperlinks: Use the accent color for links */
 a {
   text-decoration: none;
   color: var(--accent-color);
+  transition: color 0.3s ease;
 }
 
-/* Headings: Lighter font weight and adjusted size */
-h1 {
-  font-weight: 300;
-  font-size: 3rem;
-  line-height: 1.2;
-  margin-bottom: 15px;
-  color: #9aa1aac7; /* Light blue or light gray */
+/* ############################## NAVBAR ############################## */
+/* Navigation menu styling */
+.navbar-nav {
+  margin-left: auto;
 }
 
-/* Showcase Section: Full-screen height with centered content */
+.navbar-nav > li {
+  margin: 0 var(--nav-spacing);
+}
+
+/* ############################## SHOWCASE SECTION ############################## */
+/* Main heading style */
 .showcase {
   position: relative;
   height: 100vh;
@@ -68,18 +67,22 @@ h1 {
   color: var(--secondary-color);
 }
 
-/* Video container styles: Full screen video background */
-.video-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  background: var(--primary-color) no-repeat center center/cover;
+.showcase h1 {
+  font-weight: 300;
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1.2;
+  margin-bottom: 15px;
 }
 
-/* Video settings: Ensure the video covers the screen and stays centered */
+/* ############################## VIDEO BACKGROUND ############################## */
+/* Video container and overlay styling */
+.video-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--primary-color) no-repeat center/cover;
+}
+
 .video-container video {
   min-width: 100%;
   min-height: 100%;
@@ -90,42 +93,50 @@ h1 {
   transform: translate(-50%, -50%);
 }
 
-/* Overlay on top of the video for better text contrast */
 .video-container:after {
   content: "";
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6); /* Semi-transparent overlay */
+  inset: 0;
+  background: var(--overlay-color);
 }
 
-/* Content on top of the video: Centered and text-styled */
+/* ############################## CONTENT OVERLAY ############################## */
+/* Main content styling */
 .content {
   z-index: 10;
-  color: #9aa1aac7; /* Light blue or light gray */
+  color: var(--secondary-color);
 }
 
 .content p {
   font-size: 1.5rem;
   max-width: 800px;
-  margin: 0 auto 25px;
+  margin: 0 auto var(--section-spacing);
 }
 
-/* Social media icons */
+/* ############################## SOCIAL MEDIA ############################## */
+/* Social media links styling */
 .social {
-  margin-top: 25px;
+  margin-top: var(--section-spacing);
 }
 
-/* Social media links with hover effect */
 .social a {
   margin: 0 10px;
   color: var(--secondary-color);
   transition: color 0.3s;
 }
 
-/* Change color on hover to accent color */
 .social a:hover {
   color: var(--accent-color);
+}
+
+/* Add responsive design */
+@media (max-width: 768px) {
+  .content p {
+    font-size: 1.2rem;
+    padding: 0 20px;
+  }
+  
+  .navbar-nav > li {
+    margin: 0 calc(var(--nav-spacing) / 2);
+  }
 }
