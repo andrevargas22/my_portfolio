@@ -1,3 +1,17 @@
+/**
+ * Blog Content Handler
+ * 
+ * Manages the interactive elements of the blog section:
+ * - Article expansion/collapse
+ * - URL hash navigation
+ * - Content visibility toggling
+ * 
+ * Features:
+ * - Deep linking support
+ * - Smooth content transitions
+ * - Automatic content handling based on URL
+ */
+
 document.addEventListener('DOMContentLoaded', function () {
     var titles = document.querySelectorAll('.article-title');
     var hash = window.location.hash;

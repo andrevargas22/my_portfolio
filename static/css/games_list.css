@@ -1,36 +1,85 @@
-/* CSS file for the page of games finished */
+/*
+ * Personal Website - Games List
+ * Author: André Vargas
+ * Description: Styles for the completed games portfolio page
+ */
 
+/* ############################## VARIABLES ############################## */
+:root {
+  --bg-color: #FFFAF0;
+  --text-color: rgb(75, 72, 72);
+  --border-color: #413e3e;
+  --nav-spacing: 30px;
+  
+  /* Tag Colors */
+  --tag-pc: #4a90e2;            /* Blue */
+  --tag-switch: #2ecc71;        /* Green */
+  --tag-ps1: #9b59b6;           /* Purple */
+  --tag-ps2: #8e44ad;           /* Dark Purple */
+  --tag-nes: #3498db;           /* Light Blue */
+  --tag-snes: #2980b9;          /* Medium Blue */
+  --tag-n64: #1abc9c;           /* Turquoise */
+  --tag-gb: #16a085;            /* Dark Turquoise */
+  --tag-gba: #27ae60;           /* Emerald */
+  --tag-gc: #3498db;            /* Sky Blue */
+  --tag-mega: #2c3e50;          /* Navy Blue */
+  --tag-ds3: #34495e;           /* Dark Navy */
+
+  /* Game Type Tag Colors */
+  --tag-action: #e74c3c;        /* Red */
+  --tag-adventure: #c0392b;     /* Dark Red */
+  --tag-rpg: #e67e22;           /* Orange */
+  --tag-platformer: #d35400;    /* Dark Orange */
+  --tag-puzzle: #f1c40f;        /* Yellow */
+  --tag-fighting: #f39c12;      /* Golden */
+  --tag-racing: #ff5252;        /* Coral Red */
+  --tag-fps: #ff4081;           /* Pink */
+  --tag-sports: #e91e63;        /* Deep Pink */
+  --tag-strategy: #d81b60;      /* Dark Pink */
+  --tag-simulation: #c2185b;    /* Rose */
+  --tag-shooter: #f50057;       /* Bright Pink */
+  --tag-party: #ff6d00;         /* Deep Orange */
+  --tag-metroidvania: #ff3d00;  /* Red Orange */
+  --tag-beat-em-up: #dd2c00;    /* Deep Red */
+  --tag-run-gun: #ff5722;       /* Light Red */
+  --tag-dplat: #9980FA;         /* Purple Blue */
+
+  /* Status Tags */
+  --tag-beaten: #95a5a6;        /* Gray */
+}
+
+/* ############################## BASE STYLES ############################## */
 body {
   width: 100%;
   height: 100%;
-  background: #FFFAF0; 
+  background: var(--bg-color); 
 }
 
-/* Navbar */
+/* ############################## NAVBAR ############################## */
 .navbar-nav {
   margin-left: auto;
 }
 
-.navbar-nav > li{
-  margin-left:30px;
-  margin-right:30px;
+.navbar-nav > li {
+  margin: 0 var(--nav-spacing);
 }
 
-.portfolio-menu{
-	text-align:center;
+/* ############################## PORTFOLIO ############################## */
+.portfolio-menu {
+  text-align: center;
 }
 
-.portfolio-menu ul li{
-	display:inline-block;
-	margin:0;
-	list-style:none;
-	padding:10px 15px;
-	cursor:pointer;
-	-webkit-transition:all 05s ease;
-	-moz-transition:all 05s ease;
-	-ms-transition:all 05s ease;
-	-o-transition:all 05s ease;
-	transition:all .5s ease;
+.portfolio-menu ul li {
+  display: inline-block;
+  margin: 0;
+  list-style: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  -webkit-transition: all 05s ease;
+  -moz-transition: all 05s ease;
+  -ms-transition: all 05s ease;
+  -o-transition: all 05s ease;
+  transition: all .5s ease;
 }
 
 .portfolio-item {
@@ -41,13 +90,13 @@ body {
 .portfolio-item img {
   width: 100%;
   height: 200px;
-  object-fit: cover; /* This ensures the image covers the entire area while maintaining its aspect ratio */
+  object-fit: cover;
   display: block;
   margin: 0 auto;
 }
 
-.portfolio-item .item{
-  margin-bottom:10px;
+.portfolio-item .item {
+  margin-bottom: 10px;
 }
 
 .image-info {
@@ -64,151 +113,63 @@ body {
 
 .image-description {
   font-size: 12px;
-  color: rgb(75, 72, 72);
-
-  margin-bottom: 5px; /* Space between title and image */
+  color: var(--text-color);
+  margin-bottom: 5px;
 }
 
 .item {
-  border-top: 1px solid #413e3e; 
-  padding-top: 10px; 
-  margin-top: 10px; 
+  border-top: 1px solid var(--border-color);
+  padding-top: 10px;
+  margin-top: 10px;
 }
 
-/* Tags */
+/* ############################## TAGS ############################## */
 .tags {
   display: flex;
   justify-content: center;
   gap: 5px;
-  margin-top: 5px; 
-  margin-bottom: 5px;
+  margin: 5px 0;
 }
 
 .tag {
-  background-color: #007bff;
   color: white;
   padding: 3px 7px;
   border-radius: 3px;
   font-size: 10px;
 }
 
+/* Console Platform Tags */
+.tag.pc { background-color: var(--tag-pc); }
+.tag.switch { background-color: var(--tag-switch); }
+.tag.ps1 { background-color: var(--tag-ps1); }
+.tag.ps2 { background-color: var(--tag-ps2); }
+.tag.nes { background-color: var(--tag-nes); }
+.tag.snes { background-color: var(--tag-snes); }
+.tag.n64 { background-color: var(--tag-n64); }
+.tag.gb { background-color: var(--tag-gb); }
+.tag.gba { background-color: var(--tag-gba); }
+.tag.gc { background-color: var(--tag-gc); }
+.tag.mega { background-color: var(--tag-mega); }
+.tag.ds3 { background-color: var(--tag-ds3); }
 
-.tag.pc {
-  background-color: #e65d0e; 
-}
+/* Game Genre/Type Tags */
+.tag.action { background-color: var(--tag-action); }
+.tag.adventure { background-color: var(--tag-adventure); }
+.tag.rpg { background-color: var(--tag-rpg); }
+.tag.platformer { background-color: var(--tag-platformer); }
+.tag.puzzle { background-color: var(--tag-puzzle); }
+.tag.fighting { background-color: var(--tag-fighting); }
+.tag.racing { background-color: var(--tag-racing); }
+.tag.fps { background-color: var(--tag-fps); }
+.tag.sports { background-color: var(--tag-sports); }
+.tag.strategy { background-color: var(--tag-strategy); }
+.tag.simulation { background-color: var(--tag-simulation); }
+.tag.shooter { background-color: var(--tag-shooter); }
+.tag.party { background-color: var(--tag-party); }
+.tag.metroidvania { background-color: var(--tag-metroidvania); }
+.tag.beat-em-up { background-color: var(--tag-beat-em-up); }
+.tag.run_gun { background-color: var(--tag-run-gun); }
+.tag.dplat { background-color: var(--tag-dplat); }
 
-.tag.nes {
-  background-color: #085e13; 
-}
-
-.tag.snes {
-  background-color: #007bff; 
-}
-
-.tag.ds3 {
-  background-color: #420057; 
-}
-
-.tag.n64 {
-  background-color: #c184da; 
-}
-
-.tag.mega {
-  background-color: #29b39c; 
-}
-
-.tag.switch {
-  background-color: #e21c1c; 
-}
-
-.tag.ps1 {
-  background-color: #575050; 
-}
-
-.tag.ps2 {
-  background-color: #4e3939; 
-}
-
-.tag.gba {
-  background-color: #3fbcee; 
-}
-
-.tag.gb {
-  background-color: #7c8588; 
-}
-
-.tag.gc {
-  background-color: #307d97; 
-}
-
-.tag.dplat {
-  background-color: #972284; 
-}
-
-.tag.platformer {
-  background-color: #6eaa76; 
-}
-
-.tag.action {
-  background-color: #f02400; 
-}
-
-.tag.puzzle {
-  background-color: #3e1350; 
-}
-
-.tag.adventure {
-  background-color: #070e79; 
-}
-
-.tag.rpg {
-  background-color: hsl(22, 85%, 37%); 
-}
-
-.tag.fighting {
-  background-color: #330618; 
-}
-
-.tag.beat-em-up {
-  background-color: #0c9eca; 
-}
-
-.tag.run_gun {
-  background-color: #e2799c; 
-}
-
-.tag.racing {
-  background-color: #ec15c8; 
-}
-
-.tag.fps {
-  background-color: #482bc7; 
-}
-
-.tag.metroidvania {
-  background-color: #82e29f; 
-}
-
-.tag.sports {
-  background-color: #eb3a3a; 
-}
-
-.tag.strategy {
-  background-color: #5f0991; 
-}
-
-.tag.party {
-  background-color: #76d1ec; 
-}
-
-.tag.simulation {
-  background-color: #820086; 
-}
-
-.tag.shooter {
-  background-color: #32ee61; 
-}
-
-.tag.beaten {
-  background-color: #746f6f; 
-}
+/* Status Tags */
+.tag.beaten { background-color: var(--tag-beaten); }

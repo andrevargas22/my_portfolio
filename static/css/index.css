@@ -6,22 +6,24 @@
  * consistent theming.
  */
 
-/* Import external fonts */
+/* ############################## IMPORTS & VARIABLES ############################## */
+/* Font imports for typography */
 @import 'https://fonts.googleapis.com/css?family=Roboto';
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap");
 
-/* Theme variables */
+/* Theme color variables for consistent styling */
 :root {
   --primary-color: #3a4052;
   --secondary-color: #9aa1aac7;
   --accent-color: #ff6347;
+  --overlay-color: rgba(0, 0, 0, 0.6);
+  --font-primary: "Open Sans", sans-serif;
+  --section-spacing: 25px;
+  --nav-spacing: 30px;
 }
 
-/* Base styles */
-html, body {
-  background-color: #FFFAF0;
-}
-
+/* ############################## BASE STYLES ############################## */
+/* Reset and base styling for all elements */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -29,34 +31,30 @@ html, body {
 }
 
 body {
-  font-family: "Open Sans", sans-serif;
+  font-family: var(--font-primary);
   line-height: 1.5;
   color: var(--secondary-color);
+  background-color: #FFFAF0;
 }
 
 a {
   text-decoration: none;
   color: var(--accent-color);
+  transition: color 0.3s ease;
 }
 
-/* Layout Components */
+/* ############################## NAVBAR ############################## */
+/* Navigation menu styling */
 .navbar-nav {
   margin-left: auto;
 }
 
 .navbar-nav > li {
-  margin-left: 30px;
-  margin-right: 30px;
+  margin: 0 var(--nav-spacing);
 }
 
-h1 {
-  font-weight: 300;
-  font-size: 3rem;
-  line-height: 1.2;
-  margin-bottom: 15px;
-  color: #9aa1aac7; /* Light blue or light gray */
-}
-
+/* ############################## SHOWCASE SECTION ############################## */
+/* Main heading style */
 .showcase {
   position: relative;
   height: 100vh;
@@ -69,15 +67,20 @@ h1 {
   color: var(--secondary-color);
 }
 
-/* Video Background */
+.showcase h1 {
+  font-weight: 300;
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1.2;
+  margin-bottom: 15px;
+}
+
+/* ############################## VIDEO BACKGROUND ############################## */
+/* Video container and overlay styling */
 .video-container {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   overflow: hidden;
-  background: var(--primary-color) no-repeat center center/cover;
+  background: var(--primary-color) no-repeat center/cover;
 }
 
 .video-container video {
@@ -93,28 +96,27 @@ h1 {
 .video-container:after {
   content: "";
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6); /* Semi-transparent overlay */
+  inset: 0;
+  background: var(--overlay-color);
 }
 
-/* Content Overlay */
+/* ############################## CONTENT OVERLAY ############################## */
+/* Main content styling */
 .content {
   z-index: 10;
-  color: #9aa1aac7; /* Light blue or light gray */
+  color: var(--secondary-color);
 }
 
 .content p {
   font-size: 1.5rem;
   max-width: 800px;
-  margin: 0 auto 25px;
+  margin: 0 auto var(--section-spacing);
 }
 
-/* Social Media Section */
+/* ############################## SOCIAL MEDIA ############################## */
+/* Social media links styling */
 .social {
-  margin-top: 25px;
+  margin-top: var(--section-spacing);
 }
 
 .social a {
@@ -125,4 +127,16 @@ h1 {
 
 .social a:hover {
   color: var(--accent-color);
+}
+
+/* Add responsive design */
+@media (max-width: 768px) {
+  .content p {
+    font-size: 1.2rem;
+    padding: 0 20px;
+  }
+  
+  .navbar-nav > li {
+    margin: 0 calc(var(--nav-spacing) / 2);
+  }
 }

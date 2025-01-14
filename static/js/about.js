@@ -1,9 +1,31 @@
+/**
+ * Interactive Timeline Implementation
+ * 
+ * Creates a horizontal, interactive timeline for displaying chronological content.
+ * Features:
+ * - Smooth animations between events
+ * - Keyboard navigation support
+ * - Responsive design
+ * - Auto-scaling timeline
+ * - Content transitions
+ * 
+ * Navigation:
+ * - Click events to select
+ * - Left/Right arrow keys
+ * - Automatic content height adjustment
+ * - Visual progress indicator
+ */
+
 jQuery(document).ready(function($) {
     var timelines = $('.cd-horizontal-timeline'),
         eventsMinDistance = 100; // Adjust this value as needed
 
     if (timelines.length > 0) initTimeline(timelines);
 
+    /**
+     * Initializes a timeline with all necessary components
+     * @param {jQuery} timelines - Timeline container elements
+     */
     function initTimeline(timelines) {
         timelines.each(function() {
             var timeline = $(this),
@@ -134,7 +156,12 @@ jQuery(document).ready(function($) {
         }
     }
 
-    // Function to update the filling line
+    /**
+     * Updates the visual filling line to show timeline progress
+     * @param {jQuery} selectedEvent - Currently selected event
+     * @param {jQuery} filling - The filling line element
+     * @param {number} totWidth - Total timeline width
+     */
     function updateFilling(selectedEvent, filling, totWidth) {
         var eventStyle = window.getComputedStyle(selectedEvent.get(0), null),
             eventLeft = eventStyle.getPropertyValue("left"),
