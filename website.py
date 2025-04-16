@@ -87,15 +87,7 @@ def game_of_life():
     return render_template('pages/game_of_life.html')
 
 ############################## TESTING FEATURES ##############################
-@app.route('/mlops')
-def mlops():
-    """
-    Renders the MLOps Builder page.
 
-    Returns:
-        Template: The mlops.html template for the section.
-    """
-    return render_template('pages/mlops.html')
 
 ############################## FUNCTIONS USED BY PAGES ##############################
 def fetch_articles():

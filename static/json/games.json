@@ -345,6 +345,14 @@
       "image": "mk64.jpg"
     },
     {
+      "title": "Mario Kart 8",
+      "year": "2014",
+      "platform": "Nintendo Switch",
+      "genre": "Racing",
+      "beaten": "2025", 
+      "image": "mariokart8.jpg"
+    },
+    {
       "title": "Mario Party",
       "year": "1998",
       "platform": "Nintendo 64",
@@ -481,15 +489,7 @@
       "image": "overcooked.jpg"
     },
     {
-      "title": "Pokémon Emerald",
-      "year": "2004",
-      "platform": "Game Boy Advanced",
-      "genre": "RPG",
-      "beaten": "Untracked",
-      "image": "pok-emerald.webp"
-    },
-    {
-      "title": "Pokémon Fire Red",
+      "title": "Pokémon (Gen1) Fire Red",
       "year": "2004",
       "platform": "Game Boy Advanced",
       "genre": "RPG",
@@ -497,12 +497,20 @@
       "image": "pok-firered.jpg"
     },
     {
-      "title": "Pokémon Gold",
-      "year": "1999",
-      "platform": "Game Boy",
+      "title": "Pokémon (Gen2) HeartGold",
+      "year": "2004",
+      "platform": "Nintendo DS",
       "genre": "RPG",
-      "beaten": "Untracked",
-      "image": "pok-gold.jpg"
+      "beaten": "2025",
+      "image": "poke_heartgold.jpg"
+    },
+    {
+      "title": "Pokémon (Gen 3) Emerald",
+      "year": "2004",
+      "platform": "Game Boy Advanced",
+      "genre": "RPG",
+      "beaten": "2025",
+      "image": "poke_emerald.jpg"
     },
     {
       "title": "Pokémon Snap",
@@ -527,14 +535,6 @@
       "genre": "Fighting",
       "beaten": "Untracked",
       "image": "pok-stadium2.jpg"
-    },
-    {
-      "title": "Pokémon Yellow",
-      "year": "1998",
-      "platform": "Game Boy",
-      "genre": "RPG",
-      "beaten": "Untracked",
-      "image": "pok-yellow.webp"
     },
     {
       "title": "Power Rangers: The Fighting Edition",
@@ -575,6 +575,14 @@
       "genre": "RPG",
       "beaten": "Untracked",
       "image": "shining-force-resurrection.webp"
+    },
+    {
+      "title": "Sonic The Hedgehog (hack)",
+      "year": "1996",
+      "platform": "Super Nintendo",
+      "genre": "Platformer",
+      "beaten": "Untracked",
+      "image": "sonic_snes.png"
     },
     {
       "title": "Sonic The Hedgehog",

@@ -36,7 +36,8 @@
 						(Effectively finished! Credits roll, The End on the screen). 
 						I used this as an experiment to create this interactive menu with HTML, CSS and JS.
 					</center>
-					<center>2025 updates: Outer Wilds, Outer Wilds: Echoes of the Eye<br>
+					<center><b>2025 updates:</b> Outer Wilds, Outer Wilds: Echoes of the Eye, Mario Kart 8, 
+						Pokémon HeartGold, Pokémon Emerald<br>
 					</center>
 				</div>
 			</div>
@@ -53,6 +54,7 @@
 					<li class="btn btn-outline-dark" data-filter=".gc">NGC</li>
 					<li class="btn btn-outline-dark" data-filter=".gb">GB</li>
 					<li class="btn btn-outline-dark" data-filter=".gba">GBA</li>
+					<li class="btn btn-outline-dark" data-filter=".ds">DS</li>
 					<li class="btn btn-outline-dark" data-filter=".ds3">3DS</li>
 					<li class="btn btn-outline-dark" data-filter=".mega">Mega Drive</li>
 					<li class="btn btn-outline-dark" data-filter=".ps1">PS1</li>
@@ -75,6 +77,7 @@
                                                    |replace("Game Boy", "gb")
                                                    |replace("Nintendo GameCube", "gc")
                                                    |replace("Nintendo 3DS", "ds3")
+												   |replace("Nintendo DS", "ds")
                                                    |lower %}
 								{% set genre_class = game.genre|replace("3D Platformer", "dplat")
                                              |replace("Beat 'em up", "beat-em-up")
