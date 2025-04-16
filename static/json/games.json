@@ -345,6 +345,14 @@
       "image": "mk64.jpg"
     },
     {
+      "title": "Mario Kart 8",
+      "year": "2014",
+      "platform": "Nintendo Switch",
+      "genre": "Racing",
+      "beaten": "2025", 
+      "image": "mariokart8.jpg"
+    },
+    {
       "title": "Mario Party",
       "year": "1998",
       "platform": "Nintendo 64",
