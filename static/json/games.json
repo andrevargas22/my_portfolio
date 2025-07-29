@@ -49,6 +49,14 @@
       "image": "Brothers: A Tale of Two Sons.jpg"
     },
     {
+      "title": "Castlevania: Circle of the Moon",
+      "year": "2001",
+      "platform": "Game Boy Advanced",
+      "genre": "Metroidvania",
+      "beaten": "2025",
+      "image": "Castlevania: Circle of the Moon.jpg"
+    },
+    {
       "title": "Chrono Trigger",
       "year": "1995",
       "platform": "Super Nintendo",
@@ -111,6 +119,14 @@
       "genre": "Racing",
       "beaten": "Untracked",
       "image": "Diddy Kong Racing.jpg"
+    },
+    {
+      "title": "Donkey Kong",
+      "year": "1981",
+      "platform": "NES",
+      "genre": "Platformer",
+      "beaten": "2025",
+      "image": "Donkey Kong.jpg"
     },
     {
       "title": "Donkey Kong Country",
@@ -199,6 +215,14 @@
       "genre": "Fighting",
       "beaten": "Untracked",
       "image": "Dragon Ball Z: Idainaru DB Densetsu.jpg"
+    },
+    {
+      "title": "Dragon Ball Advanced Adventure",
+      "year": "2004",
+      "platform": "Game Boy Advanced",
+      "genre": "Beat 'em up",
+      "beaten": "2025",
+      "image": "Dragon Ball Advanced Adventure.png"
     },
     {
       "title": "Figment",
@@ -417,6 +441,14 @@
       "image": "Mickey to Donald: Magical Adventure 3.jpg"
     },
     {
+      "title": "Mortal Kombat (bootleg)",
+      "year": "1994",
+      "platform": "NES",
+      "genre": "Fighting",
+      "beaten": "Untracked",
+      "image": "Mortal Kombat (bootleg).jpg"
+    },
+    {
       "title": "Middle-Earth: Shadow of Mordor",
       "year": "2014",
       "platform": "PC",
@@ -489,6 +521,14 @@
       "image": "Overcooked.jpg"
     },
     {
+      "title": "Overcooked 2",
+      "year": "2018",
+      "platform": "PC",
+      "genre": "Simulation",
+      "beaten": "2021",
+      "image": "Overcooked 2.avif"
+    },
+    {
       "title": "Pokémon (Gen 1) FireRed",
       "year": "2004",
       "platform": "Game Boy Advanced",
@@ -559,6 +599,14 @@
       "genre": "Fighting",
       "beaten": "Untracked",
       "image": "Pokémon Stadium 2.jpg"
+    },
+    {
+      "title": "Pokémon Stadium (bootleg)",
+      "year": "2001",
+      "platform": "Super Nintendo",
+      "genre": "Fighting",
+      "beaten": "Untracked",
+      "image": "Pokémon Stadium (bootleg).jpg"
     },
     {
       "title": "Power Rangers: The Fighting Edition",
@@ -871,6 +919,14 @@
       "genre": "RPG",
       "beaten": "2015",
       "image": "The Legend of Zelda: Ocarina of Time 3D.webp"
+    },
+    {
+      "title": "The Legend of Zelda: Skyward Sword HD",
+      "year": "2021",
+      "platform": "Nintendo Switch",
+      "genre": "RPG",
+      "beaten": "2025",
+      "image": "The Legend of Zelda: Skyward Sword HD.jpg"
     },
     {
       "title": "The Legend of Zelda: Tears of the Kingdom",
