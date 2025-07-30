@@ -12,18 +12,18 @@
  * - Mapbox GL JS
  */
 
-// Mapbox access token - Get yours from mapbox.com (free account)
-// Token is passed securely from the server via environment variable
+// Mapbox access token
 mapboxgl.accessToken = window.mapboxToken;
 
-// Visited places data - converted from your Python structure
+// Visited places data
 const visitedPlaces = [
+    // [lng, lat] format
     {
         country: "Argentina",
-        coordinates: [-68.3029, -54.8019], // Note: Mapbox uses [lng, lat] format
+        coordinates: [-68.3029, -54.8019],
         photo: "ushuaia.jpeg",
         location: "Ushuaia",
-        color: "#28a745" // green
+        color: "#28a745"
     },
     {
         country: "Austria",
@@ -44,7 +44,7 @@ const visitedPlaces = [
         coordinates: [-40.3128, -20.3155],
         photo: "vitoria.jpeg",
         location: "Vitória",
-        color: "#dc3545" // red
+        color: "#dc3545"
     },
     {
         country: "Czechia",
@@ -192,7 +192,7 @@ const visitedPlaces = [
 function initializeMap() {
     const map = new mapboxgl.Map({
         container: 'map',
-        style: 'mapbox://styles/mapbox/streets-v12', // You can change this to different styles
+        style: 'mapbox://styles/mapbox/streets-v12',
         center: [-23.393254, 5.411838], // [lng, lat] - centered around Brazil and Argentina
         zoom: 2,
         projection: 'mercator'
