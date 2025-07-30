@@ -21,7 +21,7 @@ const visitedPlaces = [
     {
         country: "Argentina",
         coordinates: [-68.3029, -54.8019],
-        photo: "ushuaia.jpeg",
+        photo: "ushuaia.jpg",
         location: "Ushuaia",
         color: "#28a745"
     },
@@ -38,6 +38,27 @@ const visitedPlaces = [
         photo: "brussels.jpg",
         location: "Brussels",
         color: "#28a745"
+    },
+    {
+        country: "Brazil",
+        coordinates: [-46.1594, -22.7536],
+        photo: "camanducaia.jpg",
+        location: "Camanducaia",
+        color: "#dc3545"
+    },
+    {
+        country: "Brazil",
+        coordinates: [-40.5088, -2.7845],
+        photo: "jericoacoara.jpg",
+        location: "Jericoacoara",
+        color: "#dc3545"
+    },
+    {
+        country: "Brazil",
+        coordinates: [-38.5014, -12.9714],
+        photo: "salvador.jpg",
+        location: "Salvador",
+        color: "#dc3545"
     },
     {
         country: "Brazil",
@@ -79,6 +100,27 @@ const visitedPlaces = [
         coordinates: [19.0402, 47.4979],
         photo: "budapest.jpg",
         location: "Budapest",
+        color: "#28a745"
+    },
+    {
+        country: "Italy",
+        coordinates: [11.2558, 43.7696],
+        photo: "florence.jpg",
+        location: "Florence",
+        color: "#28a745"
+    },
+    {
+        country: "Italy",
+        coordinates: [12.4964, 41.9028],
+        photo: "rome.jpg",
+        location: "Rome",
+        color: "#28a745"
+    },
+    {
+        country: "Italy",
+        coordinates: [11.3308, 43.3188],
+        photo: "siena.jpg",
+        location: "Siena",
         color: "#28a745"
     },
     {
@@ -192,7 +234,7 @@ const visitedPlaces = [
 function initializeMap() {
     const map = new mapboxgl.Map({
         container: 'map',
-        style: 'mapbox://styles/mapbox/streets-v12',
+        style: 'mapbox://styles/mapbox/dark-v11',
         center: [-23.393254, 5.411838], // [lng, lat] - centered around Brazil and Argentina
         zoom: 2,
         projection: 'mercator'
