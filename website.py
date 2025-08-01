@@ -55,7 +55,8 @@ def world():
     Returns:
         Template: The map.html template for the Map section.
     """
-    return render_template('pages/map.html')
+    mapbox_token = os.getenv('MAPBOX_TOKEN')
+    return render_template('pages/map.html', mapbox_token=mapbox_token)
 
 @app.route('/games')
 def games():
