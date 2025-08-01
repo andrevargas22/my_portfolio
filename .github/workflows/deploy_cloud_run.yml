@@ -18,6 +18,7 @@ jobs:
       SERVICE_ACCOUNT: site-sa
       SERVICE_NAME: website
       MNIST_ENDPOINT: ${{ secrets.MNIST_API_ENDPOINT }}
+      MAPBOX_ACCESS_TOKEN: ${{ secrets.MAPBOX_ACCESS_TOKEN }}
 
     steps:
     - name: Checkout
@@ -51,4 +52,4 @@ jobs:
           --memory 2Gi \
           --allow-unauthenticated \
           --port 8080 \
-          --set-env-vars "MNIST_ENDPOINT=${{ env.MNIST_ENDPOINT }}"
+          --set-env-vars "MNIST_ENDPOINT=${{ env.MNIST_ENDPOINT }},MAPBOX_ACCESS_TOKEN=${{ env.MAPBOX_ACCESS_TOKEN }}"

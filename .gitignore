@@ -3,3 +3,6 @@ __pycache__
 *.json
 !static/json/games.json
 .qodo
+
+# Environment variables
+.env.local

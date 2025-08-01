@@ -36,8 +36,9 @@
 						(Effectively finished! Credits roll, The End on the screen). 
 						I used this as an experiment to create this interactive menu with HTML, CSS and JS.
 					</center>
-					<center><b>2025 updates:</b> Outer Wilds, Outer Wilds: Echoes of the Eye, Mario Kart 8, 
-						Pokémon HeartGold, Pokémon Emerald, Pokémon Platinum, Pokémon SoulSilver, Pokémon LeafGreen<br>
+					<center><b>2025 entries:</b> Outer Wilds, Outer Wilds: Echoes of the Eye, Mario Kart 8, 
+						Pokémon HeartGold, Pokémon Emerald, Pokémon Platinum, Pokémon SoulSilver, Pokémon LeafGreen, 
+						Castlevania: Circle of the Moon, Donkey Kong, Dragon Ball Advanced Adventure, The Legend of Zelda: Skyward Sword HD<br>
 					</center>
 				</div>
 			</div>
@@ -90,7 +91,9 @@
 										<div class="tags">
 											<span class="tag {{platform_class}}">{{game.platform}}</span>
 											<span class="tag {{genre_class}}">{{display_genre}}</span>
+											{% if game.beaten != "Untracked" %}
 											<span class="tag beaten">Beaten in: {{game.beaten}}</span>
+											{% endif %}
 										</div>
 										<a href="{{ url_for('static', filename='images/games/' + game.image) }}" class="fancylight popup-btn" data-fancybox-group="light">
 											<img class="img-fluid" src="{{ url_for('static', filename='images/games/' + game.image) }}" alt="{{game.title}} ({{game.year}})">
