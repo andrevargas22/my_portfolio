@@ -129,6 +129,14 @@
       "image": "Donkey Kong.jpg"
     },
     {
+      "title": "Donkey Kong Jr.",
+      "year": "1982",
+      "platform": "NES",
+      "genre": "Platformer",
+      "beaten": "2025",
+      "image": "Donkey Kong Jr.jpg"
+    },
+    {
       "title": "Donkey Kong Country",
       "year": "1994",
       "platform": "Super Nintendo",
@@ -423,6 +431,14 @@
       "genre": "Action",
       "beaten": "Untracked",
       "image": "Mega Man 64.jpg"
+    },
+    {
+      "title": "Metal Slug Advance",
+      "year": "2004",
+      "platform": "Game Boy Advance",
+      "genre": "Run and Gun",
+      "beaten": "2025",
+      "image": "Metal Slug Advance.jpg"
     },
     {
       "title": "Metroid Dread",
