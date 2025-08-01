@@ -13,7 +13,22 @@
  */
 
 // Mapbox access token
-mapboxgl.accessToken = window.mapboxToken;
+// Validate token before use
+if (!window.mapboxToken || window.mapboxToken.trim() === '') {
+    console.error('Mapbox token is missing or empty. Map cannot be initialized.');
+    document.addEventListener('DOMContentLoaded', () => {
+        const mapContainer = document.getElementById('map');
+        if (mapContainer) {
+            mapContainer.innerHTML = `
+                <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 0.25rem; padding: 0.75rem 1.25rem;">
+                    <strong>Error:</strong>&nbsp;Map cannot be loaded. Mapbox token is missing.
+                </div>
+            `;
+        }
+    });
+} else {
+    mapboxgl.accessToken = window.mapboxToken;
+}
 
 // Visited places data
 const visitedPlaces = [
@@ -232,6 +247,12 @@ const visitedPlaces = [
 
 // Initialize the map
 function initializeMap() {
+    // Check if token is available before proceeding
+    if (!window.mapboxToken || window.mapboxToken.trim() === '') {
+        console.error('Cannot initialize map: Mapbox token is not available.');
+        return;
+    }
+
     const map = new mapboxgl.Map({
         container: 'map',
         style: 'mapbox://styles/mapbox/dark-v11',
@@ -320,14 +341,53 @@ function initializeMap() {
         
         // Add fullscreen control
         map.addControl(new mapboxgl.FullscreenControl());
+
+        // Remove loading indicator once everything is loaded
+        removeLoadingIndicator();
     });
 
-    // Add loading indicator
-    map.on('sourcedata', (e) => {
-        if (map.isSourceLoaded('countries')) {
-            document.getElementById('loading-indicator')?.remove();
-        }
+    // Improved loading state management
+    map.on('idle', () => {
+        // Map is fully loaded and rendered when idle
+        removeLoadingIndicator();
     });
+
+    // Handle map load errors
+    map.on('error', (e) => {
+        console.error('Map loading error:', e);
+        removeLoadingIndicator();
+        showMapError('Failed to load map. Please try again later.');
+    });
+}
+
+// Helper function to remove loading indicator
+function removeLoadingIndicator() {
+    const loadingIndicator = document.getElementById('loading-indicator');
+    if (loadingIndicator) {
+        loadingIndicator.remove();
+    }
+}
+
+// Helper function to show map errors
+function showMapError(message) {
+    const mapContainer = document.getElementById('map');
+    if (mapContainer) {
+        const errorDiv = document.createElement('div');
+        errorDiv.style.cssText = `
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            height: 100%; 
+            color: #721c24; 
+            background-color: #f8d7da; 
+            border: 1px solid #f5c6cb; 
+            border-radius: 0.25rem; 
+            padding: 0.75rem 1.25rem;
+            text-align: center;
+        `;
+        errorDiv.innerHTML = `<strong>Error:</strong>&nbsp;${message}`;
+        mapContainer.appendChild(errorDiv);
+    }
 }
 
 // Initialize map when DOM is ready
