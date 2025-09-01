@@ -8,7 +8,7 @@ Author: André Vargas
 """
 
 import os
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import feedparser
 import json
 from pathlib import Path
@@ -87,8 +87,6 @@ def game_of_life():
     """
     return render_template('pages/game_of_life.html')
 
-############################## TESTING FEATURES ##############################
-
 
 ############################## FUNCTIONS USED BY PAGES ##############################
 def fetch_articles():
@@ -144,6 +142,32 @@ def render_map():
     """
     return render_template('base/folium.html')
 
+############################## TESTING FEATURES ##############################
+#### WebSub Callback:
+@app.route('/websub/callback', methods=['GET', 'POST'])
+def websub_callback():
+    """
+    Endpoint para receber notificações do YouTube via WebSub.
+    
+    GET: Verificação de hub challenge (obrigatório pelo WebSub)
+    POST: Recebe notificações de novos vídeos
+    """
+    if request.method == 'GET':
+        # YouTube envia um challenge que precisamos retornar para verificar o endpoint
+        challenge = request.args.get('hub.challenge')
+        if challenge:
+            print(f"[WebSub] Challenge recebido: {challenge}")
+            return challenge
+        return "OK"
+    
+    elif request.method == 'POST':
+        # Aqui recebemos as notificações de novos vídeos
+        data = request.get_data(as_text=True)
+        print(f"[WebSub] Notificação recebida:")
+        print(f"Headers: {dict(request.headers)}")
+        print(f"Body: {data}")
+        return "OK"
+    
 ############################## MAIN EXECUTION ##############################
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 8080))
