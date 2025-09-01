@@ -9,6 +9,14 @@
       "image": "A Short Hike.jpg"
     },
     {
+      "title": "Advance Wars",
+      "year": "2001",
+      "platform": "Game Boy Advance",
+      "genre": "Strategy",
+      "beaten": "2025",
+      "image": "Advance Wars.jpg"
+    },
+    {
       "title": "Alladin",
       "year": "1993",
       "platform": "Super Nintendo",
@@ -644,7 +652,7 @@
       "title": "Shining Force I",
       "year": "1992",
       "platform": "Mega Drive",
-      "genre": "RPG",
+      "genre": "Strategy",
       "beaten": "Untracked",
       "image": "Shining Force I.jpg"
     },
@@ -652,7 +660,7 @@
       "title": "Shining Force II",
       "year": "1993",
       "platform": "Mega Drive",
-      "genre": "RPG",
+      "genre": "Strategy",
       "beaten": "Untracked",
       "image": "Shining Force II.jpg"
     },
@@ -660,7 +668,7 @@
       "title": "Shining Force: Resurrection of the Dark Dragon",
       "year": "2004",
       "platform": "Game Boy Advance",
-      "genre": "RPG",
+      "genre": "Strategy",
       "beaten": "Untracked",
       "image": "Shining Force: Resurrection of the Dark Dragon.webp"
     },
