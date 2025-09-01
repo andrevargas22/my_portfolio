@@ -158,14 +158,24 @@ def websub_callback():
     if request.method == 'GET':
         # YouTube envia um challenge que precisamos retornar para verificar o endpoint
         challenge = request.args.get('hub.challenge')
+        mode = request.args.get('hub.mode')
+        topic = request.args.get('hub.topic')
+        
+        print(f"[WebSub] GET request received")
+        print(f"[WebSub] Mode: {mode}")
+        print(f"[WebSub] Topic: {topic}")
+        print(f"[WebSub] Challenge: {challenge}")
+        
         if challenge:
             # Validação de segurança: challenge deve ser alfanumérico e ter tamanho razoável
             if re.match(r'^[a-zA-Z0-9_-]{1,128}$', challenge):
-                print(f"[WebSub] Challenge válido recebido: {challenge}")
+                print(f"[WebSub] Challenge VÁLIDO - retornando: {challenge}")
                 return challenge
             else:
-                print(f"[WebSub] Challenge inválido rejeitado: {challenge}")
+                print(f"[WebSub] Challenge INVÁLIDO - rejeitado: {challenge}")
                 return "Invalid challenge", 400
+        
+        print(f"[WebSub] Sem challenge - retornando OK")
         return "OK"
     
     elif request.method == 'POST':
