@@ -237,21 +237,28 @@ def parse_youtube_notification(xml_data):
         
         # Extrair informações com debug individual
         video_id = entry.find('yt:videoId', namespaces)
-        logging.info(f"[Parse] video_id found: {video_id is not None}")
+        logging.info(f"[Parse] video_id found: {video_id is not None}, value: {video_id.text if video_id is not None else 'None'}")
         
         title = entry.find('atom:title', namespaces)
-        logging.info(f"[Parse] title found: {title is not None}")
+        logging.info(f"[Parse] title found: {title is not None}, value: {title.text if title is not None else 'None'}")
         
         link = entry.find('atom:link[@rel="alternate"]', namespaces)
-        logging.info(f"[Parse] link found: {link is not None}")
+        logging.info(f"[Parse] link found: {link is not None}, href: {link.get('href') if link is not None else 'None'}")
         
         author = entry.find('atom:author/atom:name', namespaces)
-        logging.info(f"[Parse] author found: {author is not None}")
+        logging.info(f"[Parse] author found: {author is not None}, value: {author.text if author is not None else 'None'}")
         
         published = entry.find('atom:published', namespaces)
-        logging.info(f"[Parse] published found: {published is not None}")
+        logging.info(f"[Parse] published found: {published is not None}, value: {published.text if published is not None else 'None'}")
         
-        if not all([video_id, title, link, author, published]):
+        # Verificar se todos os elementos existem E têm conteúdo
+        if not all([video_id, title, link, author, published]) or not all([
+            video_id.text if video_id is not None else None,
+            title.text if title is not None else None, 
+            link.get('href') if link is not None else None,
+            author.text if author is not None else None,
+            published.text if published is not None else None
+        ]):
             logging.error("[Parse] Dados incompletos no XML")
             return None
         
