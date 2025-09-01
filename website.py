@@ -219,6 +219,7 @@ def parse_youtube_notification(xml_data):
     """
     try:
         # Parse do XML
+        logging.info(f"[Parse] XML recebido: {xml_data[:500]}...")  # Primeiros 500 chars
         root = ET.fromstring(xml_data)
         
         # Namespaces do YouTube/Atom
@@ -231,14 +232,24 @@ def parse_youtube_notification(xml_data):
         entry = root.find('atom:entry', namespaces)
         if entry is None:
             logging.error("[Parse] Nenhuma entry encontrada no XML")
+            logging.info(f"[Parse] Root tag: {root.tag}, namespaces: {root.nsmap if hasattr(root, 'nsmap') else 'N/A'}")
             return None
         
-        # Extrair informações
+        # Extrair informações com debug individual
         video_id = entry.find('yt:videoId', namespaces)
+        logging.info(f"[Parse] video_id found: {video_id is not None}")
+        
         title = entry.find('atom:title', namespaces)
+        logging.info(f"[Parse] title found: {title is not None}")
+        
         link = entry.find('atom:link[@rel="alternate"]', namespaces)
+        logging.info(f"[Parse] link found: {link is not None}")
+        
         author = entry.find('atom:author/atom:name', namespaces)
+        logging.info(f"[Parse] author found: {author is not None}")
+        
         published = entry.find('atom:published', namespaces)
+        logging.info(f"[Parse] published found: {published is not None}")
         
         if not all([video_id, title, link, author, published]):
             logging.error("[Parse] Dados incompletos no XML")
