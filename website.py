@@ -146,6 +146,18 @@ def render_map():
     return render_template('base/folium.html')
 
 ############################## TESTING FEATURES ##############################
+#### Health Check para testar logs:
+@app.route('/test-logs')
+def test_logs():
+    """
+    Endpoint simples para testar se os logs estão funcionando.
+    """
+    print("[TEST] ========================================")
+    print("[TEST] Endpoint de teste chamado!")
+    print("[TEST] Logs estão funcionando corretamente!")
+    print("[TEST] ========================================")
+    return "Logs test OK - check Cloud Run logs!"
+
 #### WebSub Callback:
 @app.route('/websub/callback', methods=['GET', 'POST'])
 def websub_callback():
