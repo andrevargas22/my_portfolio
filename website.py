@@ -150,18 +150,6 @@ def render_map():
     return render_template('base/folium.html')
 
 ############################## TESTING FEATURES ##############################
-#### Health Check para testar logs:
-@app.route('/test-logs')
-def test_logs():
-    """
-    Endpoint simples para testar se os logs estão funcionando.
-    """
-    logging.info("[TEST] ========================================")
-    logging.info("[TEST] Endpoint de teste chamado!")
-    logging.info("[TEST] Logs estão funcionando corretamente!")
-    logging.info("[TEST] ========================================")
-    return "Logs test OK - check Cloud Run logs!"
-
 #### WebSub Callback:
 @app.route('/websub/callback', methods=['GET', 'POST'])
 def websub_callback():
@@ -177,7 +165,7 @@ def websub_callback():
         mode = request.args.get('hub.mode')
         topic = request.args.get('hub.topic')
         
-        logging.info(f"[WebSub] GET request received")
+        logging.info("################## [WebSub] GET request received ##################")
         logging.info(f"[WebSub] Mode: {mode}")
         logging.info(f"[WebSub] Topic: {topic}")
         logging.info(f"[WebSub] Challenge: {challenge}")
@@ -196,6 +184,7 @@ def websub_callback():
     
     elif request.method == 'POST':
         # Aqui recebemos as notificações de novos vídeos
+        logging.info("################## [WebSub] POST NOTIFICATION RECEIVED! ##################")
         data = request.get_data(as_text=True)
         
         # Validação HMAC para verificar autenticidade (YouTube envia X-Hub-Signature)
