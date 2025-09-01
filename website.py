@@ -16,6 +16,8 @@ import re
 import hmac
 import hashlib
 import logging
+import requests
+import xml.etree.ElementTree as ET
 
 # Configurar logging para Cloud Run
 logging.basicConfig(level=logging.INFO)
@@ -160,65 +162,144 @@ def websub_callback():
     POST: Recebe notificações de novos vídeos
     """
     if request.method == 'GET':
-        # YouTube envia um challenge que precisamos retornar para verificar o endpoint
         challenge = request.args.get('hub.challenge')
         mode = request.args.get('hub.mode')
-        topic = request.args.get('hub.topic')
         
-        logging.info("################## [WebSub] GET request received ##################")
-        logging.info(f"[WebSub] Mode: {mode}")
-        logging.info(f"[WebSub] Topic: {topic}")
-        logging.info(f"[WebSub] Challenge: {challenge}")
+        logging.info("[WebSub] GET request received")
         
         if challenge:
-            # Validação de segurança: challenge deve ser alfanumérico e ter tamanho razoável
+            # Validação de segurança
             if re.match(r'^[a-zA-Z0-9_-]{1,128}$', challenge):
-                logging.info(f"[WebSub] Challenge VÁLIDO - retornando: {challenge}")
+                logging.info("[WebSub] Challenge válido")
                 return challenge
             else:
-                logging.error(f"[WebSub] Challenge INVÁLIDO - rejeitado: {challenge}")
+                logging.error("[WebSub] Challenge inválido")
                 return "Invalid challenge", 400
         
-        logging.info(f"[WebSub] Sem challenge - retornando OK")
+        logging.info("[WebSub] Sem challenge - retornando OK")
         return "OK"
     
     elif request.method == 'POST':
-        # Aqui recebemos as notificações de novos vídeos
-        logging.info("################## [WebSub] POST NOTIFICATION RECEIVED! ##################")
+        logging.info("[WebSub] POST notification received")
         data = request.get_data(as_text=True)
         
         # Validação HMAC para verificar autenticidade (YouTube envia X-Hub-Signature)
         hub_signature = request.headers.get('X-Hub-Signature')
         if hub_signature:
-            # Extrair algoritmo e assinatura (formato: "sha1=abc123...")
             try:
                 algorithm, signature = hub_signature.split('=', 1)
                 if algorithm != 'sha1':
-                    print(f"[WebSub] Algoritmo não suportado: {algorithm}")
+                    logging.error("[WebSub] Algoritmo não suportado")
                     return "Unsupported algorithm", 400
                 
-                # Para produção, use um secret real. Por agora, vamos apenas logar
-                # secret = os.getenv('WEBSUB_SECRET', 'your-secret-here')
-                # expected_signature = hmac.new(
-                #     secret.encode('utf-8'),
-                #     data.encode('utf-8'),
-                #     hashlib.sha1
-                # ).hexdigest()
-                
-                # if not hmac.compare_digest(signature, expected_signature):
-                #     print(f"[WebSub] Assinatura inválida")
-                #     return "Invalid signature", 403
-                
-                logging.info(f"[WebSub] Notificação com assinatura recebida: {hub_signature}")
+                logging.info("[WebSub] Notificação com assinatura recebida")
             except ValueError:
-                logging.error(f"[WebSub] Formato de assinatura inválido: {hub_signature}")
+                logging.error("[WebSub] Formato de assinatura inválido")
                 return "Invalid signature format", 400
         else:
-            logging.info(f"[WebSub] Notificação sem assinatura recebida (pode ser de teste)")
+            logging.info("[WebSub] Notificação sem assinatura recebida")
         
-        logging.info(f"[WebSub] Headers: {dict(request.headers)}")
-        logging.info(f"[WebSub] Body: {data}")
+        # Parse XML e trigger do workflow
+        video_data = parse_youtube_notification(data)
+        if video_data:
+            logging.info("########### [VIDEO PARSED] ###########")
+            logging.info(f"Link: {video_data['url']}")
+            logging.info(f"Canal: {video_data['channel']}")
+            logging.info(f"Título: {video_data['title']}")
+            logging.info(f"Postado em: {video_data['published']}")
+            logging.info("######################################")
+            
+            # trigger_video_processing_workflow(video_data)
+        
         return "OK"
+
+def parse_youtube_notification(xml_data):
+    """
+    Parse do XML recebido do YouTube WebSub para extrair informações do vídeo
+    """
+    try:
+        # Parse do XML
+        root = ET.fromstring(xml_data)
+        
+        # Namespaces do YouTube/Atom
+        namespaces = {
+            'atom': 'http://www.w3.org/2005/Atom',
+            'yt': 'http://www.youtube.com/xml/schemas/2015'
+        }
+        
+        # Encontrar a entry do vídeo
+        entry = root.find('atom:entry', namespaces)
+        if entry is None:
+            logging.error("[Parse] Nenhuma entry encontrada no XML")
+            return None
+        
+        # Extrair informações
+        video_id = entry.find('yt:videoId', namespaces)
+        title = entry.find('atom:title', namespaces)
+        link = entry.find('atom:link[@rel="alternate"]', namespaces)
+        author = entry.find('atom:author/atom:name', namespaces)
+        published = entry.find('atom:published', namespaces)
+        
+        if not all([video_id, title, link, author, published]):
+            logging.error("[Parse] Dados incompletos no XML")
+            return None
+        
+        video_data = {
+            'video_id': video_id.text,
+            'title': title.text,
+            'url': link.get('href'),
+            'channel': author.text,
+            'published': published.text
+        }
+        
+        return video_data
+        
+    except ET.ParseError as e:
+        logging.error(f"[Parse] Erro ao fazer parse do XML: {e}")
+        return None
+    except Exception as e:
+        logging.error(f"[Parse] Erro inesperado: {e}")
+        return None
+
+def trigger_video_processing_workflow(video_data):
+    """
+    Dispara workflow no repositório de processamento de vídeo
+    """
+    github_token = os.getenv('GITHUB_TOKEN')  # Personal Access Token
+    repo_owner = "andrevargas22"  # seu usuário
+    repo_name = "video-processor"  # nome do outro repo
+    
+    if not github_token:
+        logging.error("[GitHub] Token não configurado")
+        return
+    
+    url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/dispatches"
+    
+    headers = {
+        "Authorization": f"Bearer {github_token}",
+        "Accept": "application/vnd.github.v3+json",
+        "Content-Type": "application/json"
+    }
+    
+    payload = {
+        "event_type": "video_published",  # nome do evento
+        "client_payload": {  # AQUI VOCÊ PASSA OS DADOS!
+            "video_id": video_data["video_id"],
+            "video_url": video_data["url"],
+            "title": video_data["title"],
+            "channel": video_data["channel"],
+            "published_at": video_data["published"]
+        }
+    }
+    
+    try:
+        response = requests.post(url, json=payload, headers=headers)
+        if response.status_code == 204:
+            logging.info(f"[GitHub] Workflow triggered para vídeo: {video_data['title']}")
+        else:
+            logging.error(f"[GitHub] Falha ao disparar workflow: {response.status_code}")
+    except Exception as e:
+        logging.error(f"[GitHub] Erro ao disparar workflow: {e}")
     
 ############################## MAIN EXECUTION ##############################
 if __name__ == '__main__':
