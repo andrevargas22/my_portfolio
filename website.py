@@ -15,6 +15,10 @@ from pathlib import Path
 import re
 import hmac
 import hashlib
+import logging
+
+# Configurar logging para Cloud Run
+logging.basicConfig(level=logging.INFO)
     
 app = Flask(__name__)
     
@@ -152,10 +156,10 @@ def test_logs():
     """
     Endpoint simples para testar se os logs estão funcionando.
     """
-    print("[TEST] ========================================")
-    print("[TEST] Endpoint de teste chamado!")
-    print("[TEST] Logs estão funcionando corretamente!")
-    print("[TEST] ========================================")
+    logging.info("[TEST] ========================================")
+    logging.info("[TEST] Endpoint de teste chamado!")
+    logging.info("[TEST] Logs estão funcionando corretamente!")
+    logging.info("[TEST] ========================================")
     return "Logs test OK - check Cloud Run logs!"
 
 #### WebSub Callback:
@@ -173,21 +177,21 @@ def websub_callback():
         mode = request.args.get('hub.mode')
         topic = request.args.get('hub.topic')
         
-        print(f"[WebSub] GET request received")
-        print(f"[WebSub] Mode: {mode}")
-        print(f"[WebSub] Topic: {topic}")
-        print(f"[WebSub] Challenge: {challenge}")
+        logging.info(f"[WebSub] GET request received")
+        logging.info(f"[WebSub] Mode: {mode}")
+        logging.info(f"[WebSub] Topic: {topic}")
+        logging.info(f"[WebSub] Challenge: {challenge}")
         
         if challenge:
             # Validação de segurança: challenge deve ser alfanumérico e ter tamanho razoável
             if re.match(r'^[a-zA-Z0-9_-]{1,128}$', challenge):
-                print(f"[WebSub] Challenge VÁLIDO - retornando: {challenge}")
+                logging.info(f"[WebSub] Challenge VÁLIDO - retornando: {challenge}")
                 return challenge
             else:
-                print(f"[WebSub] Challenge INVÁLIDO - rejeitado: {challenge}")
+                logging.error(f"[WebSub] Challenge INVÁLIDO - rejeitado: {challenge}")
                 return "Invalid challenge", 400
         
-        print(f"[WebSub] Sem challenge - retornando OK")
+        logging.info(f"[WebSub] Sem challenge - retornando OK")
         return "OK"
     
     elif request.method == 'POST':
@@ -216,15 +220,15 @@ def websub_callback():
                 #     print(f"[WebSub] Assinatura inválida")
                 #     return "Invalid signature", 403
                 
-                print(f"[WebSub] Notificação com assinatura recebida: {hub_signature}")
+                logging.info(f"[WebSub] Notificação com assinatura recebida: {hub_signature}")
             except ValueError:
-                print(f"[WebSub] Formato de assinatura inválido: {hub_signature}")
+                logging.error(f"[WebSub] Formato de assinatura inválido: {hub_signature}")
                 return "Invalid signature format", 400
         else:
-            print(f"[WebSub] Notificação sem assinatura recebida (pode ser de teste)")
+            logging.info(f"[WebSub] Notificação sem assinatura recebida (pode ser de teste)")
         
-        print(f"[WebSub] Headers: {dict(request.headers)}")
-        print(f"[WebSub] Body: {data}")
+        logging.info(f"[WebSub] Headers: {dict(request.headers)}")
+        logging.info(f"[WebSub] Body: {data}")
         return "OK"
     
 ############################## MAIN EXECUTION ##############################
