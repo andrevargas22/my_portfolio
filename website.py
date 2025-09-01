@@ -12,6 +12,9 @@ from flask import Flask, render_template, request
 import feedparser
 import json
 from pathlib import Path
+import re
+import hmac
+import hashlib
     
 app = Flask(__name__)
     
@@ -156,16 +159,50 @@ def websub_callback():
         # YouTube envia um challenge que precisamos retornar para verificar o endpoint
         challenge = request.args.get('hub.challenge')
         if challenge:
-            print(f"[WebSub] Challenge recebido: {challenge}")
-            return challenge
+            # Validação de segurança: challenge deve ser alfanumérico e ter tamanho razoável
+            if re.match(r'^[a-zA-Z0-9_-]{1,128}$', challenge):
+                print(f"[WebSub] Challenge válido recebido: {challenge}")
+                return challenge
+            else:
+                print(f"[WebSub] Challenge inválido rejeitado: {challenge}")
+                return "Invalid challenge", 400
         return "OK"
     
     elif request.method == 'POST':
         # Aqui recebemos as notificações de novos vídeos
         data = request.get_data(as_text=True)
-        print(f"[WebSub] Notificação recebida:")
-        print(f"Headers: {dict(request.headers)}")
-        print(f"Body: {data}")
+        
+        # Validação HMAC para verificar autenticidade (YouTube envia X-Hub-Signature)
+        hub_signature = request.headers.get('X-Hub-Signature')
+        if hub_signature:
+            # Extrair algoritmo e assinatura (formato: "sha1=abc123...")
+            try:
+                algorithm, signature = hub_signature.split('=', 1)
+                if algorithm != 'sha1':
+                    print(f"[WebSub] Algoritmo não suportado: {algorithm}")
+                    return "Unsupported algorithm", 400
+                
+                # Para produção, use um secret real. Por agora, vamos apenas logar
+                # secret = os.getenv('WEBSUB_SECRET', 'your-secret-here')
+                # expected_signature = hmac.new(
+                #     secret.encode('utf-8'),
+                #     data.encode('utf-8'),
+                #     hashlib.sha1
+                # ).hexdigest()
+                
+                # if not hmac.compare_digest(signature, expected_signature):
+                #     print(f"[WebSub] Assinatura inválida")
+                #     return "Invalid signature", 403
+                
+                print(f"[WebSub] Notificação com assinatura recebida: {hub_signature}")
+            except ValueError:
+                print(f"[WebSub] Formato de assinatura inválido: {hub_signature}")
+                return "Invalid signature format", 400
+        else:
+            print(f"[WebSub] Notificação sem assinatura recebida (pode ser de teste)")
+        
+        print(f"[WebSub] Headers: {dict(request.headers)}")
+        print(f"[WebSub] Body: {data}")
         return "OK"
     
 ############################## MAIN EXECUTION ##############################
