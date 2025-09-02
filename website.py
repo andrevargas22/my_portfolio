@@ -156,10 +156,10 @@ def render_map():
 @app.route('/websub/callback', methods=['GET', 'POST'])
 def websub_callback():
     """
-    Endpoint para receber notificações do YouTube via WebSub.
+    Endpoint to receive YouTube WebSub notifications.
     
-    GET: Verificação de hub challenge (obrigatório pelo WebSub)
-    POST: Recebe notificações de novos vídeos
+    GET: Hub Challenge verification
+    POST: Receives notifications of new videos
     """
     if request.method == 'GET':
         challenge = request.args.get('hub.challenge')
@@ -168,119 +168,105 @@ def websub_callback():
         logging.info("[WebSub] GET request received")
         
         if challenge:
-            # Validação de segurança
             if re.match(r'^[a-zA-Z0-9_-]{1,128}$', challenge):
-                logging.info("[WebSub] Challenge válido")
+                logging.info("[WebSub] Valid Challenge")
                 return challenge
             else:
-                logging.error("[WebSub] Challenge inválido")
+                logging.error("[WebSub] Invalid Challenge")
                 return "Invalid challenge", 400
-        
-        logging.info("[WebSub] Sem challenge - retornando OK")
+
+        logging.info("[WebSub] No challenge - Returning OK")
         return "OK"
     
     elif request.method == 'POST':
         logging.info("[WebSub] POST notification received")
         data = request.get_data(as_text=True)
         
-        # Validação HMAC para verificar autenticidade (YouTube envia X-Hub-Signature)
         hub_signature = request.headers.get('X-Hub-Signature')
         if hub_signature:
             try:
                 algorithm, signature = hub_signature.split('=', 1)
                 if algorithm != 'sha1':
-                    logging.error("[WebSub] Algoritmo não suportado")
+                    logging.error("[WebSub] Unsupported algorithm")
                     return "Unsupported algorithm", 400
-                
-                logging.info("[WebSub] Notificação com assinatura recebida")
+
+                logging.info("[WebSub] Notification with signature received")
             except ValueError:
-                logging.error("[WebSub] Formato de assinatura inválido")
+                logging.error("[WebSub] Invalid signature format")
                 return "Invalid signature format", 400
         else:
-            logging.info("[WebSub] Notificação sem assinatura recebida")
-        
-        # Parse XML e trigger do workflow
+            logging.info("[WebSub] No signature notification received")
+
         video_data = parse_youtube_notification(data)
         if video_data:
             logging.info("########### [VIDEO PARSED] ###########")
             logging.info(f"Link: {video_data['url']}")
-            logging.info(f"Canal: {video_data['channel']}")
-            logging.info(f"Título: {video_data['title']}")
-            logging.info(f"Postado em: {video_data['published']}")
+            logging.info(f"Channel: {video_data['channel']}")
+            logging.info(f"Title: {video_data['title']}")
+            logging.info(f"Published at: {video_data['published']}")
             logging.info("######################################")
             
-            # trigger_video_processing_workflow(video_data)
+            trigger_video_processing_workflow(video_data)
         
         return "OK"
 
 def parse_youtube_notification(xml_data):
     """
-    Parse do XML recebido do YouTube WebSub para extrair informações do vídeo
+    Parses the XML notification from YouTube WebSub.
     """
     try:
-        # Parse do XML
-        logging.info(f"[Parse] XML recebido: {xml_data[:500]}...")  # Primeiros 500 chars
+        # Parse the XML
         root = ET.fromstring(xml_data)
         
-        # Namespaces do YouTube/Atom
+        # Namespaces YouTube/Atom
         namespaces = {
             'atom': 'http://www.w3.org/2005/Atom',
             'yt': 'http://www.youtube.com/xml/schemas/2015'
         }
         
-        # Encontrar a entry do vídeo
+        # Get video entry
         entry = root.find('atom:entry', namespaces)
         if entry is None:
-            logging.error("[Parse] Nenhuma entry encontrada no XML")
-            logging.info(f"[Parse] Root tag: {root.tag}, namespaces: {root.nsmap if hasattr(root, 'nsmap') else 'N/A'}")
+            logging.error("[Parse] No entry found in XML")
             return None
-        
-        # Extrair informações com debug individual
+
+        # Extract video information
         video_id = entry.find('yt:videoId', namespaces)
-        logging.info(f"[Parse] video_id found: {video_id is not None}, value: {video_id.text if video_id is not None else 'None'}")
-        
         title = entry.find('atom:title', namespaces)
-        logging.info(f"[Parse] title found: {title is not None}, value: {title.text if title is not None else 'None'}")
-        
         link = entry.find('atom:link[@rel="alternate"]', namespaces)
-        logging.info(f"[Parse] link found: {link is not None}, href: {link.get('href') if link is not None else 'None'}")
-        
         author = entry.find('atom:author/atom:name', namespaces)
-        logging.info(f"[Parse] author found: {author is not None}, value: {author.text if author is not None else 'None'}")
-        
         published = entry.find('atom:published', namespaces)
-        logging.info(f"[Parse] published found: {published is not None}, value: {published.text if published is not None else 'None'}")
-        
-        # Se chegou até aqui, vamos montar os dados direto
+
+        # Build video data
         video_data = {
-            'video_id': video_id.text.strip() if video_id is not None and video_id.text else 'unknown',
-            'title': title.text.strip() if title is not None and title.text else 'Sem título',
+            'video_id': video_id.text.strip() if video_id is not None and video_id.text else 'Unknown',
+            'title': title.text.strip() if title is not None and title.text else 'No title',
             'url': link.get('href') if link is not None else f'https://www.youtube.com/watch?v={video_id.text}',
-            'channel': author.text.strip() if author is not None and author.text else 'Desconhecido',
-            'published': published.text.strip() if published is not None and published.text else 'Desconhecido'
+            'channel': author.text.strip() if author is not None and author.text else 'Unknown',
+            'published': published.text.strip() if published is not None and published.text else 'Unknown'
         }
         
-        logging.info(f"[Parse] video_data final: {video_data}")
+        logging.info(f"Video Data: {video_data}")
         
         return video_data
         
     except ET.ParseError as e:
-        logging.error(f"[Parse] Erro ao fazer parse do XML: {e}")
+        logging.error(f"[Parse] XML Parse Error: {e}")
         return None
     except Exception as e:
-        logging.error(f"[Parse] Erro inesperado: {e}")
+        logging.error(f"[Parse] Unexpected Error: {e}")
         return None
 
 def trigger_video_processing_workflow(video_data):
     """
-    Dispara workflow no repositório de processamento de vídeo
+    Triggers workflow in video processing repository
     """
-    github_token = os.getenv('GITHUB_TOKEN')  # Personal Access Token
-    repo_owner = "andrevargas22"  # seu usuário
-    repo_name = "video-processor"  # nome do outro repo
-    
+    github_token = os.getenv('GITHUB_TOKEN')
+    repo_owner = "andrevargas22"  
+    repo_name = "resumo_ia_grenal"  
+
     if not github_token:
-        logging.error("[GitHub] Token não configurado")
+        logging.error("[GitHub] Token not configured")
         return
     
     url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/dispatches"
@@ -292,8 +278,8 @@ def trigger_video_processing_workflow(video_data):
     }
     
     payload = {
-        "event_type": "video_published",  # nome do evento
-        "client_payload": {  # AQUI VOCÊ PASSA OS DADOS!
+        "event_type": "video_published",  
+        "client_payload": {  
             "video_id": video_data["video_id"],
             "video_url": video_data["url"],
             "title": video_data["title"],
@@ -305,12 +291,12 @@ def trigger_video_processing_workflow(video_data):
     try:
         response = requests.post(url, json=payload, headers=headers)
         if response.status_code == 204:
-            logging.info(f"[GitHub] Workflow triggered para vídeo: {video_data['title']}")
+            logging.info(f"[GitHub] Workflow triggered for video: {video_data['title']}")
         else:
-            logging.error(f"[GitHub] Falha ao disparar workflow: {response.status_code}")
+            logging.error(f"[GitHub] Failed to trigger workflow: {response.status_code}")
     except Exception as e:
-        logging.error(f"[GitHub] Erro ao disparar workflow: {e}")
-    
+        logging.error(f"[GitHub] Error triggering workflow: {e}")
+
 ############################## MAIN EXECUTION ##############################
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 8080))
