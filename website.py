@@ -219,7 +219,6 @@ def parse_youtube_notification(xml_data):
     """
     try:
         # Parse do XML
-        logging.info(f"[Parse] XML recebido: {xml_data[:500]}...")  # Primeiros 500 chars
         root = ET.fromstring(xml_data)
         
         # Namespaces do YouTube/Atom
@@ -232,26 +231,16 @@ def parse_youtube_notification(xml_data):
         entry = root.find('atom:entry', namespaces)
         if entry is None:
             logging.error("[Parse] Nenhuma entry encontrada no XML")
-            logging.info(f"[Parse] Root tag: {root.tag}, namespaces: {root.nsmap if hasattr(root, 'nsmap') else 'N/A'}")
             return None
         
-        # Extrair informações com debug individual
+        # Extrair informações do XML
         video_id = entry.find('yt:videoId', namespaces)
-        logging.info(f"[Parse] video_id found: {video_id is not None}, value: {video_id.text if video_id is not None else 'None'}")
-        
         title = entry.find('atom:title', namespaces)
-        logging.info(f"[Parse] title found: {title is not None}, value: {title.text if title is not None else 'None'}")
-        
         link = entry.find('atom:link[@rel="alternate"]', namespaces)
-        logging.info(f"[Parse] link found: {link is not None}, href: {link.get('href') if link is not None else 'None'}")
-        
         author = entry.find('atom:author/atom:name', namespaces)
-        logging.info(f"[Parse] author found: {author is not None}, value: {author.text if author is not None else 'None'}")
-        
         published = entry.find('atom:published', namespaces)
-        logging.info(f"[Parse] published found: {published is not None}, value: {published.text if published is not None else 'None'}")
         
-        # Se chegou até aqui, vamos montar os dados direto
+        # Montar dados do vídeo
         video_data = {
             'video_id': video_id.text.strip() if video_id is not None and video_id.text else 'unknown',
             'title': title.text.strip() if title is not None and title.text else 'Sem título',
@@ -260,7 +249,7 @@ def parse_youtube_notification(xml_data):
             'published': published.text.strip() if published is not None and published.text else 'Desconhecido'
         }
         
-        logging.info(f"[Parse] video_data final: {video_data}")
+        logging.info(f"[Parse] video_data: {video_data}")
         
         return video_data
         
