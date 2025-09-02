@@ -1,0 +1,41 @@
+name: YouTube Channel Subscription Maintenance
+
+on:
+  # 1st day of every month at 6:00 AM UTC (3:00 AM BRT)
+  schedule:
+    - cron: '0 6 1 * *'
+  
+  # Allow manual execution
+  workflow_dispatch:
+
+jobs:
+  subscribe-channels:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Subscribe to YouTube Channels
+        run: |
+          echo "Starting YouTube channel subscription maintenance..."
+          
+          # Call the subscribe-channels endpoint
+          response=$(curl -s -w "%{http_code}" \
+            -X GET \
+            "https://andrevargas.com.br/admin/subscribe-channels")
+          
+          http_code="${response: -3}"
+          response_body="${response%???}"
+          
+          echo "📊 HTTP Status Code: $http_code"
+          
+          if [ "$http_code" -eq 200 ]; then
+            echo "✅ Channel subscription maintenance completed successfully"
+            echo "📋 Response: $response_body"
+          else
+            echo "❌ Channel subscription maintenance failed"
+            echo "📋 Response: $response_body"
+            exit 1
+          fi
+          
+      - name: Log Completion
+        run: |
+          echo "🎯 YouTube channel subscription maintenance job completed at $(date)"
