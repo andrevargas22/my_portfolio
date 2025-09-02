@@ -141,16 +141,6 @@ def get_games_by_letter(letter):
     games = load_games()
     return [g for g in games if g['title'].upper().startswith(letter)]
 
-@app.route('/render_map')
-def render_map():
-    """
-    Renders the map page using Folium.
-
-    Returns:
-        Template: The folium.html template for displaying the map.
-    """
-    return render_template('base/folium.html')
-
 ############################## TESTING FEATURES ##############################
 #### WebSub Callback:
 @app.route('/websub/callback', methods=['GET', 'POST'])
@@ -296,110 +286,6 @@ def trigger_video_processing_workflow(video_data):
             logging.error(f"[GitHub] Failed to trigger workflow: {response.status_code}")
     except Exception as e:
         logging.error(f"[GitHub] Erro ao disparar workflow: {e}")
-
-@app.route('/admin/subscribe-channels')
-def subscribe_channels():
-    """
-    Automatically subscribes to all YouTube channels of interest via WebSub.
-    
-    Returns:
-        dict: Summary of subscription attempts with detailed results for each channel.
-    """
-    
-    # List of YouTube channels to subscribe to
-    channels_to_subscribe = [
-        {
-            "name": "Lucas Collar",
-            "channel_id": "UCAh4Y2AOSMwmatv9ktmhAAQ"
-        },
-        {
-            "name": "Alexandre Ernst",
-            "channel_id": "UCBgSy_cNIoGYnyLjmKHQOAg"
-        },
-        {
-            "name": "Lucas Dias",
-            "channel_id": "UCIMDIPyS1vsHBa4t9wlN8IQ"
-        },
-        {
-            "name": "Canal do Vaguinha",
-            "channel_id": "UCkoqa3e5oFNkEGvgrxLAmrQ"
-        },
-        {
-            "name": "A Dupla",
-            "channel_id": "UCRbfE8wK0_f5BPXtH424G_Q"
-        },
-        {
-            "name": "JB Filho Repórter",
-            "channel_id": "UCkPxmeuHR2EJR8DJpX8utMQ"
-        }
-    ]
-    
-    logging.info(f"[ChannelSubscriber] Starting subscription process for {len(channels_to_subscribe)} channels...")
-    
-    subscription_results = []
-    hub_url = "https://pubsubhubbub.appspot.com/subscribe"
-    callback_url = "https://andrevargas.com.br/websub/callback"
-    
-    for channel in channels_to_subscribe:
-        try:
-            logging.info(f"[ChannelSubscriber] Subscribing to: {channel['name']} ({channel['channel_id']})")
-            
-            topic_url = f"https://www.youtube.com/xml/feeds/videos.xml?channel_id={channel['channel_id']}"
-            
-            # WebSub subscription payload
-            subscription_data = {
-                'hub.callback': callback_url,
-                'hub.topic': topic_url,
-                'hub.verify': 'async',
-                'hub.mode': 'subscribe',
-                'hub.lease_seconds': '2764800'  # 32 days
-            }
-            
-            # Send subscription request to WebSub hub
-            response = requests.post(hub_url, data=subscription_data, timeout=10)
-            
-            if response.status_code == 202:
-                subscription_results.append({
-                    "channel_name": channel["name"],
-                    "channel_id": channel["channel_id"],
-                    "status": "✅ Successfully subscribed",
-                    "response_code": response.status_code
-                })
-                logging.info(f"[ChannelSubscriber] ✅ Successfully subscribed to {channel['name']}")
-            else:
-                subscription_results.append({
-                    "channel_name": channel["name"],
-                    "channel_id": channel["channel_id"],
-                    "status": f"❌ Subscription failed",
-                    "response_code": response.status_code,
-                    "response_text": response.text[:200] if response.text else "No response text"
-                })
-                logging.error(f"[ChannelSubscriber] ❌ Failed to subscribe to {channel['name']}: {response.status_code}")
-                
-        except Exception as e:
-            subscription_results.append({
-                "channel_name": channel["name"],
-                "channel_id": channel["channel_id"],
-                "status": f"❌ Exception: {str(e)}",
-                "response_code": None
-            })
-            logging.error(f"[ChannelSubscriber] Exception while subscribing to {channel['name']}: {e}")
-    
-    # Calculate final summary statistics
-    successful_subscriptions = len([result for result in subscription_results if "✅" in result["status"]])
-    total_channels = len(channels_to_subscribe)
-    
-    summary_stats = {
-        "total_channels": total_channels,
-        "successful_subscriptions": successful_subscriptions,
-        "failed_subscriptions": total_channels - successful_subscriptions,
-        "success_rate": f"{(successful_subscriptions/total_channels)*100:.1f}%"
-    }
-    
-    logging.info(f"[ChannelSubscriber] Summary: {successful_subscriptions}/{total_channels} channels successfully subscribed ({summary_stats['success_rate']})")
-    
-    # Function executed via cronjob - no return needed
-    logging.info("[ChannelSubscriber] Subscription process completed successfully")
 
 ############################## MAIN EXECUTION ##############################
 if __name__ == '__main__':
