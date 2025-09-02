@@ -252,14 +252,20 @@ def parse_youtube_notification(xml_data):
         logging.info(f"[Parse] published found: {published is not None}, value: {published.text if published is not None else 'None'}")
         
         # Verificar se todos os elementos existem E têm conteúdo
-        if not all([video_id, title, link, author, published]) or not all([
-            video_id.text if video_id is not None else None,
-            title.text if title is not None else None, 
-            link.get('href') if link is not None else None,
-            author.text if author is not None else None,
-            published.text if published is not None else None
-        ]):
-            logging.error("[Parse] Dados incompletos no XML")
+        if not video_id or not video_id.text:
+            logging.error("[Parse] video_id inválido")
+            return None
+        if not title or not title.text:
+            logging.error("[Parse] title inválido")
+            return None
+        if not link or not link.get('href'):
+            logging.error("[Parse] link inválido")
+            return None
+        if not author or not author.text:
+            logging.error("[Parse] author inválido")
+            return None
+        if not published or not published.text:
+            logging.error("[Parse] published inválido")
             return None
         
         video_data = {
