@@ -13,29 +13,24 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Subscribe to YouTube Channels
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+          
+      - name: Execute YouTube Channel Subscription Script
         run: |
           echo "Starting YouTube channel subscription maintenance..."
-          
-          # Call the subscribe-channels endpoint
-          response=$(curl -s -w "%{http_code}" \
-            -X GET \
-            "https://andrevargas.com.br/admin/subscribe-channels")
-          
-          http_code="${response: -3}"
-          response_body="${response%???}"
-          
-          echo "📊 HTTP Status Code: $http_code"
-          
-          if [ "$http_code" -eq 200 ]; then
-            echo "✅ Channel subscription maintenance completed successfully"
-            echo "📋 Response: $response_body"
-          else
-            echo "❌ Channel subscription maintenance failed"
-            echo "📋 Response: $response_body"
-            exit 1
-          fi
+          python scripts/subscribe_youtube_channels.py
           
       - name: Log Completion
         run: |
-          echo "🎯 YouTube channel subscription maintenance job completed at $(date)"
+          echo "YouTube channel subscription maintenance job completed at $(date)"
