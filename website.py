@@ -251,32 +251,16 @@ def parse_youtube_notification(xml_data):
         published = entry.find('atom:published', namespaces)
         logging.info(f"[Parse] published found: {published is not None}, value: {published.text if published is not None else 'None'}")
         
-        # Verificar se todos os elementos existem E têm conteúdo
-        logging.info(f"[Parse] Validação - video_id exists: {video_id is not None}, text: '{video_id.text if video_id is not None else 'None'}', bool: {bool(video_id.text) if video_id is not None else False}")
-        
-        if not video_id or not video_id.text:
-            logging.error(f"[Parse] video_id inválido - element: {video_id is not None}, text: '{video_id.text if video_id is not None else 'None'}'")
-            return None
-        if not title or not title.text:
-            logging.error(f"[Parse] title inválido - element: {title is not None}, text: '{title.text if title is not None else 'None'}'")
-            return None
-        if not link or not link.get('href'):
-            logging.error(f"[Parse] link inválido - element: {link is not None}, href: '{link.get('href') if link is not None else 'None'}'")
-            return None
-        if not author or not author.text:
-            logging.error(f"[Parse] author inválido - element: {author is not None}, text: '{author.text if author is not None else 'None'}'")
-            return None
-        if not published or not published.text:
-            logging.error(f"[Parse] published inválido - element: {published is not None}, text: '{published.text if published is not None else 'None'}'")
-            return None
-        
+        # Se chegou até aqui, vamos montar os dados direto
         video_data = {
-            'video_id': video_id.text,
-            'title': title.text,
-            'url': link.get('href'),
-            'channel': author.text,
-            'published': published.text
+            'video_id': video_id.text.strip() if video_id is not None and video_id.text else 'unknown',
+            'title': title.text.strip() if title is not None and title.text else 'Sem título',
+            'url': link.get('href') if link is not None else f'https://www.youtube.com/watch?v={video_id.text}',
+            'channel': author.text.strip() if author is not None and author.text else 'Desconhecido',
+            'published': published.text.strip() if published is not None and published.text else 'Desconhecido'
         }
+        
+        logging.info(f"[Parse] video_data final: {video_data}")
         
         return video_data
         
