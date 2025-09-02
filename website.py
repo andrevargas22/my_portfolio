@@ -252,20 +252,22 @@ def parse_youtube_notification(xml_data):
         logging.info(f"[Parse] published found: {published is not None}, value: {published.text if published is not None else 'None'}")
         
         # Verificar se todos os elementos existem E têm conteúdo
+        logging.info(f"[Parse] Validação - video_id exists: {video_id is not None}, text: '{video_id.text if video_id is not None else 'None'}', bool: {bool(video_id.text) if video_id is not None else False}")
+        
         if not video_id or not video_id.text:
-            logging.error("[Parse] video_id inválido")
+            logging.error(f"[Parse] video_id inválido - element: {video_id is not None}, text: '{video_id.text if video_id is not None else 'None'}'")
             return None
         if not title or not title.text:
-            logging.error("[Parse] title inválido")
+            logging.error(f"[Parse] title inválido - element: {title is not None}, text: '{title.text if title is not None else 'None'}'")
             return None
         if not link or not link.get('href'):
-            logging.error("[Parse] link inválido")
+            logging.error(f"[Parse] link inválido - element: {link is not None}, href: '{link.get('href') if link is not None else 'None'}'")
             return None
         if not author or not author.text:
-            logging.error("[Parse] author inválido")
+            logging.error(f"[Parse] author inválido - element: {author is not None}, text: '{author.text if author is not None else 'None'}'")
             return None
         if not published or not published.text:
-            logging.error("[Parse] published inválido")
+            logging.error(f"[Parse] published inválido - element: {published is not None}, text: '{published.text if published is not None else 'None'}'")
             return None
         
         video_data = {
