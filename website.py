@@ -18,8 +18,6 @@ import hashlib
 import logging
 import requests
 import xml.etree.ElementTree as ET
-import subprocess
-import sys
 
 # Configurar logging para Cloud Run
 logging.basicConfig(level=logging.INFO)
@@ -144,66 +142,6 @@ def get_games_by_letter(letter):
     return [g for g in games if g['title'].upper().startswith(letter)]
 
 ############################## TESTING FEATURES ##############################
-
-@app.route('/audio_download')
-def audio_download():
-    """
-    Faz o download do áudio do vídeo usando os dados do request.
-    """
-    logging.info("[Audio Download] Request received")
-    
-    # Pegar dados do vídeo do request (se vier como parâmetros)
-    video_url = request.args.get('url')
-    channel = request.args.get('channel', 'Unknown')
-    title = request.args.get('title', 'Unknown')
-    
-    if not video_url:
-        logging.error("[Audio Download] No URL provided")
-        return {"message": "No URL provided", "status": "error"}, 400
-    
-    try:
-        # Sanitize filename components inline
-        clean_title = re.sub(r'[<>:"/\\|?*]', '', title).replace(' ', '_')[:100]
-        clean_channel = re.sub(r'[<>:"/\\|?*]', '', channel).replace(' ', '_')[:100]
-        
-        # Generate simple filename
-        filename = f"{clean_channel}_{clean_title}.webm"
-        
-        logging.info(f"[Audio Download] Starting download: {filename}")
-        
-        # Use yt-dlp to download audio with anti-bot measures
-        command = [
-            'yt-dlp',
-            '--format', 'bestaudio[ext=webm]/bestaudio',
-            '--output', filename,
-            '--no-playlist',
-            '--quiet',
-            '--user-agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36',
-            '--add-header', 'Accept-Language:en-US,en;q=0.9',
-            '--add-header', 'Accept:text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-            '--add-header', 'Accept-Encoding:gzip, deflate',
-            '--add-header', 'DNT:1',
-            '--add-header', 'Connection:keep-alive',
-            '--extractor-retries', '5',
-            '--sleep-interval', '2',
-            '--max-sleep-interval', '10',
-            '--no-check-certificate',
-            video_url
-        ]
-        
-        result = subprocess.run(command, capture_output=True, text=True, timeout=300)
-        
-        if result.returncode == 0:
-            logging.info(f"[Audio Download] Success: {filename}")
-            return {"message": "Audio downloaded successfully", "filename": filename, "status": "success"}
-        else:
-            logging.error(f"[Audio Download] Failed: {result.stderr}")
-            return {"message": "Download failed", "error": result.stderr, "status": "error"}, 500
-            
-    except Exception as e:
-        logging.error(f"[Audio Download] Exception: {e}")
-        return {"message": "Download exception", "error": str(e), "status": "error"}, 500
-
 #### WebSub Callback:
 @app.route('/websub/callback', methods=['GET', 'POST'])
 def websub_callback():
@@ -258,25 +196,7 @@ def websub_callback():
             logging.info(f"Published at: {video_data['published']}")
             logging.info("######################################")
             
-            #trigger_video_processing_workflow(video_data)
-            
-            # Chamar rota de download de áudio
-            try:
-                with app.test_client() as client:
-                    response = client.get('/audio_download', query_string={
-                        'url': video_data['url'],
-                        'channel': video_data['channel'],
-                        'title': video_data['title']
-                    })
-                    
-                    if response.status_code == 200:
-                        result = response.get_json()
-                        logging.info(f"[Audio Download] Success: {result['filename']}")
-                    else:
-                        logging.error(f"[Audio Download] Failed with status: {response.status_code}")
-                        
-            except Exception as e:
-                logging.error(f"[Audio Download] Error calling route: {e}")
+            trigger_video_processing_workflow(video_data)
         
         return "OK"
 
