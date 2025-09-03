@@ -4,3 +4,7 @@ __pycache__
 
 # Environment variables
 .env.local
+
+# testing
+test_notification.xml
+test_websub.sh
