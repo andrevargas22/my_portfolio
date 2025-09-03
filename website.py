@@ -142,6 +142,14 @@ def get_games_by_letter(letter):
     return [g for g in games if g['title'].upper().startswith(letter)]
 
 ############################## TESTING FEATURES ##############################
+
+@app.route('/test/hello')
+def test_hello():
+    """
+    Rota de teste que apenas imprime hello world nos logs
+    """
+    return {"message": "Hello World", "status": "success"}
+
 #### WebSub Callback:
 @app.route('/websub/callback', methods=['GET', 'POST'])
 def websub_callback():
@@ -196,7 +204,14 @@ def websub_callback():
             logging.info(f"Published at: {video_data['published']}")
             logging.info("######################################")
             
-            trigger_video_processing_workflow(video_data)
+            #trigger_video_processing_workflow(video_data)
+            
+            # Teste: chamada direta da função
+            try:
+                result = test_hello()
+                logging.info(f"[Test Direct] Function result: {result}")
+            except Exception as e:
+                logging.error(f"[Test Direct] Error calling function: {e}")
         
         return "OK"
 
