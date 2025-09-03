@@ -18,6 +18,8 @@ import hashlib
 import logging
 import requests
 import xml.etree.ElementTree as ET
+import subprocess
+import sys
 
 # Configurar logging para Cloud Run
 logging.basicConfig(level=logging.INFO)
@@ -143,12 +145,54 @@ def get_games_by_letter(letter):
 
 ############################## TESTING FEATURES ##############################
 
-@app.route('/test/hello')
-def test_hello():
+@app.route('/audio_download')
+def audio_download():
     """
-    Rota de teste que apenas imprime hello world nos logs
+    Faz o download do áudio do vídeo usando os dados do request.
     """
-    return {"message": "Hello World", "status": "success"}
+    logging.info("[Audio Download] Request received")
+    
+    # Pegar dados do vídeo do request (se vier como parâmetros)
+    video_url = request.args.get('url')
+    channel = request.args.get('channel', 'Unknown')
+    title = request.args.get('title', 'Unknown')
+    
+    if not video_url:
+        logging.error("[Audio Download] No URL provided")
+        return {"message": "No URL provided", "status": "error"}, 400
+    
+    try:
+        # Sanitize filename components inline
+        clean_title = re.sub(r'[<>:"/\\|?*]', '', title).replace(' ', '_')[:100]
+        clean_channel = re.sub(r'[<>:"/\\|?*]', '', channel).replace(' ', '_')[:100]
+        
+        # Generate simple filename
+        filename = f"{clean_channel}_{clean_title}.webm"
+        
+        logging.info(f"[Audio Download] Starting download: {filename}")
+        
+        # Use yt-dlp to download audio
+        command = [
+            'yt-dlp',
+            '--format', 'bestaudio[ext=webm]/bestaudio',
+            '--output', filename,
+            '--no-playlist',
+            '--quiet',
+            video_url
+        ]
+        
+        result = subprocess.run(command, capture_output=True, text=True, timeout=300)
+        
+        if result.returncode == 0:
+            logging.info(f"[Audio Download] Success: {filename}")
+            return {"message": "Audio downloaded successfully", "filename": filename, "status": "success"}
+        else:
+            logging.error(f"[Audio Download] Failed: {result.stderr}")
+            return {"message": "Download failed", "error": result.stderr, "status": "error"}, 500
+            
+    except Exception as e:
+        logging.error(f"[Audio Download] Exception: {e}")
+        return {"message": "Download exception", "error": str(e), "status": "error"}, 500
 
 #### WebSub Callback:
 @app.route('/websub/callback', methods=['GET', 'POST'])
@@ -206,12 +250,23 @@ def websub_callback():
             
             #trigger_video_processing_workflow(video_data)
             
-            # Teste: chamada direta da função
+            # Chamar rota de download de áudio
             try:
-                result = test_hello()
-                logging.info(f"[Test Direct] Function result: {result}")
+                with app.test_client() as client:
+                    response = client.get('/audio_download', query_string={
+                        'url': video_data['url'],
+                        'channel': video_data['channel'],
+                        'title': video_data['title']
+                    })
+                    
+                    if response.status_code == 200:
+                        result = response.get_json()
+                        logging.info(f"[Audio Download] Success: {result['filename']}")
+                    else:
+                        logging.error(f"[Audio Download] Failed with status: {response.status_code}")
+                        
             except Exception as e:
-                logging.error(f"[Test Direct] Error calling function: {e}")
+                logging.error(f"[Audio Download] Error calling route: {e}")
         
         return "OK"
 
