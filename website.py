@@ -171,7 +171,7 @@ def audio_download():
         
         logging.info(f"[Audio Download] Starting download: {filename}")
         
-        # Use yt-dlp to download audio
+        # Use yt-dlp to download audio with anti-bot measures
         command = [
             'yt-dlp',
             '--format', 'bestaudio[ext=webm]/bestaudio',
@@ -180,9 +180,14 @@ def audio_download():
             '--quiet',
             '--user-agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36',
             '--add-header', 'Accept-Language:en-US,en;q=0.9',
-            '--extractor-retries', '3',
-            '--sleep-interval', '1',
-            '--max-sleep-interval', '5',
+            '--add-header', 'Accept:text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            '--add-header', 'Accept-Encoding:gzip, deflate',
+            '--add-header', 'DNT:1',
+            '--add-header', 'Connection:keep-alive',
+            '--extractor-retries', '5',
+            '--sleep-interval', '2',
+            '--max-sleep-interval', '10',
+            '--no-check-certificate',
             video_url
         ]
         
