@@ -13,8 +13,6 @@ import feedparser
 import json
 from pathlib import Path
 import re
-import hmac
-import hashlib
 import logging
 import requests
 import xml.etree.ElementTree as ET

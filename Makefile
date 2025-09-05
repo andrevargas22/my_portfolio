@@ -11,7 +11,7 @@ merge:
 	@echo "⬇️  Pulling latest changes from $(MAIN_BRANCH)..."
 	git pull origin $(MAIN_BRANCH)
 	@echo "🔀 Merging $(DEV_BRANCH) into $(MAIN_BRANCH)..."
-	git merge $(DEV_BRANCH)
+	git merge $(DEV_BRANCH) --no-edit
 	@echo "⬆️  Pushing changes to $(MAIN_BRANCH)..."
 	git push origin $(MAIN_BRANCH)
 	@echo "🔄 Returning to $(DEV_BRANCH)..."

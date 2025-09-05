@@ -129,6 +129,14 @@
       "image": "Cuphead.jpg"
     },
     {
+      "title": "Digimon Battle Spirit",
+      "year": "2001",
+      "platform": "Game Boy Advance",
+      "genre": "Fighting",
+      "beaten": "2025",
+      "image": "Digimon Battle Spirit.jpg"
+    },
+    {
       "title": "Diddy Kong Racing",
       "year": "1995",
       "platform": "Nintendo 64",
@@ -647,6 +655,14 @@
       "genre": "Fighting",
       "beaten": "Untracked",
       "image": "Power Rangers: The Fighting Edition.jpg"
+    },
+    {
+      "title": "Return of the Obra Dinn",
+      "year": "2018",
+      "platform": "Nintendo Switch",
+      "genre": "Puzzle",
+      "beaten": "2025",
+      "image": "Return of the Obra Dinn.webp"
     },
     {
       "title": "Shadow of the Colossus",
