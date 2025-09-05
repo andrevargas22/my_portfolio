@@ -13,8 +13,6 @@ import feedparser
 import json
 from pathlib import Path
 import re
-import hmac
-import hashlib
 import logging
 import requests
 import xml.etree.ElementTree as ET
@@ -268,7 +266,8 @@ def trigger_video_processing_workflow(video_data):
     }
     
     payload = {
-        "event_type": "video_published",  
+        "event_type": "video_published",
+        "ref": "dev",  # Trigger workflow on dev branch instead of main
         "client_payload": {  
             "video_id": video_data["video_id"],
             "video_url": video_data["url"],
