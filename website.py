@@ -266,7 +266,8 @@ def trigger_video_processing_workflow(video_data):
     }
     
     payload = {
-        "event_type": "video_published",  
+        "event_type": "video_published",
+        "ref": "dev",  # Trigger workflow on dev branch instead of main
         "client_payload": {  
             "video_id": video_data["video_id"],
             "video_url": video_data["url"],
