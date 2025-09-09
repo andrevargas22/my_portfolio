@@ -194,7 +194,7 @@ def websub_callback():
             logging.info(f"Published at: {video_data['published']}")
             logging.info("######################################")
             
-            #trigger_video_processing_workflow(video_data)
+            trigger_video_processing_workflow(video_data)
         
         return "OK"
 
@@ -251,7 +251,7 @@ def trigger_video_processing_workflow(video_data):
     """
     github_token = os.getenv('GITHUB_TOKEN')
     repo_owner = "andrevargas22"  
-    repo_name = "resumo_ia_grenal"  
+    repo_name = "grenalbot"  
 
     if not github_token:
         logging.error("[GitHub] Token not configured")
