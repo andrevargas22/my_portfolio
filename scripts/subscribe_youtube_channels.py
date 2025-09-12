@@ -49,12 +49,32 @@ def subscribe_to_youtube_channels():
             "channel_id": "UCkoqa3e5oFNkEGvgrxLAmrQ"
         },
         {
+            "name": "Careca de Saber",
+            "channel_id": "UCUaNjDcaVliZyWd-MgsDAzw"
+        },
+        {
+            "name": "César Cidade Dias",
+            "channel_id": "UC-vcAXksTA21wp1iN4ZGv6Q"
+        },
+        {
+            "name": "Cristiano Oliveira",
+            "channel_id": "UC66qTkwGt0VOzejqDmzQyjg"
+        },
+        {
             "name": "A Dupla",
             "channel_id": "UCRbfE8wK0_f5BPXtH424G_Q"
         },
         {
             "name": "JB Filho Repórter",
             "channel_id": "UCkPxmeuHR2EJR8DJpX8utMQ"
+        },
+        {
+            "name": "Leonardo Meneghetti",
+            "channel_id": "UCZqLwvgBgcSV5onlSrxkjQQ"
+        },
+        {
+            "name": "Marinho Saldanha",
+            "channel_id": "UC7a6C6H12xIAYZUKa_f9GKQ"
         }
     ]
     
