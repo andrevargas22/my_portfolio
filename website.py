@@ -194,7 +194,7 @@ def websub_callback():
             logging.info(f"Published at: {video_data['published']}")
             logging.info("######################################")
             
-            #trigger_video_processing_workflow(video_data)
+            trigger_video_processing_workflow(video_data)
         
         return "OK"
 

@@ -8,3 +8,5 @@ __pycache__/
 # testing
 test_notification.xml
 test_websub.sh
+
+find_channel_id.py
