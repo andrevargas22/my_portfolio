@@ -12,10 +12,17 @@ merge:
 	@echo "✅ Merge completed successfully!"
 
 debug:
-	export $$(grep -v '^#' .env.local | xargs) && FLASK_APP=website.py flask run --debug
+	bash -c 'set -a && source .env.local && FLASK_APP=website.py flask run --debug'
 
 test:
 	curl -X POST https://andrevargas.com.br/websub/callback \
+	-H "Content-Type: application/atom+xml" \
+	-H "User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)" \
+	-d @test_notification.xml \
+	-v
+
+test-local:
+	curl -X POST http://localhost:5000/websub/callback \
 	-H "Content-Type: application/atom+xml" \
 	-H "User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)" \
 	-d @test_notification.xml \

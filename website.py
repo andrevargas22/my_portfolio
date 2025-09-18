@@ -8,14 +8,19 @@ Author: André Vargas
 """
 
 import os
+import time
+import json
+import logging
+import re
+import hmac
+import base64
+from hashlib import sha256
 from flask import Flask, render_template, request
 import feedparser
-import json
 from pathlib import Path
-import re
-import logging
 import requests
 import xml.etree.ElementTree as ET
+import jwt
 
 # Configurar logging para Cloud Run
 logging.basicConfig(level=logging.INFO)
@@ -245,29 +250,109 @@ def parse_youtube_notification(xml_data):
         logging.error(f"[Parse] Unexpected Error: {e}")
         return None
 
+def _load_private_key():
+    """
+    Get the GitHub App private key from environment variables.
+    """
+    
+    key = os.getenv("GITHUB_APP_PRIVATE_KEY")
+    if not key:
+        return None
+    if "\\n" in key:
+        key = key.replace("\\n", "\n")
+    return key
+
+
+def _generate_github_app_jwt(app_id: str, private_key: str) -> str:
+    """
+    Generate a short-lived JWT for GitHub App authentication.
+    """
+    
+    now = int(time.time())
+    payload = {
+        "iat": now - 60,  
+        "exp": now + 540,  
+        "iss": app_id
+    }
+    token = jwt.encode(payload, private_key, algorithm="RS256")
+    return token
+
+
+def _get_installation_token(app_jwt: str, installation_id: str) -> str | None:
+    """
+    Get an installation access token for a GitHub App.
+    """
+    url = f"https://api.github.com/app/installations/{installation_id}/access_tokens"
+    headers = {
+        "Authorization": f"Bearer {app_jwt}",
+        "Accept": "application/vnd.github.v3+json"
+    }
+    try:
+        r = requests.post(url, headers=headers, timeout=10)
+        if r.status_code == 201:
+            data = r.json()
+            return data.get("token")
+        logging.error(f"[GitHub] Failed to get installation token: {r.status_code} {r.text}")
+    except Exception as e:
+        logging.error(f"[GitHub] Error requesting installation token: {e}")
+    return None
+
+
+def _get_dispatch_token():
+    """
+    Return an installation access token using GitHub App authentication.
+    """
+    
+    app_id = os.getenv("GITHUB_APP_ID")
+    inst_id = os.getenv("GITHUB_APP_INSTALLATION_ID")
+    private_key = _load_private_key()
+
+    if not all([app_id, inst_id, private_key]):
+        logging.error("[GitHub] GitHub App configuration incomplete (missing App ID, Installation ID, or private key)")
+        return None
+
+    try:
+        app_jwt = _generate_github_app_jwt(app_id, private_key)
+        install_token = _get_installation_token(app_jwt, inst_id)
+        if install_token:
+            return install_token
+        logging.error("[GitHub] Failed to obtain installation access token")
+        return None
+    except Exception as e:
+        logging.error(f"[GitHub] GitHub App authentication failed: {e}")
+        return None
+
+
+def _valid_video_id(video_id: str) -> bool:
+    """
+    Validate YouTube video ID format.
+    """
+    return bool(re.fullmatch(r"[A-Za-z0-9_-]{6,20}", video_id or ""))
+
+
 def trigger_video_processing_workflow(video_data):
     """
-    Triggers workflow in video processing repository
+    Dispatch a workflow event in the target repository using a GitHub App token.
     """
-    github_token = os.getenv('GITHUB_TOKEN')
-    repo_owner = "andrevargas22"  
-    repo_name = "grenalbot"  
-
-    if not github_token:
-        logging.error("[GitHub] Token not configured")
+    
+    if not video_data or video_data.get("video_id") in (None, "Unknown"):
+        logging.error("[GitHub] Missing or invalid video data")
         return
-    
+
+    if not _valid_video_id(video_data.get("video_id", "")):
+        logging.error("[GitHub] Video ID pattern invalid - aborting dispatch")
+        return
+
+    repo_owner = "andrevargas22"
+    repo_name = "grenalbot"
+    token = _get_dispatch_token()
+    if not token:
+        return
+
     url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/dispatches"
-    
-    headers = {
-        "Authorization": f"Bearer {github_token}",
-        "Accept": "application/vnd.github.v3+json",
-        "Content-Type": "application/json"
-    }
-    
     payload = {
         "event_type": "video_published",
-        "client_payload": {  
+        "client_payload": {
             "video_id": video_data["video_id"],
             "video_url": video_data["url"],
             "title": video_data["title"],
@@ -276,14 +361,20 @@ def trigger_video_processing_workflow(video_data):
         }
     }
     
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Accept": "application/vnd.github.v3+json",
+        "Content-Type": "application/json"
+    }
+    
     try:
-        response = requests.post(url, json=payload, headers=headers)
-        if response.status_code == 204:
-            logging.info(f"[GitHub] Workflow triggered for video: {video_data['title']}")
+        r = requests.post(url, json=payload, headers=headers, timeout=10)
+        if r.status_code == 204:
+            logging.info(f"[GitHub] Workflow dispatch sent for video_id={video_data['video_id']}")
         else:
-            logging.error(f"[GitHub] Failed to trigger workflow: {response.status_code}")
+            logging.error(f"[GitHub] Dispatch failed {r.status_code}: {r.text}")
     except Exception as e:
-        logging.error(f"[GitHub] Erro ao disparar workflow: {e}")
+        logging.error(f"[GitHub] Dispatch error: {e}")
 
 ############################## MAIN EXECUTION ##############################
 if __name__ == '__main__':
