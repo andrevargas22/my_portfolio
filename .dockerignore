@@ -1,0 +1,67 @@
+# Arquivos de ambiente e configuração sensível
+.env.local
+.env.prod
+.env
+*.env
+
+# Arquivos de desenvolvimento
+.git/
+.gitignore
+.vscode/
+.idea/
+*.code-workspace
+
+# Arquivos de sistema e temporários
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Arquivos Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+
+# Documentação de desenvolvimento
+README.md
+docs/
+*.md
+
+# Arquivos de build e deploy
+Dockerfile
+.dockerignore
+docker-compose.yml
+Makefile
+
+# Logs
+*.log
+logs/
+
+# Arquivos de teste
+test_*.py
+*_test.py
+tests/
+test_notification.xml
+
+# Node.js (se houver dependências front-end)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Arquivos grandes desnecessários em produção
+*.zip
+*.tar.gz
+*.rar
