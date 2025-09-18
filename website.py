@@ -174,44 +174,24 @@ def websub_callback():
         return "OK"
     
     elif request.method == 'POST':
-        logging.info("[WebSub] 📥 POST notification received")
+        logging.info("[WebSub] POST notification received")
         data = request.get_data(as_text=True)
         
-        # 🔍 DEBUG: Log informações da requisição para desenvolvimento local
-        is_local = os.getenv('FLASK_ENV') == 'development' or os.getenv('DEBUG') == '1'
-        if is_local:
-            logging.info(f"[DEBUG] 🌐 Request Info:")
-            logging.info(f"[DEBUG] 🌐 Headers: {dict(request.headers)}")
-            logging.info(f"[DEBUG] 🌐 Content-Type: {request.content_type}")
-            logging.info(f"[DEBUG] 🌐 User-Agent: {request.headers.get('User-Agent', 'N/A')}")
-        
-        # Verificação HMAC se o segredo estiver configurado
+        # HMAC verification if the secret is configured
         webhook_secret = os.environ.get('WEBHOOK_HMAC_SECRET')
         hub_signature = request.headers.get('X-Hub-Signature')
         
-        if is_local:
-            logging.info(f"[DEBUG] 🔒 Security Check:")
-            logging.info(f"[DEBUG] 🔒 HMAC secret configured: {'✅ Yes' if webhook_secret else '❌ No'}")
-            logging.info(f"[DEBUG] 🔒 Signature provided: {'✅ Yes' if hub_signature else '❌ No'}")
-        
         if webhook_secret:
-            # Se temos segredo configurado, exigimos verificação HMAC
+            # If the secret is configured, require HMAC verification
             if not hub_signature:
-                logging.error("[WebSub] ❌ HMAC secret configured but no signature provided")
+                logging.error("[WebSub] HMAC secret configured but no signature provided")
                 return "Signature required", 401
             
-            logging.info("[WebSub] 🔐 Starting HMAC verification...")
             if not _verify_webhook_signature(data, hub_signature):
-                logging.error("[WebSub] 🚫 HMAC verification failed")
+                logging.error("[WebSub] HMAC verification failed")
                 return "Forbidden", 403
                 
-            logging.info("[WebSub] ✅ HMAC verification successful")
-        else:
-            # Se não há segredo, apenas logamos se há assinatura
-            if hub_signature:
-                logging.warning("[WebSub] ⚠️ Signature provided but no HMAC secret configured - skipping verification")
-            else:
-                logging.info("[WebSub] ℹ️ No signature and no HMAC secret - proceeding without verification")
+            logging.info("[WebSub] HMAC verification successful")
 
         video_data = parse_youtube_notification(data)
         if video_data:
@@ -291,26 +271,12 @@ def _verify_webhook_signature(body: str, signature_header: str) -> bool:
         logging.warning("[WebSub] HMAC verification requested but WEBHOOK_HMAC_SECRET not configured")
         return False
     
-    # 🔍 DEBUG: Log dados de entrada para desenvolvimento local
-    is_local = os.getenv('FLASK_ENV') == 'development' or os.getenv('DEBUG') == '1'
-    if is_local:
-        logging.info(f"[DEBUG] 🔐 HMAC Debug Info:")
-        logging.info(f"[DEBUG] 📨 Body length: {len(body)} bytes")
-        logging.info(f"[DEBUG] 📨 Body preview: {body[:200]}..." if len(body) > 200 else f"[DEBUG] 📨 Body: {body}")
-        logging.info(f"[DEBUG] 🏷️ Signature header: {signature_header}")
-        logging.info(f"[DEBUG] 🔑 Secret configured: {'Yes' if webhook_secret else 'No'}")
-        logging.info(f"[DEBUG] 🔑 Secret length: {len(webhook_secret)} chars")
-    
     try:
         # Parse signature header: "sha1=hexdigest"
         algorithm, provided_signature = signature_header.split('=', 1)
         if algorithm != 'sha1':
             logging.error(f"[WebSub] Unsupported signature algorithm: {algorithm}")
             return False
-        
-        if is_local:
-            logging.info(f"[DEBUG] 🎯 Algorithm: {algorithm}")
-            logging.info(f"[DEBUG] 🎯 Provided signature: {provided_signature}")
         
         # Calculate expected signature
         expected_signature = hmac.new(
@@ -319,28 +285,18 @@ def _verify_webhook_signature(body: str, signature_header: str) -> bool:
             hashlib.sha1
         ).hexdigest()
         
-        if is_local:
-            logging.info(f"[DEBUG] 🧮 Expected signature: {expected_signature}")
-            logging.info(f"[DEBUG] 🔍 Signatures match: {provided_signature == expected_signature}")
-        
         # Secure comparison to prevent timing attacks
         is_valid = hmac.compare_digest(provided_signature, expected_signature)
         
         if is_valid:
-            logging.info("[WebSub] ✅ HMAC signature validated successfully")
+            logging.info("[WebSub] HMAC signature validated successfully")
         else:
-            logging.error("[WebSub] ❌ HMAC signature validation failed")
-            if is_local:
-                logging.error(f"[DEBUG] 💥 Comparison failed - provided vs expected:")
-                logging.error(f"[DEBUG] 💥 PROVIDED:  {provided_signature}")
-                logging.error(f"[DEBUG] 💥 EXPECTED:  {expected_signature}")
+            logging.error("[WebSub] HMAC signature validation failed")
             
         return is_valid
         
     except (ValueError, AttributeError) as e:
         logging.error(f"[WebSub] Error parsing signature header: {e}")
-        if is_local:
-            logging.error(f"[DEBUG] 💀 Exception details: {type(e).__name__}: {e}")
         return False
 
 
