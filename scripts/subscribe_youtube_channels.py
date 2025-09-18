@@ -80,6 +80,12 @@ def subscribe_to_youtube_channels():
     
     hub_url = "https://pubsubhubbub.appspot.com/subscribe"
     callback_url = "https://andrevargas.com.br/websub/callback"
+    
+    # Get HMAC secret for WebSub validation
+    webhook_secret = os.getenv("WEBHOOK_HMAC_SECRET")
+    if not webhook_secret:
+        logging.warning("WEBHOOK_HMAC_SECRET not configured - subscriptions will have no signature validation")
+    
     all_successful = True
     
     for channel in channels_to_subscribe:
@@ -93,6 +99,10 @@ def subscribe_to_youtube_channels():
                 'hub.mode': 'subscribe',
                 'hub.lease_seconds': '2764800'
             }
+            
+            # Add HMAC secret if configured
+            if webhook_secret:
+                subscription_data['hub.secret'] = webhook_secret
             
             response = requests.post(hub_url, data=subscription_data, timeout=15)
             
