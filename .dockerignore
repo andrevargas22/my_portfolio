@@ -1,67 +1,21 @@
-# Arquivos de ambiente e configuração sensível
-.env.local
-.env.prod
-.env
-*.env
-
-# Arquivos de desenvolvimento
-.git/
-.gitignore
-.vscode/
-.idea/
-*.code-workspace
-
-# Arquivos de sistema e temporários
-.DS_Store
-Thumbs.db
-*.swp
-*.swo
-*~
-
-# Arquivos Python
+# Files and directories to ignore
 __pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-env/
-venv/
-.venv/
-pip-log.txt
-pip-delete-this-directory.txt
-.pytest_cache/
-
-# Jupyter Notebooks
-.ipynb_checkpoints
-
-# Documentação de desenvolvimento
-README.md
-docs/
-*.md
-
-# Arquivos de build e deploy
+.github/
+.gitignore
 Dockerfile
 .dockerignore
-docker-compose.yml
 Makefile
+README.md
 
-# Logs
-*.log
-logs/
+# Json files
+*.json
+!games.json
 
-# Arquivos de teste
-test_*.py
-*_test.py
-tests/
+# All .env files
+.env*
+
+# Testing
 test_notification.xml
 
-# Node.js (se houver dependências front-end)
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Arquivos grandes desnecessários em produção
-*.zip
-*.tar.gz
-*.rar
+# Scripts
+scripts/find_channel_id.py

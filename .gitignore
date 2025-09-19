@@ -1,12 +1,15 @@
+# Files and directories to ignore
 __pycache__/
 
+# Json files
 *.json
+!games.json
 
-# Environment variables
+# .env local file
 .env.local
 
-# testing
+# Testing
 test_notification.xml
-test_websub.sh
 
+# Scripts
 find_channel_id.py
