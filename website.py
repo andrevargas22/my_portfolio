@@ -193,10 +193,8 @@ def websub_callback():
     
     if isinstance(result, tuple):
         return result
-    
-    return result
-
-
+      
+      
 ############################## MAIN EXECUTION ##############################
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 8080))
