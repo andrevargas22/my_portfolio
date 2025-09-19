@@ -33,6 +33,15 @@
 			<!-- Publications List -->
 			<div class="row">
 				<div class="col-lg-12 my-4">
+					{% if feed_error %}
+					<!-- Error handling for feed timeout/failures -->
+					<div class="alert alert-warning" role="alert">
+						<strong>📡 Feed Temporarily Unavailable</strong><br>
+						Unable to load articles from Medium: {{ feed_error }}.<br>
+						<small class="text-muted">Please try refreshing the page in a few moments.</small>
+					</div>
+					{% else %}
+					<!-- Normal article list -->
 					<ul class="list-group">
 						{% for article in articles %}
 						{% set sanitized_title = article.title | lower | replace(" ", "-") | replace("'", "") %}
@@ -46,6 +55,7 @@
 						</li>
 						{% endfor %}
 					</ul>
+					{% endif %}
 				</div>
 			</div>
 

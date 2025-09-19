@@ -22,6 +22,54 @@ from scripts.testing import handle_websub_callback
 logging.basicConfig(level=logging.INFO)
     
 app = Flask(__name__)
+
+# Security: Limit request body size
+app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024  
+
+# Handle request entity too large errors
+@app.errorhandler(413)
+def request_entity_too_large(error):
+    """Handle requests that exceed the maximum content length."""
+    app.logger.warning(f"Request entity too large from {request.remote_addr}")
+    return "Request entity too large. Maximum allowed size is 1MB.", 413
+
+# Security headers
+@app.after_request
+def add_security_headers(response):
+    """
+    Add security headers to responses.
+    """
+    # Prevent MIME type sniffing
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    
+    # Prevent clickjacking attacks
+    response.headers['X-Frame-Options'] = 'DENY'
+    
+    # XSS protection
+    response.headers['X-XSS-Protection'] = '1; mode=block'
+    
+    # Content Security Policy
+    response.headers['Content-Security-Policy'] = (
+        "default-src *; "
+        "script-src * 'unsafe-inline' 'unsafe-eval' blob:; "
+        "worker-src * blob:; " 
+        "style-src * 'unsafe-inline'; "
+        "img-src * data: blob:; "
+        "font-src *; "
+        "connect-src *; "
+        "media-src *; "
+        "object-src 'none'; "
+        "base-uri 'self'"
+    )
+    
+    # Referrer Policy
+    response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+    
+    # Force HTTPS in production
+    if request.is_secure:
+        response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
+    
+    return response
     
 ############################## PAGE ROUTES ##############################
 @app.route('/')
@@ -48,18 +96,33 @@ def about():
 def blog():
     """
     Renders the blog page with articles fetched from the Medium feed.
+    
+    Implements graceful handling for timeout and network errors.
 
     Returns:
         Template: The blog.html template populated with Medium articles.
+                 If feed fails to load, shows error message with fallback.
     """
     articles = fetch_articles()
+    
+    # Handle timeout and error cases
+    if isinstance(articles, tuple):
+        error_message, status_code = articles
+        app.logger.warning(f"Blog feed error: {error_message} (Status: {status_code})")
+        
+        # Return template with error message instead of failing completely
+        return render_template('pages/blog.html', 
+                             articles=[], 
+                             feed_error=error_message,
+                             status_code=status_code)
+    
     return render_template('pages/blog.html', articles=articles)
 
 @app.route('/map')
-def world():
+def map_page():
     """
-    Renders the map page.
-
+    Renders the travel map page with Mapbox integration.
+    
     Returns:
         Template: The map.html template for the Map section.
     """
