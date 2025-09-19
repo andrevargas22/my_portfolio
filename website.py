@@ -73,6 +73,16 @@ def add_security_headers(response):
     # Force HTTPS in production
     if request.is_secure:
         response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
+
+    
+    response.headers['Permissions-Policy'] = (
+        "geolocation=(), microphone=(), camera=(), payment=(), usb=(), accelerometer=(), gyroscope=(), "
+        "magnetometer=(), interest-cohort=(), fullscreen=(self)"
+    )
+
+    response.headers['Cross-Origin-Opener-Policy'] = 'same-origin'
+
+    response.headers['Origin-Agent-Cluster'] = '?1'
     
     return response
     

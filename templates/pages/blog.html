@@ -5,21 +5,13 @@
 	and links to original Medium posts.
 -->
 	
-<!doctype html>
-<html lang="en">
-
-	<head>
-		<!-- Header File -->
-		{% include 'base/header.html' %} 
-		<!-- Page CSS -->
-		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/blog.css') }}">
-		<meta name="description" content="Collection of technical articles and blog posts about Machine Learning and MLOps">
-	</head>
-
-	<body>
-		
-		<!-- Navigation Bar -->
-		{% include 'base/navbar.html' %} 
+{% extends 'base/layout.html' %}
+{% block title %}Publications - André Vargas{% endblock %}
+{% block head_extra %}
+    <meta name="description" content="Collection of technical articles and blog posts about Machine Learning and MLOps">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/blog.css') }}">
+{% endblock %}
+{% block content %}
 
 		<div class="container">
 
@@ -61,11 +53,8 @@
 
 		</div>
 
-		<!-- Bootstrap Bundle with Popper -->
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-			
-		<script src="{{ url_for('static', filename='js/blog.js') }}"></script>
-		
-	</body>
+{% endblock %}
+{% block scripts_extra %}
+<script src="{{ url_for('static', filename='js/blog.js') }}"></script>
+{% endblock %}
 
-</html>

@@ -1,59 +1,42 @@
 <!--
-    Personal Website - Navigation Bar Component
-    Author: André Vargas
-    Description: Responsive navigation bar component using Bootstrap, featuring brand,
-    main navigation links and dropdown menus for projects categories.
+  Navigation Bar Component (partial)
+  NOTE: This file intentionally contains ONLY the <nav> element (no <!doctype>, <html>, or <body>)
+        to avoid duplicate root elements when included inside the base layout.
 -->
-
-<!doctype html>
-<html lang="en">
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <!-- Navigation Bar Brand -->
-            <a class="navbar-brand" href="/">
-                André Vargas
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <!-- Navigation Bar Options -->
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mb-2 mb-lg-0">
-                    
-                    <!-- About -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="/about">About Me</a>
-                    </li>
-                    
-                    <!-- Publications -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="/blog">Publications</a>
-                    </li>
-                    
-                    <!-- AI Projects -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">André Vargas</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="/about">About Me</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog">Publications</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdownAI" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Data and AI Projects
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="/mnist_api">MNIST API</a></li>
-                        </ul>
-                    </li>
-
-                    <!-- Other Projects -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownAI">
+                        <li><a class="dropdown-item" href="/mnist_api">MNIST API</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdownOther" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Other Projects
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="/games">Finished Games</a></li>
-                            <li><a class="dropdown-item" href="/map">Visited Countries</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('game_of_life') }}">Game of Life</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownOther">
+                        <li><a class="dropdown-item" href="/games">Finished Games</a></li>
+                        <li><a class="dropdown-item" href="/map">Visited Countries</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('game_of_life') }}">Game of Life</a></li>
+                    </ul>
+                </li>
+            </ul>
         </div>
-    </nav>
-</html>
+    </div>
+</nav>
+
