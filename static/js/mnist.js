@@ -224,3 +224,11 @@ function predict() {
         }
     });
 }
+
+// Attach button event listeners after DOM ready
+document.addEventListener('DOMContentLoaded', function() {
+    var clearBtn = document.getElementById('btn-clear');
+    if (clearBtn) clearBtn.addEventListener('click', clean);
+    var predictBtn = document.getElementById('btn-predict');
+    if (predictBtn) predictBtn.addEventListener('click', predict);
+});

@@ -1,15 +1,21 @@
 # Files and directories to ignore
 __pycache__/
+.github/
+.gitignore
+Dockerfile
+.dockerignore
+Makefile
+README.md
 
 # Json files
 *.json
 !games.json
 
-# .env local file
-.env.local
+# All .env files
+.env*
 
 # Testing
 test_notification.xml
 
 # Scripts
-find_channel_id.py
+scripts/find_channel_id.py
