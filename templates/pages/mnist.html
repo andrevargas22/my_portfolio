@@ -5,20 +5,15 @@
 	using a neural network model deployed on Google Cloud Run.
 -->
 	
-<!doctype html>
-<html lang="en">
-	<head>
-		{% include 'base/header.html' %}
-		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/mnist.css') }}">
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.css" />
-		<meta name="description" content="Interactive MNIST digit classifier demo using CNN and MLFlow">
-		<script type="text/javascript">
-			window.apiEndpoint = "{{ mnist_endpoint }}";
-		</script>
-	</head>
-	<body>
-		<!-- Navigation Bar -->
-		{% include 'base/navbar.html' %} 
+{% extends 'base/layout.html' %}
+{% block title %}MNIST API Demo - André Vargas{% endblock %}
+{% block head_extra %}
+    <meta name="description" content="Interactive MNIST digit classifier demo using CNN and MLFlow">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/mnist.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.css" />
+    <script nonce="{{ g.csp_nonce }}" type="text/javascript">window.apiEndpoint = "{{ mnist_endpoint|e }}";</script>
+{% endblock %}
+{% block content %}
 
 		<!-- Required CSS -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.js"></script>
@@ -50,8 +45,8 @@
 					<canvas id='canvas' width='300' height='300'></canvas><br>
 
 					<!-- Interactive Buttons -->
-					<button class="btn btn-primary m-2" onclick="clean()">Clear</button>
-					<button class="btn btn-success m-2" onclick="predict()">Predict!</button>
+					<button id="btn-clear" class="btn btn-primary m-2">Clear</button>
+					<button id="btn-predict" class="btn btn-success m-2">Predict!</button>
 				</div> 
 
 				<!-- Result Column -->
@@ -77,10 +72,11 @@
 			</div>
 		</div>
 
-		<!-- Bootstrap Bundle with Popper -->
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-		
-		<script type="text/javascript" src="{{ url_for('static', filename='js/mnist.js') }}"></script>
-
-	</body>
-</html>
+{% endblock %}
+{% block scripts_extra %}
+<!-- Third-party libs required by mnist.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/mnist.js') }}"></script>
+{% endblock %}
