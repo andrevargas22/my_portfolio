@@ -15,8 +15,8 @@
 		<!-- Mapbox GL JS -->
 		<link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
 		<script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
-		<script type="text/javascript">
-			window.mapboxToken = "{{ mapbox_token }}";
+		<script nonce="{{ g.csp_nonce }}" type="text/javascript">
+			window.mapboxToken = "{{ mapbox_token|e }}";
 		</script>
 		<meta name="description" content="Interactive travel map showing visited countries with photos and highlights">
 	</head>

@@ -260,22 +260,26 @@ def handle_websub_callback(request_method, request_args=None, request_data=None,
     
     elif request_method == 'POST':
         logging.info("[WebSub] POST notification received")
-        
-        # HMAC verification if the secret is configured
+
         webhook_secret = os.getenv("WEBHOOK_HMAC_SECRET")
         hub_signature = request_headers.get('X-Hub-Signature') if request_headers else None
-        
-        if webhook_secret:
-            # If the secret is configured, require HMAC verification
-            if not hub_signature:
-                logging.error("[WebSub] HMAC secret configured but no signature provided")
-                return "Signature required", 401
-            
-            if not verify_webhook_signature(request_data, hub_signature):
-                logging.error("[WebSub] HMAC verification failed")
-                return "Forbidden", 403
-                
-            logging.info("[WebSub] HMAC verification successful")
+
+        # Enforce secret presence (fail closed)
+        if not webhook_secret:
+            logging.error("[WebSub] WEBHOOK_HMAC_SECRET not configured - rejecting notification")
+            return "Server HMAC not configured", 503
+
+        # Require signature header
+        if not hub_signature:
+            logging.error("[WebSub] Missing X-Hub-Signature header")
+            return "Signature required", 401
+
+        # Verify signature
+        if not verify_webhook_signature(request_data, hub_signature):
+            logging.error("[WebSub] HMAC verification failed - rejecting payload")
+            return "Forbidden", 403
+
+        logging.info("[WebSub] HMAC verification successful")
 
         video_data = parse_youtube_notification(request_data)
         if video_data:
@@ -285,9 +289,9 @@ def handle_websub_callback(request_method, request_args=None, request_data=None,
             logging.info(f"Title: {video_data['title']}")
             logging.info(f"Published at: {video_data['published']}")
             logging.info("######################################")
-            
+
             trigger_video_processing_workflow(video_data)
-        
+
         return "OK"
     
     # Method not supported

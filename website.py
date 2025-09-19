@@ -10,7 +10,8 @@ Author: André Vargas
 # Imports
 import os
 import logging
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, g
+import secrets
 
 # Production functions
 from scripts.functions import fetch_articles, get_games_by_letter
@@ -34,6 +35,11 @@ def request_entity_too_large(error):
     return "Request entity too large. Maximum allowed size is 1MB.", 413
 
 # Security headers
+@app.before_request
+def generate_csp_nonce():
+    """Generate a per-request nonce for CSP (used for inline scripts that we intentionally allow)."""
+    g.csp_nonce = secrets.token_urlsafe(16)
+
 @app.after_request
 def add_security_headers(response):
     """
@@ -49,17 +55,16 @@ def add_security_headers(response):
     response.headers['X-XSS-Protection'] = '1; mode=block'
     
     # Content Security Policy
+    nonce = getattr(g, 'csp_nonce', '')
     response.headers['Content-Security-Policy'] = (
-        "default-src *; "
-        "script-src * 'unsafe-inline' 'unsafe-eval' blob:; "
-        "worker-src * blob:; " 
-        "style-src * 'unsafe-inline'; "
-        "img-src * data: blob:; "
-        "font-src *; "
-        "connect-src *; "
-        "media-src *; "
-        "object-src 'none'; "
-        "base-uri 'self'"
+        "default-src 'self'; "
+        f"script-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://maxcdn.bootstrapcdn.com https://api.mapbox.com 'nonce-{nonce}' blob:; "
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://api.mapbox.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://maxcdn.bootstrapcdn.com; "
+        "img-src 'self' data: https://api.mapbox.com https://miro.medium.com https://cdn-images-1.medium.com https://i.gifer.com; "
+        "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; "
+        "connect-src 'self' https://api.mapbox.com https://mnist-api-622916111375.us-central1.run.app; "
+        "worker-src 'self' blob:; "
+        "object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests"
     )
     
     # Referrer Policy

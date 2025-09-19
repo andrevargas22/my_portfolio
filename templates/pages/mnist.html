@@ -12,8 +12,8 @@
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/mnist.css') }}">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.css" />
 		<meta name="description" content="Interactive MNIST digit classifier demo using CNN and MLFlow">
-		<script type="text/javascript">
-			window.apiEndpoint = "{{ mnist_endpoint }}";
+		<script nonce="{{ g.csp_nonce }}" type="text/javascript">
+			window.apiEndpoint = "{{ mnist_endpoint|e }}";
 		</script>
 	</head>
 	<body>
@@ -50,8 +50,8 @@
 					<canvas id='canvas' width='300' height='300'></canvas><br>
 
 					<!-- Interactive Buttons -->
-					<button class="btn btn-primary m-2" onclick="clean()">Clear</button>
-					<button class="btn btn-success m-2" onclick="predict()">Predict!</button>
+					<button id="btn-clear" class="btn btn-primary m-2">Clear</button>
+					<button id="btn-predict" class="btn btn-success m-2">Predict!</button>
 				</div> 
 
 				<!-- Result Column -->

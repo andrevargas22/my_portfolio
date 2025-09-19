@@ -8,6 +8,8 @@ on:
 
 jobs:
   login-build-push:
+    # NOTE: Cannot depend on a job from another workflow (CI). If you want to gate deploy
+    # on audit success, merge the audit job into this same workflow file and use `needs: audit`.
     name: Build, Push and Run
     runs-on: ubuntu-latest
 
