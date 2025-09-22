@@ -20,39 +20,49 @@ def parse_youtube_notification(xml_data):
     try:
         # Parse the XML
         root = ET.fromstring(xml_data)
-        
+
         # Namespaces YouTube/Atom
         namespaces = {
-            'atom': 'http://www.w3.org/2005/Atom',
-            'yt': 'http://www.youtube.com/xml/schemas/2015'
+            "atom": "http://www.w3.org/2005/Atom",
+            "yt": "http://www.youtube.com/xml/schemas/2015",
         }
-        
+
         # Get video entry
-        entry = root.find('atom:entry', namespaces)
+        entry = root.find("atom:entry", namespaces)
         if entry is None:
             logging.error("[Parse] No entry found in XML")
             return None
 
         # Extract video information
-        video_id = entry.find('yt:videoId', namespaces)
-        title = entry.find('atom:title', namespaces)
+        video_id = entry.find("yt:videoId", namespaces)
+        title = entry.find("atom:title", namespaces)
         link = entry.find('atom:link[@rel="alternate"]', namespaces)
-        author = entry.find('atom:author/atom:name', namespaces)
-        published = entry.find('atom:published', namespaces)
+        author = entry.find("atom:author/atom:name", namespaces)
+        published = entry.find("atom:published", namespaces)
 
         # Build video data
         video_data = {
-            'video_id': video_id.text.strip() if video_id is not None and video_id.text else 'Unknown',
-            'title': title.text.strip() if title is not None and title.text else 'No title',
-            'url': link.get('href') if link is not None else f'https://www.youtube.com/watch?v={video_id.text}',
-            'channel': author.text.strip() if author is not None and author.text else 'Unknown',
-            'published': published.text.strip() if published is not None and published.text else 'Unknown'
+            "video_id": video_id.text.strip()
+            if video_id is not None and video_id.text
+            else "Unknown",
+            "title": title.text.strip()
+            if title is not None and title.text
+            else "No title",
+            "url": link.get("href")
+            if link is not None
+            else f"https://www.youtube.com/watch?v={video_id.text}",
+            "channel": author.text.strip()
+            if author is not None and author.text
+            else "Unknown",
+            "published": published.text.strip()
+            if published is not None and published.text
+            else "Unknown",
         }
-        
+
         logging.info(f"Video Data: {video_data}")
-        
+
         return video_data
-        
+
     except ET.ParseError as e:
         logging.error(f"[Parse] XML Parse Error: {e}")
         return None
@@ -64,43 +74,43 @@ def parse_youtube_notification(xml_data):
 def verify_webhook_signature(body: str, signature_header: str) -> bool:
     """
     Verify HMAC-SHA1 signature from WebSub notification.
-    
+
     Args:
         body: Raw request body as string
         signature_header: Value of X-Hub-Signature header (e.g., "sha1=abc123...")
-        
+
     Returns:
         bool: True if signature is valid, False otherwise
     """
     webhook_secret = os.getenv("WEBHOOK_HMAC_SECRET")
     if not webhook_secret:
-        logging.warning("[WebSub] HMAC verification requested but WEBHOOK_HMAC_SECRET not configured")
+        logging.warning(
+            "[WebSub] HMAC verification requested but WEBHOOK_HMAC_SECRET not configured"
+        )
         return False
-    
+
     try:
         # Parse signature header: "sha1=hexdigest"
-        algorithm, provided_signature = signature_header.split('=', 1)
-        if algorithm != 'sha1':
+        algorithm, provided_signature = signature_header.split("=", 1)
+        if algorithm != "sha1":
             logging.error(f"[WebSub] Unsupported signature algorithm: {algorithm}")
             return False
-        
+
         # Calculate expected signature
         expected_signature = hmac.new(
-            webhook_secret.encode('utf-8'),
-            body.encode('utf-8'),
-            hashlib.sha1
+            webhook_secret.encode("utf-8"), body.encode("utf-8"), hashlib.sha1
         ).hexdigest()
-        
+
         # Secure comparison to prevent timing attacks
         is_valid = hmac.compare_digest(provided_signature, expected_signature)
-        
+
         if is_valid:
             logging.info("[WebSub] HMAC signature validated successfully")
         else:
             logging.error("[WebSub] HMAC signature validation failed")
-            
+
         return is_valid
-        
+
     except (ValueError, AttributeError) as e:
         logging.error(f"[WebSub] Error parsing signature header: {e}")
         return False
@@ -123,11 +133,7 @@ def _generate_github_app_jwt(app_id: str, private_key: str) -> str:
     Generate a short-lived JWT for GitHub App authentication.
     """
     now = int(time.time())
-    payload = {
-        "iat": now - 60,  
-        "exp": now + 540,  
-        "iss": app_id
-    }
+    payload = {"iat": now - 60, "exp": now + 540, "iss": app_id}
     token = jwt.encode(payload, private_key, algorithm="RS256")
     return token
 
@@ -139,14 +145,16 @@ def _get_installation_token(app_jwt: str, installation_id: str) -> str | None:
     url = f"https://api.github.com/app/installations/{installation_id}/access_tokens"
     headers = {
         "Authorization": f"Bearer {app_jwt}",
-        "Accept": "application/vnd.github.v3+json"
+        "Accept": "application/vnd.github.v3+json",
     }
     try:
         r = requests.post(url, headers=headers, timeout=10)
         if r.status_code == 201:
             data = r.json()
             return data.get("token")
-        logging.error(f"[GitHub] Failed to get installation token: {r.status_code} {r.text}")
+        logging.error(
+            f"[GitHub] Failed to get installation token: {r.status_code} {r.text}"
+        )
     except Exception as e:
         logging.error(f"[GitHub] Error requesting installation token: {e}")
     return None
@@ -161,7 +169,9 @@ def _get_dispatch_token():
     private_key = _load_private_key()
 
     if not all([app_id, inst_id, private_key]):
-        logging.error("[GitHub] GitHub App configuration incomplete (missing App ID, Installation ID, or private key)")
+        logging.error(
+            "[GitHub] GitHub App configuration incomplete (missing App ID, Installation ID, or private key)"
+        )
         return None
 
     try:
@@ -209,46 +219,50 @@ def trigger_video_processing_workflow(video_data):
             "video_url": video_data["url"],
             "title": video_data["title"],
             "channel": video_data["channel"],
-            "published_at": video_data["published"]
-        }
+            "published_at": video_data["published"],
+        },
     }
-    
+
     headers = {
         "Authorization": f"Bearer {token}",
         "Accept": "application/vnd.github.v3+json",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
     }
-    
+
     try:
         r = requests.post(url, json=payload, headers=headers, timeout=10)
         if r.status_code == 204:
-            logging.info(f"[GitHub] Workflow dispatch sent for video_id={video_data['video_id']}")
+            logging.info(
+                f"[GitHub] Workflow dispatch sent for video_id={video_data['video_id']}"
+            )
         else:
             logging.error(f"[GitHub] Dispatch failed {r.status_code}: {r.text}")
     except Exception as e:
         logging.error(f"[GitHub] Dispatch error: {e}")
 
 
-def handle_websub_callback(request_method, request_args=None, request_data=None, request_headers=None):
+def handle_websub_callback(
+    request_method, request_args=None, request_data=None, request_headers=None
+):
     """
     Handle WebSub callback for both GET (challenge) and POST (notification) requests.
-    
+
     Args:
         request_method: HTTP method ('GET' or 'POST')
         request_args: Query parameters for GET requests
         request_data: Body data for POST requests
         request_headers: Request headers
-        
+
     Returns:
         tuple: (response_body, status_code) or just response_body for 200 OK
     """
-    if request_method == 'GET':
-        challenge = request_args.get('hub.challenge') if request_args else None
-        
+    if request_method == "GET":
+        challenge = request_args.get("hub.challenge") if request_args else None
+
         logging.info("[WebSub] GET request received")
-        
+
         if challenge:
-            if re.match(r'^[a-zA-Z0-9_-]{1,128}$', challenge):
+            if re.match(r"^[a-zA-Z0-9_-]{1,128}$", challenge):
                 logging.info("[WebSub] Valid Challenge")
                 return challenge
             else:
@@ -257,16 +271,20 @@ def handle_websub_callback(request_method, request_args=None, request_data=None,
 
         logging.info("[WebSub] No challenge - Returning OK")
         return "OK"
-    
-    elif request_method == 'POST':
+
+    elif request_method == "POST":
         logging.info("[WebSub] POST notification received")
 
         webhook_secret = os.getenv("WEBHOOK_HMAC_SECRET")
-        hub_signature = request_headers.get('X-Hub-Signature') if request_headers else None
+        hub_signature = (
+            request_headers.get("X-Hub-Signature") if request_headers else None
+        )
 
         # Enforce secret presence (fail closed)
         if not webhook_secret:
-            logging.error("[WebSub] WEBHOOK_HMAC_SECRET not configured - rejecting notification")
+            logging.error(
+                "[WebSub] WEBHOOK_HMAC_SECRET not configured - rejecting notification"
+            )
             return "Server HMAC not configured", 503
 
         # Require signature header
@@ -293,6 +311,6 @@ def handle_websub_callback(request_method, request_args=None, request_data=None,
             trigger_video_processing_workflow(video_data)
 
         return "OK"
-    
+
     # Method not supported
     return "Method not allowed", 405
