@@ -45,6 +45,9 @@ jobs:
       MNIST_ENDPOINT: ${{ secrets.MNIST_API_ENDPOINT }}
       MAPBOX_ACCESS_TOKEN: ${{ secrets.MAPBOX_ACCESS_TOKEN }}
       WEBHOOK_HMAC_SECRET: ${{ secrets.WEBHOOK_HMAC_SECRET }}
+      GRENALBOT_ID: ${{ secrets.GRENALBOT_ID }}
+      GRENALBOT_INSTALLATION_ID: ${{ secrets.GRENALBOT_INSTALLATION_ID }}
+      GRENALBOT_PRIVATE_KEY: ${{ secrets.GRENALBOT_PRIVATE_KEY }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -77,4 +80,11 @@ jobs:
             --memory 2Gi \
             --allow-unauthenticated \
             --port 8080 \
-            --set-env-vars "MNIST_ENDPOINT=${{ env.MNIST_ENDPOINT }},MAPBOX_ACCESS_TOKEN=${{ env.MAPBOX_ACCESS_TOKEN }},WEBHOOK_HMAC_SECRET=${{ env.WEBHOOK_HMAC_SECRET }}"
+            --set-env-vars "\
+              MNIST_ENDPOINT=${{ env.MNIST_ENDPOINT }},\
+              MAPBOX_ACCESS_TOKEN=${{ env.MAPBOX_ACCESS_TOKEN }},\
+              WEBHOOK_HMAC_SECRET=${{ env.WEBHOOK_HMAC_SECRET }},\
+              GRENALBOT_ID=${{ env.GRENALBOT_ID }},\
+              GRENALBOT_INSTALLATION_ID=${{ env.GRENALBOT_INSTALLATION_ID }},\
+              GRENALBOT_PRIVATE_KEY=${{ env.GRENALBOT_PRIVATE_KEY }}\
+            "
