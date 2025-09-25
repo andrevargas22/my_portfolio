@@ -88,4 +88,4 @@ jobs:
               GRENALBOT_ID=${{ env.GRENALBOT_ID }},\
               GRENALBOT_INSTALLATION_ID=${{ env.GRENALBOT_INSTALLATION_ID }},\
               GRENALBOT_PRIVATE_KEY=${{ env.GRENALBOT_PRIVATE_KEY }}\
-            "
+              "
