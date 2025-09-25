@@ -17,6 +17,7 @@ test:
 	curl -X POST https://andrevargas.com.br/websub/callback \
 	-H "Content-Type: application/atom+xml" \
 	-H "User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)" \
+	-H "X-Hub-Signature: sha1=7aec651cb69a4ca65a147ad26586b5af4bbb96ea" \
 	-d @test_notification.xml \
 	-v
 
