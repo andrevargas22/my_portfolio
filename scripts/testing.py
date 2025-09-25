@@ -299,17 +299,20 @@ def handle_websub_callback(
 
         logging.info("[WebSub] HMAC verification successful")
 
-        video_data = parse_youtube_notification(request_data)
-        if video_data:
-            logging.info("########### [VIDEO PARSED] ###########")
-            logging.info(f"Link: {video_data['url']}")
-            logging.info(f"Channel: {video_data['channel']}")
-            logging.info(f"Title: {video_data['title']}")
-            logging.info(f"Published at: {video_data['published']}")
-            logging.info("######################################")
+        try:
+            video_data = parse_youtube_notification(request_data)
+            if video_data:
+                logging.info("########### [VIDEO PARSED] ###########")
+                logging.info(f"Link: {video_data['url']}")
+                logging.info(f"Channel: {video_data['channel']}")
+                logging.info(f"Title: {video_data['title']}")
+                logging.info(f"Published at: {video_data['published']}")
+                logging.info("######################################")
 
-            trigger_video_processing_workflow(video_data)
-
+                trigger_video_processing_workflow(video_data)
+        except Exception as e:
+            logging.error(f"[WebSub] Error processing notification: {e}")
+        
         return "OK"
 
     # Method not supported
