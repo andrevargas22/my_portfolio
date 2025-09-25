@@ -48,6 +48,7 @@ jobs:
       GRENALBOT_ID: ${{ secrets.GRENALBOT_ID }}
       GRENALBOT_INSTALLATION_ID: ${{ secrets.GRENALBOT_INSTALLATION_ID }}
       GRENALBOT_PRIVATE_KEY: ${{ secrets.GRENALBOT_PRIVATE_KEY }}
+      
     steps:
       - name: Checkout
         uses: actions/checkout@v4
