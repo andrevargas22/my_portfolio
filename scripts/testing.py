@@ -310,8 +310,12 @@ def handle_websub_callback(
                 logging.info("######################################")
 
                 trigger_video_processing_workflow(video_data)
+        except ET.ParseError as e:
+            logging.error(f"[WebSub] XML ParseError processing notification: {e}")
+        except requests.RequestException as e:
+            logging.error(f"[WebSub] RequestException during video processing workflow: {e}")
         except Exception as e:
-            logging.error(f"[WebSub] Error processing notification: {e}")
+            logging.critical(f"[WebSub] Unexpected error processing notification: {e}", exc_info=True)
         
         return "OK"
 
