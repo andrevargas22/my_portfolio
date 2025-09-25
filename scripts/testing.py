@@ -120,7 +120,7 @@ def _load_private_key():
     """
     Get the GitHub App private key from environment variables.
     """
-    key = os.getenv("GITHUB_APP_PRIVATE_KEY")
+    key = os.getenv("GRENALBOT_PRIVATE_KEY")
     if not key:
         return None
     if "\\n" in key:
@@ -164,8 +164,8 @@ def _get_dispatch_token():
     """
     Return an installation access token using GitHub App authentication.
     """
-    app_id = os.getenv("GITHUB_APP_ID")
-    inst_id = os.getenv("GITHUB_APP_INSTALLATION_ID")
+    app_id = os.getenv("GRENALBOT_ID")
+    inst_id = os.getenv("GRENALBOT_INSTALLATION_ID")
     private_key = _load_private_key()
 
     if not all([app_id, inst_id, private_key]):
