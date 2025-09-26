@@ -48,9 +48,10 @@ def subscribe_to_youtube_channels():
     # Get HMAC secret for WebSub validation
     webhook_secret = os.getenv("WEBHOOK_HMAC_SECRET")
     if not webhook_secret:
-        logging.warning(
-            "WEBHOOK_HMAC_SECRET not configured - subscriptions will have no signature validation"
+        logging.error(
+            "WEBHOOK_HMAC_SECRET not configured - aborting (signed notifications required)"
         )
+        return False
 
     all_successful = True
 
@@ -64,11 +65,9 @@ def subscribe_to_youtube_channels():
                 "hub.verify": "async",
                 "hub.mode": "subscribe",
                 "hub.lease_seconds": "2764800",
+                # Always include secret (validated earlier)
+                "hub.secret": webhook_secret,
             }
-
-            # Add HMAC secret if configured
-            if webhook_secret:
-                subscription_data["hub.secret"] = webhook_secret
 
             response = requests.post(hub_url, data=subscription_data, timeout=15)
 
