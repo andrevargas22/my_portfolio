@@ -25,14 +25,6 @@
       "image": "Advance Wars 2: Black Hole Rising.jpg"
     },
     {
-      "title": "Alladin",
-      "year": "1993",
-      "platform": "Super Nintendo",
-      "genre": "Platformer",
-      "beaten": "Untracked",
-      "image": "Alladin.jpg"
-    },
-    {
       "title": "Batman Arkham Asylum",
       "year": "2009",
       "platform": "PC",
@@ -129,14 +121,6 @@
       "image": "Cuphead.jpg"
     },
     {
-      "title": "Digimon Battle Spirit",
-      "year": "2001",
-      "platform": "Game Boy Advance",
-      "genre": "Fighting",
-      "beaten": "2025",
-      "image": "Digimon Battle Spirit.jpg"
-    },
-    {
       "title": "Diddy Kong Racing",
       "year": "1995",
       "platform": "Nintendo 64",
@@ -145,20 +129,28 @@
       "image": "Diddy Kong Racing.jpg"
     },
     {
+      "title": "Digimon Battle Spirit",
+      "year": "2001",
+      "platform": "Game Boy Advance",
+      "genre": "Fighting",
+      "beaten": "2025",
+      "image": "Digimon Battle Spirit.jpg"
+    },
+    {
+      "title": "Disney's Aladdin",
+      "year": "1993",
+      "platform": "Super Nintendo",
+      "genre": "Platformer",
+      "beaten": "Untracked",
+      "image": "Disney's Aladdin.jpg"
+    },
+    {
       "title": "Donkey Kong",
       "year": "1981",
       "platform": "NES",
       "genre": "Platformer",
       "beaten": "2025",
       "image": "Donkey Kong.jpg"
-    },
-    {
-      "title": "Donkey Kong Jr.",
-      "year": "1982",
-      "platform": "NES",
-      "genre": "Platformer",
-      "beaten": "2025",
-      "image": "Donkey Kong Jr.jpg"
     },
     {
       "title": "Donkey Kong Country",
@@ -185,6 +177,22 @@
       "image": "Donkey Kong Country 3.jpg"
     },
     {
+      "title": "Donkey Kong Jr.",
+      "year": "1982",
+      "platform": "NES",
+      "genre": "Platformer",
+      "beaten": "2025",
+      "image": "Donkey Kong Jr.jpg"
+    },
+    {
+      "title": "Dragon Ball Advanced Adventure",
+      "year": "2004",
+      "platform": "Game Boy Advance",
+      "genre": "Beat 'em up",
+      "beaten": "2025",
+      "image": "Dragon Ball Advanced Adventure.png"
+    },
+    {
       "title": "Dragon Ball GT: Final Bout",
       "year": "1997",
       "platform": "PlayStation 1",
@@ -199,6 +207,14 @@
       "genre": "RPG",
       "beaten": "2023",
       "image": "Dragon Ball Z - Buu's Fury.webp"
+    },
+    {
+      "title": "Dragon Ball Z - Legacy of Goku 2",
+      "year": "2003",
+      "platform": "Game Boy Advance",
+      "genre": "RPG",
+      "beaten": "2023",
+      "image": "Dragon Ball Z - Legacy of Goku 2.jpg"
     },
     {
       "title": "Dragon Ball Z - Super Butoden 2",
@@ -225,14 +241,6 @@
       "image": "Dragon Ball Z - The Legacy of Goku.jpg"
     },
     {
-      "title": "Dragon Ball Z - Legacy of Goku 2",
-      "year": "2003",
-      "platform": "Game Boy Advance",
-      "genre": "RPG",
-      "beaten": "2023",
-      "image": "Dragon Ball Z - Legacy of Goku 2.jpg"
-    },
-    {
       "title": "Dragon Ball Z: Buyū Retsuden",
       "year": "1994",
       "platform": "Mega Drive",
@@ -249,20 +257,20 @@
       "image": "Dragon Ball Z: Idainaru DB Densetsu.jpg"
     },
     {
-      "title": "Dragon Ball Advanced Adventure",
-      "year": "2004",
-      "platform": "Game Boy Advance",
-      "genre": "Beat 'em up",
-      "beaten": "2025",
-      "image": "Dragon Ball Advanced Adventure.png"
-    },
-    {
       "title": "Figment",
       "year": "2017",
       "platform": "Nintendo Switch",
       "genre": "Adventure",
       "beaten": "2024",
       "image": "Figment.webp"
+    },
+    {
+      "title": "GTA San Andreas",
+      "year": "2004",
+      "platform": "PC",
+      "genre": "Action",
+      "beaten": "2015",
+      "image": "GTA San Andreas.webp"
     },
     {
       "title": "Golden Axe I",
@@ -305,14 +313,6 @@
       "image": "Gorogoa.webp"
     },
     {
-      "title": "GTA San Andreas",
-      "year": "2004",
-      "platform": "PC",
-      "genre": "Action",
-      "beaten": "2015",
-      "image": "GTA San Andreas.webp"
-    },
-    {
       "title": "Gunstar Heroes",
       "year": "1993",
       "platform": "Mega Drive",
@@ -327,6 +327,14 @@
       "genre": "Metroidvania",
       "beaten": "2018",
       "image": "Hollow Knight.avif"
+    },
+    {
+      "title": "Hollow Knight: Silksong",
+      "year": "2025",
+      "platform": "Nintendo Switch",
+      "genre": "Metroidvania",
+      "beaten": "2025",
+      "image": "Hollow Knight: Silksong.webp"
     },
     {
       "title": "Inside",
@@ -405,7 +413,7 @@
       "year": "2014",
       "platform": "Nintendo Switch",
       "genre": "Racing",
-      "beaten": "2025", 
+      "beaten": "2025",
       "image": "Mario Kart 8.jpg"
     },
     {
@@ -481,20 +489,20 @@
       "image": "Mickey to Donald: Magical Adventure 3.jpg"
     },
     {
-      "title": "Mortal Kombat (bootleg)",
-      "year": "1994",
-      "platform": "NES",
-      "genre": "Fighting",
-      "beaten": "Untracked",
-      "image": "Mortal Kombat (bootleg).jpg"
-    },
-    {
       "title": "Middle-Earth: Shadow of Mordor",
       "year": "2014",
       "platform": "PC",
       "genre": "Action",
       "beaten": "2018",
       "image": "Middle-Earth: Shadow of Mordor.jpeg"
+    },
+    {
+      "title": "Mortal Kombat (bootleg)",
+      "year": "1994",
+      "platform": "NES",
+      "genre": "Fighting",
+      "beaten": "Untracked",
+      "image": "Mortal Kombat (bootleg).jpg"
     },
     {
       "title": "Never Alone",
@@ -569,14 +577,6 @@
       "image": "Overcooked 2.avif"
     },
     {
-      "title": "Pokémon (Gen 1) FireRed",
-      "year": "2004",
-      "platform": "Game Boy Advance",
-      "genre": "RPG",
-      "beaten": "2023",
-      "image": "Pokémon (Gen 1) Fire Red.jpg"
-    },
-    {
       "title": "Pokémon (Gen 1 Nuzlocke) LeafGreen",
       "year": "2004",
       "platform": "Game Boy Advance",
@@ -585,12 +585,12 @@
       "image": "Pokémon (Gen 1 Nuzlocke) LeafGreen.jpg"
     },
     {
-      "title": "Pokémon (Gen 2) HeartGold",
+      "title": "Pokémon (Gen 1) FireRed",
       "year": "2004",
-      "platform": "Nintendo DS",
+      "platform": "Game Boy Advance",
       "genre": "RPG",
-      "beaten": "2025",
-      "image": "Pokémon (Gen 2) HeartGold.jpg"
+      "beaten": "2023",
+      "image": "Pokémon (Gen 1) Fire Red.jpg"
     },
     {
       "title": "Pokémon (Gen 2 Nuzlocke) SoulSilver",
@@ -599,6 +599,14 @@
       "genre": "RPG",
       "beaten": "2025",
       "image": "Pokémon (Gen 2 Nuzlocke) SoulSilver.jpg"
+    },
+    {
+      "title": "Pokémon (Gen 2) HeartGold",
+      "year": "2004",
+      "platform": "Nintendo DS",
+      "genre": "RPG",
+      "beaten": "2025",
+      "image": "Pokémon (Gen 2) HeartGold.jpg"
     },
     {
       "title": "Pokémon (Gen 3) Emerald",
@@ -633,20 +641,20 @@
       "image": "Pokémon Stadium.jpg"
     },
     {
-      "title": "Pokémon Stadium 2",
-      "year": "1999",
-      "platform": "Nintendo 64",
-      "genre": "Fighting",
-      "beaten": "Untracked",
-      "image": "Pokémon Stadium 2.jpg"
-    },
-    {
       "title": "Pokémon Stadium (bootleg)",
       "year": "2001",
       "platform": "Super Nintendo",
       "genre": "Fighting",
       "beaten": "Untracked",
       "image": "Pokémon Stadium (bootleg).jpg"
+    },
+    {
+      "title": "Pokémon Stadium 2",
+      "year": "1999",
+      "platform": "Nintendo 64",
+      "genre": "Fighting",
+      "beaten": "Untracked",
+      "image": "Pokémon Stadium 2.jpg"
     },
     {
       "title": "Power Rangers: The Fighting Edition",
@@ -697,20 +705,20 @@
       "image": "Shining Force: Resurrection of the Dark Dragon.webp"
     },
     {
-      "title": "Sonic The Hedgehog (hack)",
-      "year": "1996",
-      "platform": "Super Nintendo",
-      "genre": "Platformer",
-      "beaten": "Untracked",
-      "image": "Sonic The Hedgehog (hack).png"
-    },
-    {
       "title": "Sonic The Hedgehog",
       "year": "1991",
       "platform": "Mega Drive",
       "genre": "Platformer",
       "beaten": "Untracked",
       "image": "Sonic The Hedgehog.webp"
+    },
+    {
+      "title": "Sonic The Hedgehog (hack)",
+      "year": "1996",
+      "platform": "Super Nintendo",
+      "genre": "Platformer",
+      "beaten": "Untracked",
+      "image": "Sonic The Hedgehog (hack).png"
     },
     {
       "title": "Sonic The Hedgehog 2",
@@ -761,20 +769,20 @@
       "image": "Star Fox 64 3D.jpg"
     },
     {
-      "title": "Street Fighter 2: Turbo",
-      "year": "1992",
-      "platform": "Super Nintendo",
-      "genre": "Fighting",
-      "beaten": "Untracked",
-      "image": "Street Fighter 2: Turbo.jpeg"
-    },
-    {
       "title": "Street Fighter 2: The New Challengers",
       "year": "1993",
       "platform": "Super Nintendo",
       "genre": "Fighting",
       "beaten": "Untracked",
       "image": "Street Fighter 2: The New Challengers.jpg"
+    },
+    {
+      "title": "Street Fighter 2: Turbo",
+      "year": "1992",
+      "platform": "Super Nintendo",
+      "genre": "Fighting",
+      "beaten": "Untracked",
+      "image": "Street Fighter 2: Turbo.jpeg"
     },
     {
       "title": "Sunset Riders",
@@ -993,20 +1001,20 @@
       "image": "The Legend of Zelda: The Minish Cap.jpg"
     },
     {
-      "title": "The Legend of Zelda: Twilight Princess",
-      "year": "2006",
-      "platform": "Nintendo GameCube",
-      "genre": "RPG",
-      "beaten": "2024",
-      "image": "The Legend of Zelda: Twilight Princess.jpg"
-    },
-    {
       "title": "The Legend of Zelda: The Wind Waker",
       "year": "2002",
       "platform": "Nintendo GameCube",
       "genre": "RPG",
       "beaten": "2024",
       "image": "The Legend of Zelda: The Wind Waker.jpg"
+    },
+    {
+      "title": "The Legend of Zelda: Twilight Princess",
+      "year": "2006",
+      "platform": "Nintendo GameCube",
+      "genre": "RPG",
+      "beaten": "2024",
+      "image": "The Legend of Zelda: Twilight Princess.jpg"
     },
     {
       "title": "The Mask",
