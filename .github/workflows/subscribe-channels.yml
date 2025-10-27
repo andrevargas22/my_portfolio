@@ -1,9 +1,10 @@
 name: YouTube Channel Subscription Maintenance
 
 on:
-  # 1st day of every month at 6:00 AM UTC (3:00 AM BRT)
+  # 1st and 15th day of every month at 6:00 AM UTC (3:00 AM BRT)
   schedule:
-    - cron: '0 6 1 * *'
+    - cron: '0 6 1 * *'   # Day 1 of every month
+    - cron: '0 6 15 * *'  # Day 15 of every month
   
   # Allow manual execution
   workflow_dispatch:
