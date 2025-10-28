@@ -71,12 +71,12 @@ def parse_youtube_notification(xml_data):
         return None
 
 
-def verify_webhook_signature(body: str, signature_header: str) -> bool:
+def verify_webhook_signature(body: bytes, signature_header: str) -> bool:
     """
     Verify HMAC-SHA1 signature from WebSub notification.
 
     Args:
-        body: Raw request body as string
+        body: Raw request body as bytes
         signature_header: Value of X-Hub-Signature header (e.g., "sha1=abc123...")
 
     Returns:
@@ -98,7 +98,7 @@ def verify_webhook_signature(body: str, signature_header: str) -> bool:
 
         # Calculate expected signature
         expected_signature = hmac.new(
-            webhook_secret.encode("utf-8"), body.encode("utf-8"), hashlib.sha1
+            webhook_secret.encode("utf-8"), body, hashlib.sha1
         ).hexdigest()
 
         # Secure comparison to prevent timing attacks
