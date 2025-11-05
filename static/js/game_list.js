@@ -29,7 +29,11 @@ $(document).ready(function() {
     var $grid = $('.portfolio-item').imagesLoaded(function() {
         $grid.isotope({
             itemSelector: '.item',
-            layoutMode: 'fitRows'
+            layoutMode: 'fitRows',
+            // Custom sorting function for top-rank
+            getSortData: {
+                topRank: '[data-top-rank] parseInt'
+            }
         });
     });
 
@@ -39,9 +43,20 @@ $(document).ready(function() {
         $(this).addClass('active');
 
         var selector = $(this).attr('data-filter');
-        $grid.isotope({
-            filter: selector
-        });
+        
+        // If filtering by Top 10, sort by rank; otherwise use default order
+        if (selector === '.top-10') {
+            $grid.isotope({
+                filter: selector,
+                sortBy: 'topRank'
+            });
+        } else {
+            $grid.isotope({
+                filter: selector,
+                sortBy: 'original-order'
+            });
+        }
+        
         return false;
     });
 });

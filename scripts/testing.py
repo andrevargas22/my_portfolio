@@ -309,7 +309,7 @@ def handle_websub_callback(
                 logging.info(f"Published at: {video_data['published']}")
                 logging.info("######################################")
 
-                #trigger_video_processing_workflow(video_data)
+                trigger_video_processing_workflow(video_data)
 
         except ET.ParseError as e:
             logging.error(f"[WebSub] XML ParseError processing notification: {e}")
