@@ -29,7 +29,18 @@ $(document).ready(function() {
     var $grid = $('.portfolio-item').imagesLoaded(function() {
         $grid.isotope({
             itemSelector: '.item',
-            layoutMode: 'fitRows'
+            layoutMode: 'fitRows',
+            // Robust top rank sort: read numeric attribute or fallback high
+            getSortData: {
+                topRank: function(itemElem) {
+                    var v = itemElem.getAttribute('data-top-rank');
+                    var n = parseInt(v, 10);
+                    return isNaN(n) ? 999 : n;
+                }
+            },
+            sortAscending: {
+                topRank: true
+            }
         });
     });
 
@@ -39,9 +50,17 @@ $(document).ready(function() {
         $(this).addClass('active');
 
         var selector = $(this).attr('data-filter');
-        $grid.isotope({
-            filter: selector
-        });
+        
+        // If filtering by Top 10, force re-sort by rank (ascending 1..10)
+        if (selector === '.top-10') {
+            $grid.isotope({ filter: selector });
+            // trigger separate sort to ensure order update after filter
+            $grid.isotope({ sortBy: 'topRank' });
+        } else {
+            // revert to original order for other filters
+            $grid.isotope({ filter: selector, sortBy: 'original-order' });
+        }
+        
         return false;
     });
 });

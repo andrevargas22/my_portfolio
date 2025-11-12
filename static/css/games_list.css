@@ -47,6 +47,9 @@
 
   /* Status Tags */
   --tag-beaten: #95a5a6;        /* Gray */
+  
+  /* Top 10 Badge */
+  --tag-top-badge: #FFD700;     /* Gold */
 }
 
 /* ############################## BASE STYLES ############################## */
@@ -174,3 +177,10 @@ body {
 
 /* Status Tags */
 .tag.beaten { background-color: var(--tag-beaten); }
+
+/* Top 10 Badge */
+.tag.top-badge { 
+  background-color: var(--tag-top-badge); 
+  color: #000;
+  font-weight: bold;
+}

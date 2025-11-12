@@ -199,12 +199,14 @@ def websub_callback():
     result = handle_websub_callback(
         request_method=request.method,
         request_args=request.args,
-        request_data=request.get_data(as_text=True),
+        request_data=request.get_data(as_text=False),
         request_headers=request.headers,
     )
 
     if isinstance(result, tuple):
         return result
+    
+    return result
 
 ############################## MAIN EXECUTION ##############################
 if __name__ == "__main__":

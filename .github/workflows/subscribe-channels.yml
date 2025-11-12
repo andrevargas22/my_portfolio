@@ -12,6 +12,8 @@ on:
 jobs:
   subscribe-channels:
     runs-on: ubuntu-latest
+    env:
+      WEBHOOK_HMAC_SECRET: ${{ secrets.WEBHOOK_HMAC_SECRET }}
     
     steps:
       - name: Checkout repository
@@ -30,6 +32,11 @@ jobs:
       - name: Execute YouTube Channel Subscription Script
         run: |
           echo "Starting YouTube channel subscription maintenance..."
+          if [ -z "${WEBHOOK_HMAC_SECRET}" ]; then
+            echo "ERROR: WEBHOOK_HMAC_SECRET is not set. Aborting." >&2
+            exit 1
+          fi
+          echo "HMAC secret detected (length: ${#WEBHOOK_HMAC_SECRET}) - proceeding with signed subscription requests"
           python scripts/subscribe_youtube_channels.py
           
       - name: Log Completion

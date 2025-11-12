@@ -6,7 +6,8 @@
       "platform": "PC",
       "genre": "3D Platformer",
       "beaten": "2021",
-      "image": "A Short Hike.jpg"
+      "image": "A Short Hike.jpg",
+      "top_10": null
     },
     {
       "title": "Advance Wars",
@@ -14,7 +15,8 @@
       "platform": "Game Boy Advance",
       "genre": "Strategy",
       "beaten": "2025",
-      "image": "Advance Wars.jpg"
+      "image": "Advance Wars.jpg",
+      "top_10": null
     },
     {
       "title": "Advance Wars 2: Black Hole Rising",
@@ -22,7 +24,8 @@
       "platform": "Game Boy Advance",
       "genre": "Strategy",
       "beaten": "2025",
-      "image": "Advance Wars 2: Black Hole Rising.jpg"
+      "image": "Advance Wars 2: Black Hole Rising.jpg",
+      "top_10": null
     },
     {
       "title": "Batman Arkham Asylum",
@@ -30,7 +33,8 @@
       "platform": "PC",
       "genre": "Action",
       "beaten": "2018",
-      "image": "Batman Arkham Asylum.jpg"
+      "image": "Batman Arkham Asylum.jpg",
+      "top_10": null
     },
     {
       "title": "Batman Arkham City",
@@ -38,7 +42,8 @@
       "platform": "PC",
       "genre": "Action",
       "beaten": "2021",
-      "image": "Batman Arkham City.jpg"
+      "image": "Batman Arkham City.jpg",
+      "top_10": null
     },
     {
       "title": "Braid",
@@ -46,7 +51,8 @@
       "platform": "PC",
       "genre": "Puzzle",
       "beaten": "2011",
-      "image": "Braid.jpg"
+      "image": "Braid.jpg",
+      "top_10": null
     },
     {
       "title": "Brothers: A Tale of Two Sons",
@@ -54,7 +60,8 @@
       "platform": "PC",
       "genre": "Adventure",
       "beaten": "2018",
-      "image": "Brothers: A Tale of Two Sons.jpg"
+      "image": "Brothers: A Tale of Two Sons.jpg",
+      "top_10": null
     },
     {
       "title": "Castlevania: Circle of the Moon",
@@ -62,7 +69,8 @@
       "platform": "Game Boy Advance",
       "genre": "Metroidvania",
       "beaten": "2025",
-      "image": "Castlevania: Circle of the Moon.jpg"
+      "image": "Castlevania: Circle of the Moon.jpg",
+      "top_10": null
     },
     {
       "title": "Chrono Trigger",
@@ -70,7 +78,8 @@
       "platform": "Super Nintendo",
       "genre": "RPG",
       "beaten": "2022",
-      "image": "Chrono Trigger.webp"
+      "image": "Chrono Trigger.webp",
+      "top_10": 7
     },
     {
       "title": "ClayFighter 63⅓",
@@ -78,7 +87,8 @@
       "platform": "Nintendo 64",
       "genre": "Fighting",
       "beaten": "Untracked",
-      "image": "ClayFighter 63⅓.jpeg"
+      "image": "ClayFighter 63⅓.jpeg",
+      "top_10": null
     },
     {
       "title": "Comix Zone",
@@ -86,7 +96,8 @@
       "platform": "Mega Drive",
       "genre": "Beat 'em up",
       "beaten": "2024",
-      "image": "Comix Zone.jpg"
+      "image": "Comix Zone.jpg",
+      "top_10": null
     },
     {
       "title": "Conker's Bad Fur Day",
@@ -94,7 +105,8 @@
       "platform": "Nintendo 64",
       "genre": "3D Platformer",
       "beaten": "Untracked",
-      "image": "Conker's Bad Fur Day.jpg"
+      "image": "Conker's Bad Fur Day.jpg",
+      "top_10": null
     },
     {
       "title": "Contra Hard Corps",
@@ -102,7 +114,8 @@
       "platform": "Mega Drive",
       "genre": "Run and Gun",
       "beaten": "2024",
-      "image": "Contra Hard Corps.png"
+      "image": "Contra Hard Corps.png",
+      "top_10": null
     },
     {
       "title": "Crash Bandicoot 1",
@@ -110,7 +123,8 @@
       "platform": "Nintendo Switch",
       "genre": "3D Platformer",
       "beaten": "2023",
-      "image": "Crash Bandicoot 1.jpg"
+      "image": "Crash Bandicoot 1.jpg",
+      "top_10": null
     },
     {
       "title": "Cuphead",
@@ -118,7 +132,8 @@
       "platform": "PC",
       "genre": "Run and Gun",
       "beaten": "2017",
-      "image": "Cuphead.jpg"
+      "image": "Cuphead.jpg",
+      "top_10": null
     },
     {
       "title": "Diddy Kong Racing",
@@ -126,7 +141,8 @@
       "platform": "Nintendo 64",
       "genre": "Racing",
       "beaten": "Untracked",
-      "image": "Diddy Kong Racing.jpg"
+      "image": "Diddy Kong Racing.jpg",
+      "top_10": null
     },
     {
       "title": "Digimon Battle Spirit",
@@ -134,7 +150,8 @@
       "platform": "Game Boy Advance",
       "genre": "Fighting",
       "beaten": "2025",
-      "image": "Digimon Battle Spirit.jpg"
+      "image": "Digimon Battle Spirit.jpg",
+      "top_10": null
     },
     {
       "title": "Disney's Aladdin",
@@ -142,7 +159,8 @@
       "platform": "Super Nintendo",
       "genre": "Platformer",
       "beaten": "Untracked",
-      "image": "Disney's Aladdin.jpg"
+      "image": "Disney's Aladdin.jpg",
+      "top_10": null
     },
     {
       "title": "Donkey Kong",
@@ -150,7 +168,8 @@
       "platform": "NES",
       "genre": "Platformer",
       "beaten": "2025",
-      "image": "Donkey Kong.jpg"
+      "image": "Donkey Kong.jpg",
+      "top_10": null
     },
     {
       "title": "Donkey Kong Country",
@@ -158,7 +177,8 @@
       "platform": "Super Nintendo",
       "genre": "Platformer",
       "beaten": "Untracked",
-      "image": "Donkey Kong Country.jpg"
+      "image": "Donkey Kong Country.jpg",
+      "top_10": null
     },
     {
       "title": "Donkey Kong Country 2",
@@ -166,7 +186,8 @@
       "platform": "Super Nintendo",
       "genre": "Platformer",
       "beaten": "Untracked",
-      "image": "Donkey Kong Country 2.png"
+      "image": "Donkey Kong Country 2.png",
+      "top_10": null
     },
     {
       "title": "Donkey Kong Country 3",
@@ -174,7 +195,8 @@
       "platform": "Super Nintendo",
       "genre": "Platformer",
       "beaten": "Untracked",
-      "image": "Donkey Kong Country 3.jpg"
+      "image": "Donkey Kong Country 3.jpg",
+      "top_10": null
     },
     {
       "title": "Donkey Kong Jr.",
@@ -182,7 +204,8 @@
       "platform": "NES",
       "genre": "Platformer",
       "beaten": "2025",
-      "image": "Donkey Kong Jr.jpg"
+      "image": "Donkey Kong Jr.jpg",
+      "top_10": null
     },
     {
       "title": "Dragon Ball Advanced Adventure",
@@ -190,7 +213,8 @@
       "platform": "Game Boy Advance",
       "genre": "Beat 'em up",
       "beaten": "2025",
-      "image": "Dragon Ball Advanced Adventure.png"
+      "image": "Dragon Ball Advanced Adventure.png",
+      "top_10": null
     },
     {
       "title": "Dragon Ball GT: Final Bout",
@@ -198,7 +222,8 @@
       "platform": "PlayStation 1",
       "genre": "Fighting",
       "beaten": "Untracked",
-      "image": "Dragon Ball GT: Final Bout.jpg"
+      "image": "Dragon Ball GT: Final Bout.jpg",
+      "top_10": null
     },
     {
       "title": "Dragon Ball Z - Buu's Fury",
@@ -206,7 +231,8 @@
       "platform": "Game Boy Advance",
       "genre": "RPG",
       "beaten": "2023",
-      "image": "Dragon Ball Z - Buu's Fury.webp"
+      "image": "Dragon Ball Z - Buu's Fury.webp",
+      "top_10": null
     },
     {
       "title": "Dragon Ball Z - Legacy of Goku 2",
@@ -214,7 +240,8 @@
       "platform": "Game Boy Advance",
       "genre": "RPG",
       "beaten": "2023",
-      "image": "Dragon Ball Z - Legacy of Goku 2.jpg"
+      "image": "Dragon Ball Z - Legacy of Goku 2.jpg",
+      "top_10": null
     },
     {
       "title": "Dragon Ball Z - Super Butoden 2",
@@ -222,7 +249,8 @@
       "platform": "Super Nintendo",
       "genre": "Fighting",
       "beaten": "Untracked",
-      "image": "Dragon Ball Z - Super Butoden 2.png"
+      "image": "Dragon Ball Z - Super Butoden 2.png",
+      "top_10": null
     },
     {
       "title": "Dragon Ball Z - Super Butoden 3",
@@ -230,7 +258,8 @@
       "platform": "Super Nintendo",
       "genre": "Fighting",
       "beaten": "1998",
-      "image": "Dragon Ball Z - Super Butoden 3.jpg"
+      "image": "Dragon Ball Z - Super Butoden 3.jpg",
+      "top_10": null
     },
     {
       "title": "Dragon Ball Z - The Legacy of Goku",
@@ -238,7 +267,8 @@
       "platform": "Game Boy Advance",
       "genre": "RPG",
       "beaten": "2023",
-      "image": "Dragon Ball Z - The Legacy of Goku.jpg"
+      "image": "Dragon Ball Z - The Legacy of Goku.jpg",
+      "top_10": null
     },
     {
       "title": "Dragon Ball Z: Buyū Retsuden",
@@ -246,7 +276,8 @@
       "platform": "Mega Drive",
       "genre": "Fighting",
       "beaten": "Untracked",
-      "image": "Dragon Ball Z: Buyū Retsuden.png"
+      "image": "Dragon Ball Z: Buyū Retsuden.png",
+      "top_10": null
     },
     {
       "title": "Dragon Ball Z: Idainaru DB Densetsu",
@@ -254,7 +285,8 @@
       "platform": "PlayStation 1",
       "genre": "Fighting",
       "beaten": "Untracked",
-      "image": "Dragon Ball Z: Idainaru DB Densetsu.jpg"
+      "image": "Dragon Ball Z: Idainaru DB Densetsu.jpg",
+      "top_10": null
     },
     {
       "title": "Figment",
@@ -262,7 +294,8 @@
       "platform": "Nintendo Switch",
       "genre": "Adventure",
       "beaten": "2024",
-      "image": "Figment.webp"
+      "image": "Figment.webp",
+      "top_10": null
     },
     {
       "title": "GTA San Andreas",
@@ -270,7 +303,8 @@
       "platform": "PC",
       "genre": "Action",
       "beaten": "2015",
-      "image": "GTA San Andreas.webp"
+      "image": "GTA San Andreas.webp",
+      "top_10": null
     },
     {
       "title": "Golden Axe I",
@@ -278,7 +312,8 @@
       "platform": "Mega Drive",
       "genre": "Beat 'em up",
       "beaten": "2024",
-      "image": "Golden Axe I.webp"
+      "image": "Golden Axe I.webp",
+      "top_10": null
     },
     {
       "title": "Golden Axe II",
@@ -286,7 +321,8 @@
       "platform": "Mega Drive",
       "genre": "Beat 'em up",
       "beaten": "2024",
-      "image": "Golden Axe II.avif"
+      "image": "Golden Axe II.avif",
+      "top_10": null
     },
     {
       "title": "GoldenEye 007",
@@ -294,7 +330,8 @@
       "platform": "Nintendo 64",
       "genre": "FPS",
       "beaten": "Untracked",
-      "image": "GoldenEye 007.jpg"
+      "image": "GoldenEye 007.jpg",
+      "top_10": null
     },
     {
       "title": "Goof Troop",
@@ -302,7 +339,8 @@
       "platform": "Super Nintendo",
       "genre": "Puzzle",
       "beaten": "Untracked",
-      "image": "Goof Troop.jpg"
+      "image": "Goof Troop.jpg",
+      "top_10": null
     },
     {
       "title": "Gorogoa",
@@ -310,7 +348,8 @@
       "platform": "PC",
       "genre": "Puzzle",
       "beaten": "2020",
-      "image": "Gorogoa.webp"
+      "image": "Gorogoa.webp",
+      "top_10": null
     },
     {
       "title": "Gunstar Heroes",
@@ -318,7 +357,8 @@
       "platform": "Mega Drive",
       "genre": "Run and Gun",
       "beaten": "Untracked",
-      "image": "Gunstar Heroes.webp"
+      "image": "Gunstar Heroes.webp",
+      "top_10": null
     },
     {
       "title": "Hollow Knight",
@@ -326,7 +366,8 @@
       "platform": "PC",
       "genre": "Metroidvania",
       "beaten": "2018",
-      "image": "Hollow Knight.avif"
+      "image": "Hollow Knight.avif",
+      "top_10": 2
     },
     {
       "title": "Hollow Knight: Silksong",
@@ -334,7 +375,8 @@
       "platform": "Nintendo Switch",
       "genre": "Metroidvania",
       "beaten": "2025",
-      "image": "Hollow Knight: Silksong.webp"
+      "image": "Hollow Knight: Silksong.webp",
+      "top_10": null
     },
     {
       "title": "Inside",
@@ -342,7 +384,8 @@
       "platform": "PC",
       "genre": "Platformer",
       "beaten": "2018",
-      "image": "Inside.jpg"
+      "image": "Inside.jpg",
+      "top_10": null
     },
     {
       "title": "Internacional Superstar Soccer Deluxe",
@@ -350,7 +393,8 @@
       "platform": "Super Nintendo",
       "genre": "Sports",
       "beaten": "Untracked",
-      "image": "Internacional Superstar Soccer Deluxe.jpg"
+      "image": "Internacional Superstar Soccer Deluxe.jpg",
+      "top_10": null
     },
     {
       "title": "Journey",
@@ -358,7 +402,8 @@
       "platform": "PC",
       "genre": "3D Platformer",
       "beaten": "2020",
-      "image": "Journey.jpg"
+      "image": "Journey.jpg",
+      "top_10": null
     },
     {
       "title": "Killer Instinct",
@@ -366,7 +411,8 @@
       "platform": "Super Nintendo",
       "genre": "Fighting",
       "beaten": "Untracked",
-      "image": "Killer Instinct.jpg"
+      "image": "Killer Instinct.jpg",
+      "top_10": null
     },
     {
       "title": "Kingdom Rush",
@@ -374,7 +420,8 @@
       "platform": "PC",
       "genre": "Strategy",
       "beaten": "2020",
-      "image": "Kingdom Rush.jpeg"
+      "image": "Kingdom Rush.jpeg",
+      "top_10": null
     },
     {
       "title": "Life is Strange",
@@ -382,7 +429,8 @@
       "platform": "PC",
       "genre": "Adventure",
       "beaten": "2017",
-      "image": "Life is Strange.jpg"
+      "image": "Life is Strange.jpg",
+      "top_10": 8
     },
     {
       "title": "Life is Strange: Before the Storm",
@@ -390,7 +438,8 @@
       "platform": "PC",
       "genre": "Adventure",
       "beaten": "2017",
-      "image": "Life is Strange: Before the Storm.jpg"
+      "image": "Life is Strange: Before the Storm.jpg",
+      "top_10": null
     },
     {
       "title": "Limbo",
@@ -398,7 +447,8 @@
       "platform": "PC",
       "genre": "Platformer",
       "beaten": "2011",
-      "image": "Limbo.jpg"
+      "image": "Limbo.jpg",
+      "top_10": null
     },
     {
       "title": "Mario Kart 64",
@@ -406,7 +456,8 @@
       "platform": "Nintendo 64",
       "genre": "Racing",
       "beaten": "Untracked",
-      "image": "Mario Kart 64.jpg"
+      "image": "Mario Kart 64.jpg",
+      "top_10": null
     },
     {
       "title": "Mario Kart 8",
@@ -414,7 +465,8 @@
       "platform": "Nintendo Switch",
       "genre": "Racing",
       "beaten": "2025",
-      "image": "Mario Kart 8.jpg"
+      "image": "Mario Kart 8.jpg",
+      "top_10": null
     },
     {
       "title": "Mario Party",
@@ -422,7 +474,8 @@
       "platform": "Nintendo 64",
       "genre": "Party",
       "beaten": "Untracked",
-      "image": "Mario Party.avif"
+      "image": "Mario Party.avif",
+      "top_10": null
     },
     {
       "title": "Mario Tennis",
@@ -430,7 +483,8 @@
       "platform": "Nintendo 64",
       "genre": "Sports",
       "beaten": "Untracked",
-      "image": "Mario Tennis.jpg"
+      "image": "Mario Tennis.jpg",
+      "top_10": null
     },
     {
       "title": "Mark of the Ninja",
@@ -438,7 +492,8 @@
       "platform": "PC",
       "genre": "Action",
       "beaten": "2018",
-      "image": "Mark of the Ninja.jpg"
+      "image": "Mark of the Ninja.jpg",
+      "top_10": null
     },
     {
       "title": "Mega Man",
@@ -446,7 +501,8 @@
       "platform": "NES",
       "genre": "Platformer",
       "beaten": "2023",
-      "image": "Mega Man.jpg"
+      "image": "Mega Man.jpg",
+      "top_10": null
     },
     {
       "title": "Mega Man 2",
@@ -454,7 +510,8 @@
       "platform": "NES",
       "genre": "Platformer",
       "beaten": "2023",
-      "image": "Mega Man 2.jpg"
+      "image": "Mega Man 2.jpg",
+      "top_10": null
     },
     {
       "title": "Mega Man 64",
@@ -462,7 +519,8 @@
       "platform": "Nintendo 64",
       "genre": "Action",
       "beaten": "Untracked",
-      "image": "Mega Man 64.jpg"
+      "image": "Mega Man 64.jpg",
+      "top_10": null
     },
     {
       "title": "Metal Slug Advance",
@@ -470,7 +528,8 @@
       "platform": "Game Boy Advance",
       "genre": "Run and Gun",
       "beaten": "2025",
-      "image": "Metal Slug Advance.jpg"
+      "image": "Metal Slug Advance.jpg",
+      "top_10": null
     },
     {
       "title": "Metroid Dread",
@@ -478,7 +537,8 @@
       "platform": "Nintendo Switch",
       "genre": "Metroidvania",
       "beaten": "2021",
-      "image": "Metroid Dread.jpg"
+      "image": "Metroid Dread.jpg",
+      "top_10": null
     },
     {
       "title": "Mickey to Donald: Magical Adventure 3",
@@ -486,7 +546,8 @@
       "platform": "Super Nintendo",
       "genre": "Platformer",
       "beaten": "Untracked",
-      "image": "Mickey to Donald: Magical Adventure 3.jpg"
+      "image": "Mickey to Donald: Magical Adventure 3.jpg",
+      "top_10": null
     },
     {
       "title": "Middle-Earth: Shadow of Mordor",
@@ -494,7 +555,8 @@
       "platform": "PC",
       "genre": "Action",
       "beaten": "2018",
-      "image": "Middle-Earth: Shadow of Mordor.jpeg"
+      "image": "Middle-Earth: Shadow of Mordor.jpeg",
+      "top_10": null
     },
     {
       "title": "Mortal Kombat (bootleg)",
@@ -502,7 +564,8 @@
       "platform": "NES",
       "genre": "Fighting",
       "beaten": "Untracked",
-      "image": "Mortal Kombat (bootleg).jpg"
+      "image": "Mortal Kombat (bootleg).jpg",
+      "top_10": null
     },
     {
       "title": "Never Alone",
@@ -510,7 +573,8 @@
       "platform": "PC",
       "genre": "Platformer",
       "beaten": "Untracked",
-      "image": "Never Alone.avif"
+      "image": "Never Alone.avif",
+      "top_10": null
     },
     {
       "title": "New Super Mario Bros. U Deluxe",
@@ -518,7 +582,8 @@
       "platform": "Nintendo Switch",
       "genre": "Platformer",
       "beaten": "2021",
-      "image": "New Super Mario Bros. U Deluxe.webp"
+      "image": "New Super Mario Bros. U Deluxe.webp",
+      "top_10": null
     },
     {
       "title": "No Time to Explain",
@@ -526,7 +591,8 @@
       "platform": "PC",
       "genre": "Platformer",
       "beaten": "Untracked",
-      "image": "No Time to Explain.avif"
+      "image": "No Time to Explain.avif",
+      "top_10": null
     },
     {
       "title": "Ori and the Blind Forest",
@@ -534,7 +600,8 @@
       "platform": "PC",
       "genre": "Metroidvania",
       "beaten": "2017",
-      "image": "Ori and the Blind Forest.jpg"
+      "image": "Ori and the Blind Forest.jpg",
+      "top_10": null
     },
     {
       "title": "Ori and the Will of the Wisps",
@@ -542,7 +609,8 @@
       "platform": "PC",
       "genre": "Metroidvania",
       "beaten": "2020",
-      "image": "Ori and the Will of the Wisps.webp"
+      "image": "Ori and the Will of the Wisps.webp",
+      "top_10": null
     },
     {
       "title": "Outer Wilds",
@@ -550,7 +618,8 @@
       "platform": "Nintendo Switch",
       "genre": "Adventure",
       "beaten": "2025",
-      "image": "Outer Wilds.jpg"
+      "image": "Outer Wilds.jpg",
+      "top_10": 6
     },
     {
       "title": "Outer Wilds: Echoes of the Eye",
@@ -558,7 +627,8 @@
       "platform": "Nintendo Switch",
       "genre": "Adventure",
       "beaten": "2025",
-      "image": "Outer Wilds: Echoes of the Eye.webp"
+      "image": "Outer Wilds: Echoes of the Eye.webp",
+      "top_10": null
     },
     {
       "title": "Overcooked",
@@ -566,7 +636,8 @@
       "platform": "PC",
       "genre": "Simulation",
       "beaten": "2020",
-      "image": "Overcooked.jpg"
+      "image": "Overcooked.jpg",
+      "top_10": null
     },
     {
       "title": "Overcooked 2",
@@ -574,7 +645,8 @@
       "platform": "PC",
       "genre": "Simulation",
       "beaten": "2021",
-      "image": "Overcooked 2.avif"
+      "image": "Overcooked 2.avif",
+      "top_10": null
     },
     {
       "title": "Pokémon (Gen 1 Nuzlocke) LeafGreen",
@@ -582,7 +654,8 @@
       "platform": "Game Boy Advance",
       "genre": "RPG",
       "beaten": "2025",
-      "image": "Pokémon (Gen 1 Nuzlocke) LeafGreen.jpg"
+      "image": "Pokémon (Gen 1 Nuzlocke) LeafGreen.jpg",
+      "top_10": null
     },
     {
       "title": "Pokémon (Gen 1) FireRed",
@@ -590,7 +663,8 @@
       "platform": "Game Boy Advance",
       "genre": "RPG",
       "beaten": "2023",
-      "image": "Pokémon (Gen 1) Fire Red.jpg"
+      "image": "Pokémon (Gen 1) FireRed.jpg",
+      "top_10": 10
     },
     {
       "title": "Pokémon (Gen 2 Nuzlocke) SoulSilver",
@@ -598,7 +672,8 @@
       "platform": "Nintendo DS",
       "genre": "RPG",
       "beaten": "2025",
-      "image": "Pokémon (Gen 2 Nuzlocke) SoulSilver.jpg"
+      "image": "Pokémon (Gen 2 Nuzlocke) SoulSilver.jpg",
+      "top_10": null
     },
     {
       "title": "Pokémon (Gen 2) HeartGold",
@@ -606,7 +681,8 @@
       "platform": "Nintendo DS",
       "genre": "RPG",
       "beaten": "2025",
-      "image": "Pokémon (Gen 2) HeartGold.jpg"
+      "image": "Pokémon (Gen 2) HeartGold.jpg",
+      "top_10": null
     },
     {
       "title": "Pokémon (Gen 3) Emerald",
@@ -614,7 +690,8 @@
       "platform": "Game Boy Advance",
       "genre": "RPG",
       "beaten": "2025",
-      "image": "Pokémon (Gen 3) Emerald.jpg"
+      "image": "Pokémon (Gen 3) Emerald.jpg",
+      "top_10": null
     },
     {
       "title": "Pokémon (Gen 4) Platinum",
@@ -622,7 +699,8 @@
       "platform": "Nintendo DS",
       "genre": "RPG",
       "beaten": "2025",
-      "image": "Pokémon (Gen 4) Platinum.jpg"
+      "image": "Pokémon (Gen 4) Platinum.jpg",
+      "top_10": null
     },
     {
       "title": "Pokémon Snap",
@@ -630,7 +708,8 @@
       "platform": "Nintendo 64",
       "genre": "Simulation",
       "beaten": "2024",
-      "image": "Pokémon Snap.jpg"
+      "image": "Pokémon Snap.jpg",
+      "top_10": null
     },
     {
       "title": "Pokémon Stadium",
@@ -638,7 +717,8 @@
       "platform": "Nintendo 64",
       "genre": "Fighting",
       "beaten": "2005",
-      "image": "Pokémon Stadium.jpg"
+      "image": "Pokémon Stadium.jpg",
+      "top_10": null
     },
     {
       "title": "Pokémon Stadium (bootleg)",
@@ -646,7 +726,8 @@
       "platform": "Super Nintendo",
       "genre": "Fighting",
       "beaten": "Untracked",
-      "image": "Pokémon Stadium (bootleg).jpg"
+      "image": "Pokémon Stadium (bootleg).jpg",
+      "top_10": null
     },
     {
       "title": "Pokémon Stadium 2",
@@ -654,7 +735,8 @@
       "platform": "Nintendo 64",
       "genre": "Fighting",
       "beaten": "Untracked",
-      "image": "Pokémon Stadium 2.jpg"
+      "image": "Pokémon Stadium 2.jpg",
+      "top_10": null
     },
     {
       "title": "Power Rangers: The Fighting Edition",
@@ -662,7 +744,8 @@
       "platform": "Super Nintendo",
       "genre": "Fighting",
       "beaten": "Untracked",
-      "image": "Power Rangers: The Fighting Edition.jpg"
+      "image": "Power Rangers: The Fighting Edition.jpg",
+      "top_10": null
     },
     {
       "title": "Return of the Obra Dinn",
@@ -670,7 +753,8 @@
       "platform": "Nintendo Switch",
       "genre": "Puzzle",
       "beaten": "2025",
-      "image": "Return of the Obra Dinn.webp"
+      "image": "Return of the Obra Dinn.webp",
+      "top_10": null
     },
     {
       "title": "Shadow of the Colossus",
@@ -678,7 +762,8 @@
       "platform": "PlayStation 2",
       "genre": "Action",
       "beaten": "Untracked",
-      "image": "Shadow of the Colossus.webp"
+      "image": "Shadow of the Colossus.webp",
+      "top_10": 3
     },
     {
       "title": "Shining Force I",
@@ -686,7 +771,8 @@
       "platform": "Mega Drive",
       "genre": "Strategy",
       "beaten": "Untracked",
-      "image": "Shining Force I.jpg"
+      "image": "Shining Force I.jpg",
+      "top_10": 4
     },
     {
       "title": "Shining Force II",
@@ -694,7 +780,8 @@
       "platform": "Mega Drive",
       "genre": "Strategy",
       "beaten": "Untracked",
-      "image": "Shining Force II.jpg"
+      "image": "Shining Force II.jpg",
+      "top_10": null
     },
     {
       "title": "Shining Force: Resurrection of the Dark Dragon",
@@ -702,7 +789,8 @@
       "platform": "Game Boy Advance",
       "genre": "Strategy",
       "beaten": "Untracked",
-      "image": "Shining Force: Resurrection of the Dark Dragon.webp"
+      "image": "Shining Force: Resurrection of the Dark Dragon.webp",
+      "top_10": null
     },
     {
       "title": "Sonic The Hedgehog",
@@ -710,7 +798,8 @@
       "platform": "Mega Drive",
       "genre": "Platformer",
       "beaten": "Untracked",
-      "image": "Sonic The Hedgehog.webp"
+      "image": "Sonic The Hedgehog.webp",
+      "top_10": null
     },
     {
       "title": "Sonic The Hedgehog (hack)",
@@ -718,7 +807,8 @@
       "platform": "Super Nintendo",
       "genre": "Platformer",
       "beaten": "Untracked",
-      "image": "Sonic The Hedgehog (hack).png"
+      "image": "Sonic The Hedgehog (hack).png",
+      "top_10": null
     },
     {
       "title": "Sonic The Hedgehog 2",
@@ -726,7 +816,8 @@
       "platform": "Mega Drive",
       "genre": "Platformer",
       "beaten": "Untracked",
-      "image": "Sonic The Hedgehog 2.webp"
+      "image": "Sonic The Hedgehog 2.webp",
+      "top_10": null
     },
     {
       "title": "Sonic Wings",
@@ -734,7 +825,8 @@
       "platform": "Super Nintendo",
       "genre": "Shooter",
       "beaten": "Untracked",
-      "image": "Sonic Wings.webp"
+      "image": "Sonic Wings.webp",
+      "top_10": null
     },
     {
       "title": "South Park",
@@ -742,7 +834,8 @@
       "platform": "Nintendo 64",
       "genre": "FPS",
       "beaten": "Untracked",
-      "image": "South Park.avif"
+      "image": "South Park.avif",
+      "top_10": null
     },
     {
       "title": "Spanky's Quest",
@@ -750,7 +843,8 @@
       "platform": "Super Nintendo",
       "genre": "Platformer",
       "beaten": "Untracked",
-      "image": "Spanky's Quest.png"
+      "image": "Spanky's Quest.png",
+      "top_10": null
     },
     {
       "title": "Star Fox 64",
@@ -758,7 +852,8 @@
       "platform": "Nintendo 64",
       "genre": "Shooter",
       "beaten": "Untracked",
-      "image": "Star Fox 64.webp"
+      "image": "Star Fox 64.webp",
+      "top_10": null
     },
     {
       "title": "Star Fox 64 3D",
@@ -766,7 +861,8 @@
       "platform": "Nintendo 3DS",
       "genre": "Shooter",
       "beaten": "2014",
-      "image": "Star Fox 64 3D.jpg"
+      "image": "Star Fox 64 3D.jpg",
+      "top_10": null
     },
     {
       "title": "Street Fighter 2: The New Challengers",
@@ -774,7 +870,8 @@
       "platform": "Super Nintendo",
       "genre": "Fighting",
       "beaten": "Untracked",
-      "image": "Street Fighter 2: The New Challengers.jpg"
+      "image": "Street Fighter 2: The New Challengers.jpg",
+      "top_10": null
     },
     {
       "title": "Street Fighter 2: Turbo",
@@ -782,7 +879,8 @@
       "platform": "Super Nintendo",
       "genre": "Fighting",
       "beaten": "Untracked",
-      "image": "Street Fighter 2: Turbo.jpeg"
+      "image": "Street Fighter 2: Turbo.jpeg",
+      "top_10": null
     },
     {
       "title": "Sunset Riders",
@@ -790,7 +888,8 @@
       "platform": "Super Nintendo",
       "genre": "Run and Gun",
       "beaten": "Untracked",
-      "image": "Sunset Riders.jpeg"
+      "image": "Sunset Riders.jpeg",
+      "top_10": null
     },
     {
       "title": "Super Mario 64",
@@ -798,7 +897,8 @@
       "platform": "Nintendo 64",
       "genre": "3D Platformer",
       "beaten": "Untracked",
-      "image": "Super Mario 64.jpg"
+      "image": "Super Mario 64.jpg",
+      "top_10": null
     },
     {
       "title": "Super Mario Bros.",
@@ -806,7 +906,8 @@
       "platform": "NES",
       "genre": "Platformer",
       "beaten": "Untracked",
-      "image": "Super Mario Bros..jpg"
+      "image": "Super Mario Bros..jpg",
+      "top_10": null
     },
     {
       "title": "Super Mario Bros. 2",
@@ -814,7 +915,8 @@
       "platform": "NES",
       "genre": "Platformer",
       "beaten": "Untracked",
-      "image": "Super Mario Bros. 2.png"
+      "image": "Super Mario Bros. 2.png",
+      "top_10": null
     },
     {
       "title": "Super Mario Bros. 3",
@@ -822,7 +924,8 @@
       "platform": "NES",
       "genre": "Platformer",
       "beaten": "Untracked",
-      "image": "Super Mario Bros. 3.webp"
+      "image": "Super Mario Bros. 3.webp",
+      "top_10": null
     },
     {
       "title": "Super Mario Bros.: The Lost Levels",
@@ -830,7 +933,8 @@
       "platform": "Super Nintendo",
       "genre": "Platformer",
       "beaten": "Untracked",
-      "image": "Super Mario Bros.: The Lost Levels.jpg"
+      "image": "Super Mario Bros.: The Lost Levels.jpg",
+      "top_10": null
     },
     {
       "title": "Super Mario Kart",
@@ -838,7 +942,8 @@
       "platform": "Super Nintendo",
       "genre": "Racing",
       "beaten": "Untracked",
-      "image": "Super Mario Kart.jpg"
+      "image": "Super Mario Kart.jpg",
+      "top_10": null
     },
     {
       "title": "Super Mario World",
@@ -846,7 +951,8 @@
       "platform": "Super Nintendo",
       "genre": "Platformer",
       "beaten": "Untracked",
-      "image": "Super Mario World.jpg"
+      "image": "Super Mario World.jpg",
+      "top_10": 9
     },
     {
       "title": "Super Meat Boy",
@@ -854,7 +960,8 @@
       "platform": "PC",
       "genre": "Platformer",
       "beaten": "2011",
-      "image": "Super Meat Boy.webp"
+      "image": "Super Meat Boy.webp",
+      "top_10": null
     },
     {
       "title": "Super Metroid",
@@ -862,7 +969,8 @@
       "platform": "Super Nintendo",
       "genre": "Metroidvania",
       "beaten": "2024",
-      "image": "Super Metroid.jpg"
+      "image": "Super Metroid.jpg",
+      "top_10": null
     },
     {
       "title": "Super Smash Bros.",
@@ -870,7 +978,8 @@
       "platform": "Nintendo 64",
       "genre": "Fighting",
       "beaten": "2006",
-      "image": "Super Smash Bros..avif"
+      "image": "Super Smash Bros..avif",
+      "top_10": null
     },
     {
       "title": "TMNT: Turtles in Time",
@@ -878,7 +987,8 @@
       "platform": "Super Nintendo",
       "genre": "Beat 'em up",
       "beaten": "Untracked",
-      "image": "TMNT: Turtles in Time.jpeg"
+      "image": "TMNT: Turtles in Time.jpeg",
+      "top_10": null
     },
     {
       "title": "The Awesome Adventures of Captain Spirit",
@@ -886,7 +996,8 @@
       "platform": "PC",
       "genre": "Adventure",
       "beaten": "2018",
-      "image": "The Awesome Adventures of Captain Spirit.jpg"
+      "image": "The Awesome Adventures of Captain Spirit.jpg",
+      "top_10": null
     },
     {
       "title": "The Begginer's Guide",
@@ -894,7 +1005,8 @@
       "platform": "PC",
       "genre": "Adventure",
       "beaten": "Untracked",
-      "image": "The Begginer's Guide.jpg"
+      "image": "The Begginer's Guide.jpg",
+      "top_10": null
     },
     {
       "title": "The Legend of Zelda",
@@ -902,7 +1014,8 @@
       "platform": "NES",
       "genre": "RPG",
       "beaten": "2024",
-      "image": "The Legend of Zelda.webp"
+      "image": "The Legend of Zelda.webp",
+      "top_10": null
     },
     {
       "title": "The Legend of Zelda II: Adventure of Link",
@@ -910,7 +1023,8 @@
       "platform": "NES",
       "genre": "RPG",
       "beaten": "2024",
-      "image": "The Legend of Zelda II: Adventure of Link.jpg"
+      "image": "The Legend of Zelda II: Adventure of Link.jpg",
+      "top_10": null
     },
     {
       "title": "The Legend of Zelda: A Link to the Past",
@@ -918,7 +1032,8 @@
       "platform": "Super Nintendo",
       "genre": "RPG",
       "beaten": "2024",
-      "image": "The Legend of Zelda: A Link to the Past.bmp"
+      "image": "The Legend of Zelda: A Link to the Past.bmp",
+      "top_10": null
     },
     {
       "title": "The Legend of Zelda: Breath of the Wild",
@@ -926,7 +1041,8 @@
       "platform": "Nintendo Switch",
       "genre": "RPG",
       "beaten": "2021",
-      "image": "The Legend of Zelda: Breath of the Wild.jpg"
+      "image": "The Legend of Zelda: Breath of the Wild.jpg",
+      "top_10": 5
     },
     {
       "title": "The Legend of Zelda: Echoes of Wisdom",
@@ -934,7 +1050,8 @@
       "platform": "Nintendo Switch",
       "genre": "RPG",
       "beaten": "2024",
-      "image": "The Legend of Zelda: Echoes of Wisdom.jpg"
+      "image": "The Legend of Zelda: Echoes of Wisdom.jpg",
+      "top_10": null
     },
     {
       "title": "The Legend of Zelda: Link's Awakening",
@@ -942,7 +1059,8 @@
       "platform": "Nintendo Switch",
       "genre": "RPG",
       "beaten": "2021",
-      "image": "The Legend of Zelda: Link's Awakening.webp"
+      "image": "The Legend of Zelda: Link's Awakening.webp",
+      "top_10": null
     },
     {
       "title": "The Legend of Zelda: Majora's Mask",
@@ -950,7 +1068,8 @@
       "platform": "Nintendo 64",
       "genre": "RPG",
       "beaten": "Untracked",
-      "image": "The Legend of Zelda: Majora's Mask.jpg"
+      "image": "The Legend of Zelda: Majora's Mask.jpg",
+      "top_10": null
     },
     {
       "title": "The Legend of Zelda: Majora's Mask 3D",
@@ -958,7 +1077,8 @@
       "platform": "Nintendo 3DS",
       "genre": "RPG",
       "beaten": "2015",
-      "image": "The Legend of Zelda: Majora's Mask 3D.jpg"
+      "image": "The Legend of Zelda: Majora's Mask 3D.jpg",
+      "top_10": null
     },
     {
       "title": "The Legend of Zelda: Ocarina of Time",
@@ -966,7 +1086,8 @@
       "platform": "Nintendo 64",
       "genre": "RPG",
       "beaten": "2002",
-      "image": "The Legend of Zelda: Ocarina of Time.webp"
+      "image": "The Legend of Zelda: Ocarina of Time.webp",
+      "top_10": 1
     },
     {
       "title": "The Legend of Zelda: Ocarina of Time 3D",
@@ -974,7 +1095,8 @@
       "platform": "Nintendo 3DS",
       "genre": "RPG",
       "beaten": "2015",
-      "image": "The Legend of Zelda: Ocarina of Time 3D.webp"
+      "image": "The Legend of Zelda: Ocarina of Time 3D.webp",
+      "top_10": null
     },
     {
       "title": "The Legend of Zelda: Skyward Sword HD",
@@ -982,7 +1104,8 @@
       "platform": "Nintendo Switch",
       "genre": "RPG",
       "beaten": "2025",
-      "image": "The Legend of Zelda: Skyward Sword HD.jpg"
+      "image": "The Legend of Zelda: Skyward Sword HD.jpg",
+      "top_10": null
     },
     {
       "title": "The Legend of Zelda: Tears of the Kingdom",
@@ -990,7 +1113,8 @@
       "platform": "Nintendo Switch",
       "genre": "RPG",
       "beaten": "2023",
-      "image": "The Legend of Zelda: Tears of the Kingdom.webp"
+      "image": "The Legend of Zelda: Tears of the Kingdom.webp",
+      "top_10": null
     },
     {
       "title": "The Legend of Zelda: The Minish Cap",
@@ -998,7 +1122,8 @@
       "platform": "Game Boy Advance",
       "genre": "RPG",
       "beaten": "2024",
-      "image": "The Legend of Zelda: The Minish Cap.jpg"
+      "image": "The Legend of Zelda: The Minish Cap.jpg",
+      "top_10": null
     },
     {
       "title": "The Legend of Zelda: The Wind Waker",
@@ -1006,7 +1131,8 @@
       "platform": "Nintendo GameCube",
       "genre": "RPG",
       "beaten": "2024",
-      "image": "The Legend of Zelda: The Wind Waker.jpg"
+      "image": "The Legend of Zelda: The Wind Waker.jpg",
+      "top_10": null
     },
     {
       "title": "The Legend of Zelda: Twilight Princess",
@@ -1014,7 +1140,8 @@
       "platform": "Nintendo GameCube",
       "genre": "RPG",
       "beaten": "2024",
-      "image": "The Legend of Zelda: Twilight Princess.jpg"
+      "image": "The Legend of Zelda: Twilight Princess.jpg",
+      "top_10": null
     },
     {
       "title": "The Mask",
@@ -1022,7 +1149,8 @@
       "platform": "Super Nintendo",
       "genre": "Platformer",
       "beaten": "Untracked",
-      "image": "The Mask.png"
+      "image": "The Mask.png",
+      "top_10": null
     },
     {
       "title": "The Stanley Parable",
@@ -1030,7 +1158,8 @@
       "platform": "PC",
       "genre": "Adventure",
       "beaten": "Untracked",
-      "image": "The Stanley Parable.jpg"
+      "image": "The Stanley Parable.jpg",
+      "top_10": null
     },
     {
       "title": "Thomas Was Alone",
@@ -1038,7 +1167,8 @@
       "platform": "PC",
       "genre": "Puzzle",
       "beaten": "2018",
-      "image": "Thomas Was Alone.jpg"
+      "image": "Thomas Was Alone.jpg",
+      "top_10": null
     },
     {
       "title": "Tiny Toon Adventures: Buster Busts Loose",
@@ -1046,7 +1176,8 @@
       "platform": "Super Nintendo",
       "genre": "Platformer",
       "beaten": "Untracked",
-      "image": "Tiny Toon Adventures: Buster Busts Loose.jpg"
+      "image": "Tiny Toon Adventures: Buster Busts Loose.jpg",
+      "top_10": null
     },
     {
       "title": "To the Moon",
@@ -1054,7 +1185,8 @@
       "platform": "PC",
       "genre": "RPG",
       "beaten": "Untracked",
-      "image": "To the Moon.jpg"
+      "image": "To the Moon.jpg",
+      "top_10": null
     },
     {
       "title": "Tony Hawk's Pro Skater 2",
@@ -1062,7 +1194,8 @@
       "platform": "Nintendo 64",
       "genre": "Sports",
       "beaten": "Untracked",
-      "image": "Tony Hawk's Pro Skater 2.jpg"
+      "image": "Tony Hawk's Pro Skater 2.jpg",
+      "top_10": null
     },
     {
       "title": "Top Gear 2",
@@ -1070,7 +1203,8 @@
       "platform": "Super Nintendo",
       "genre": "Racing",
       "beaten": "Untracked",
-      "image": "Top Gear 2.jpg"
+      "image": "Top Gear 2.jpg",
+      "top_10": null
     },
     {
       "title": "Ultimate Mortal Kombat 3",
@@ -1078,7 +1212,8 @@
       "platform": "Super Nintendo",
       "genre": "Fighting",
       "beaten": "Untracked",
-      "image": "Ultimate Mortal Kombat 3.jpg"
+      "image": "Ultimate Mortal Kombat 3.jpg",
+      "top_10": null
     },
     {
       "title": "Wave Race 64",
@@ -1086,7 +1221,8 @@
       "platform": "Nintendo 64",
       "genre": "Racing",
       "beaten": "Untracked",
-      "image": "Wave Race 64.jpg"
+      "image": "Wave Race 64.jpg",
+      "top_10": null
     },
     {
       "title": "X-Men Mutant Apocalypse",
@@ -1094,7 +1230,8 @@
       "platform": "Super Nintendo",
       "genre": "Beat 'em up",
       "beaten": "Untracked",
-      "image": "X-Men Mutant Apocalypse.png"
+      "image": "X-Men Mutant Apocalypse.png",
+      "top_10": null
     }
   ]
 }

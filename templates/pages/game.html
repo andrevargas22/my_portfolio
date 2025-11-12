@@ -42,6 +42,7 @@
 			<div class="portfolio-menu mt-2 mb-4">
 				<ul>
 					<li class="btn btn-outline-dark active" data-filter="*">All</li>
+					<li class="btn btn-outline-dark" data-filter=".top-10">🥇 Top 10</li>
 					<li class="btn btn-outline-dark" data-filter=".pc">PC</li>
 					<li class="btn btn-outline-dark" data-filter=".nes">NES</li>
 					<li class="btn btn-outline-dark" data-filter=".snes">SNES</li>
@@ -80,14 +81,17 @@
                                              |replace(" ", "-")
                                              |lower %}
 								{% set display_genre = game.genre %}
-								<div class="item {{platform_class}} col-lg-3 col-md-4 col-6 col-sm">
+								<div class="item {{platform_class}} {% if game.top_10 %}top-10{% endif %} col-lg-3 col-md-4 col-6 col-sm" data-top-rank="{% if game.top_10 %}{{ game.top_10 }}{% else %}999{% endif %}">
 									<div class="image-container">
 										<p class="image-description">{{game.title}} ({{game.year}})</p>
 										<div class="tags">
+											{% if game.top_10 %}
+											<span class="tag top-badge">🥇 Top {{ game.top_10}}</span>
+											{% endif %}
 											<span class="tag {{platform_class}}">{{game.platform}}</span>
 											<span class="tag {{genre_class}}">{{display_genre}}</span>
 											{% if game.beaten != "Untracked" %}
-											<span class="tag beaten">Beaten in: {{game.beaten}}</span>
+											<span class="tag beaten">✔️ {{game.beaten}}</span>
 											{% endif %}
 										</div>
 										<a href="{{ url_for('static', filename='images/games/' + game.image) }}" class="fancylight popup-btn" data-fancybox-group="light">
