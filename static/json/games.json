@@ -79,7 +79,7 @@
       "genre": "RPG",
       "beaten": "2022",
       "image": "Chrono Trigger.webp",
-      "top_10": 5
+      "top_10": 7
     },
     {
       "title": "ClayFighter 63⅓",
@@ -178,7 +178,7 @@
       "genre": "Platformer",
       "beaten": "Untracked",
       "image": "Donkey Kong Country.jpg",
-      "top_10": 10
+      "top_10": null
     },
     {
       "title": "Donkey Kong Country 2",
@@ -394,7 +394,7 @@
       "genre": "Sports",
       "beaten": "Untracked",
       "image": "Internacional Superstar Soccer Deluxe.jpg",
-      "top_10": 9
+      "top_10": null
     },
     {
       "title": "Journey",
@@ -430,7 +430,7 @@
       "genre": "Adventure",
       "beaten": "2017",
       "image": "Life is Strange.jpg",
-      "top_10": null
+      "top_10": 8
     },
     {
       "title": "Life is Strange: Before the Storm",
@@ -619,7 +619,7 @@
       "genre": "Adventure",
       "beaten": "2025",
       "image": "Outer Wilds.jpg",
-      "top_10": 7
+      "top_10": 6
     },
     {
       "title": "Outer Wilds: Echoes of the Eye",
@@ -663,8 +663,8 @@
       "platform": "Game Boy Advance",
       "genre": "RPG",
       "beaten": "2023",
-      "image": "Pokémon (Gen 1) Fire Red.jpg",
-      "top_10": null
+      "image": "Pokémon (Gen 1) FireRed.jpg",
+      "top_10": 10
     },
     {
       "title": "Pokémon (Gen 2 Nuzlocke) SoulSilver",
@@ -772,7 +772,7 @@
       "genre": "Strategy",
       "beaten": "Untracked",
       "image": "Shining Force I.jpg",
-      "top_10": 6
+      "top_10": 4
     },
     {
       "title": "Shining Force II",
@@ -952,7 +952,7 @@
       "genre": "Platformer",
       "beaten": "Untracked",
       "image": "Super Mario World.jpg",
-      "top_10": 8
+      "top_10": 9
     },
     {
       "title": "Super Meat Boy",
@@ -1042,7 +1042,7 @@
       "genre": "RPG",
       "beaten": "2021",
       "image": "The Legend of Zelda: Breath of the Wild.jpg",
-      "top_10": 4
+      "top_10": 5
     },
     {
       "title": "The Legend of Zelda: Echoes of Wisdom",
