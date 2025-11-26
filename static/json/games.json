@@ -79,7 +79,7 @@
       "genre": "RPG",
       "beaten": "2022",
       "image": "Chrono Trigger.webp",
-      "top_10": 7
+      "top_10": 6
     },
     {
       "title": "ClayFighter 63⅓",
@@ -298,6 +298,15 @@
       "top_10": null
     },
     {
+      "title": "Final Fantasy VII",
+      "year": "1997",
+      "platform": "PlayStation 1",
+      "genre": "RPG",
+      "beaten": "2025",
+      "image": "Final Fantasy VII.webp",
+      "top_10": 5
+    },
+    {
       "title": "GTA San Andreas",
       "year": "2004",
       "platform": "PC",
@@ -367,7 +376,7 @@
       "genre": "Metroidvania",
       "beaten": "2018",
       "image": "Hollow Knight.avif",
-      "top_10": 2
+      "top_10": 3
     },
     {
       "title": "Hollow Knight: Silksong",
@@ -619,7 +628,7 @@
       "genre": "Adventure",
       "beaten": "2025",
       "image": "Outer Wilds.jpg",
-      "top_10": 6
+      "top_10": 4
     },
     {
       "title": "Outer Wilds: Echoes of the Eye",
@@ -664,7 +673,7 @@
       "genre": "RPG",
       "beaten": "2023",
       "image": "Pokémon (Gen 1) FireRed.jpg",
-      "top_10": 10
+      "top_10": null
     },
     {
       "title": "Pokémon (Gen 2 Nuzlocke) SoulSilver",
@@ -763,7 +772,7 @@
       "genre": "Action",
       "beaten": "Untracked",
       "image": "Shadow of the Colossus.webp",
-      "top_10": 3
+      "top_10": 2
     },
     {
       "title": "Shining Force I",
@@ -772,7 +781,7 @@
       "genre": "Strategy",
       "beaten": "Untracked",
       "image": "Shining Force I.jpg",
-      "top_10": 4
+      "top_10": 7
     },
     {
       "title": "Shining Force II",
@@ -853,7 +862,7 @@
       "genre": "Shooter",
       "beaten": "Untracked",
       "image": "Star Fox 64.webp",
-      "top_10": null
+      "top_10": 10
     },
     {
       "title": "Star Fox 64 3D",
@@ -1042,7 +1051,7 @@
       "genre": "RPG",
       "beaten": "2021",
       "image": "The Legend of Zelda: Breath of the Wild.jpg",
-      "top_10": 5
+      "top_10": null
     },
     {
       "title": "The Legend of Zelda: Echoes of Wisdom",
