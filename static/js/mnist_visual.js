@@ -140,6 +140,32 @@ function getCanvasImageData() {
     return canvas.toDataURL('image/png');
 }
 
+function getCanvasPixelData() {
+    // Get the canvas pixel data as a 28x28 array (normalized 0-1)
+    // This matches what the model receives
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const pixels = [];
+    
+    // Downsample to 28x28 and normalize
+    const scaleX = canvas.width / 28;
+    const scaleY = canvas.height / 28;
+    
+    for (let y = 0; y < 28; y++) {
+        for (let x = 0; x < 28; x++) {
+            // Sample the center of each 28x28 grid cell
+            const srcX = Math.floor((x + 0.5) * scaleX);
+            const srcY = Math.floor((y + 0.5) * scaleY);
+            const idx = (srcY * canvas.width + srcX) * 4;
+            
+            // Convert RGB to grayscale (use red channel since drawing is white on black)
+            const gray = imageData.data[idx] / 255.0;
+            pixels.push(gray);
+        }
+    }
+    
+    return pixels;
+}
+
 // ==================== UI FUNCTIONS ====================
 function showLoading() {
     document.getElementById('loading-indicator').style.display = 'block';
@@ -287,6 +313,9 @@ async function visualizeDigit() {
         const data = await response.json();
         
         console.log('Full API response:', data);
+        
+        // Add canvas pixel data to response for input layer visualization
+        data.input_image = getCanvasPixelData();
         
         // Display prediction results
         displayPrediction(data);
@@ -567,11 +596,13 @@ class CNNVisualizer3D {
         
         // Build layers in correct order: Input → Conv2D → Conv2D_1 → Conv2D_2 → Flatten → Dense → Output
         
-        // Add Input layer (28x28 original image) - optional
+        // Add Input layer (28x28 original image) - FIRST layer showing drawn digit
         if (apiResponse.input_image) {
             try {
                 // Input is the original 28x28 grayscale image
-                const inputData = apiResponse.input_image.flat(); // Flatten 28x28 to 784 values
+                const inputData = Array.isArray(apiResponse.input_image[0]) 
+                    ? apiResponse.input_image.flat() 
+                    : apiResponse.input_image;
                 
                 layers.push({
                     name: 'input',
@@ -670,7 +701,7 @@ class CNNVisualizer3D {
             }
         }
         
-        // Add Conv2D_2 layer (last convolutional layer - 3x3x64)
+        // Add Conv2D_2 layer (last convolutional layer - 3x3x64) - THIRD conv layer
         if (apiResponse.activations.conv2d_2 && apiResponse.activations.conv2d_2.feature_maps) {
             try {
                 const featureMaps = apiResponse.activations.conv2d_2.feature_maps;
@@ -843,16 +874,19 @@ class CNNVisualizer3D {
         // Determine label text based on layer
         let labelText = '';
         
-        if (layer.type === 'conv') {
-            labelText = 'Conv2D Layer';
+        if (layer.type === 'input') {
+            labelText = `Input (${layer.shape})`;
+        } else if (layer.type === 'conv') {
+            // Extract layer name: conv2d, conv2d_1, conv2d_2
+            const layerName = layer.name === 'conv2d' ? 'Conv2D' : 
+                             layer.name === 'conv2d_1' ? 'Conv2D_1' : 'Conv2D_2';
+            labelText = `${layerName} (${layer.shape})`;
         } else if (layer.type === 'flatten') {
-            labelText = 'Flatten Layer';
+            labelText = `Flatten (${layer.size})`;
         } else if (layer.type === 'hidden') {
-            labelText = 'Dense Layer';
+            labelText = `Dense (${layer.size})`;
         } else if (layer.type === 'output') {
-            labelText = 'Output Layer';
-        } else if (layer.type === 'input') {
-            labelText = 'Input Layer';
+            labelText = `Output (${layer.size})`;
         }
         
         if (!labelText) return;
@@ -977,16 +1011,16 @@ class CNNVisualizer3D {
         
         positions.forEach((position, index) => {
             const canvas = document.createElement('canvas');
-            canvas.width = 256;
-            canvas.height = 256;
+            canvas.width = 512;
+            canvas.height = 512;
             const ctx = canvas.getContext('2d');
             
             // Draw digit label
             ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
-            ctx.font = 'bold 140px Arial';
+            ctx.font = 'bold 280px Arial';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText(String(index), 128, 128);
+            ctx.fillText(String(index), 256, 256);
             
             // Create sprite
             const texture = new THREE.CanvasTexture(canvas);
@@ -998,7 +1032,7 @@ class CNNVisualizer3D {
             
             sprite.position.copy(position);
             sprite.position.x += labelOffset;
-            sprite.scale.set(0.8, 0.8, 1);
+            sprite.scale.set(1.0, 1.0, 1);
             
             this.scene.add(sprite);
             this.meshes.push(sprite);
