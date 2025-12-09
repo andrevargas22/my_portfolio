@@ -1,0 +1,125 @@
+<!--
+	Personal Website - MNIST 3D Visualization
+	Description: Interactive 3D visualization of CNN activations for handwritten digit recognition.
+	Shows real-time feature maps and neuron activations using Three.js.
+-->
+	
+{% extends 'base/layout.html' %}
+{% block title %}MNIST 3D Visualization - André Vargas{% endblock %}
+{% block head_extra %}
+    <meta name="description" content="Interactive 3D visualization of CNN layer activations for MNIST digit classification">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/mnist_visual.css') }}">
+    <script nonce="{{ g.csp_nonce }}" type="text/javascript">window.apiEndpoint = "{{ mnist_endpoint|e }}";</script>
+{% endblock %}
+{% block content %}
+
+		<div class="container">
+			<!-- Page Header -->
+			<div class="row">
+				<div class="col-lg-12 text-center my-2">
+					<h4 class="border-bottom border-dark p-2">MNIST 3D Neural Network Visualization</h4>
+					<center>
+						<p>
+							Explore how a convolutional neural network recognizes handwritten digits by visualizing its internal activations in 3D.
+						</p>
+					</center>
+				</div>
+			</div>
+			
+			<!-- Instructions -->
+			<div class="row">
+				<div class="col-12">
+					<p>
+						<b>Instructions</b>: Draw a digit in the canvas below and click "Visualize!" to see the neural network's internal activations. 
+						The 3D visualization shows feature maps from convolutional layers and neuron activations from dense layers. 
+						Use your mouse to rotate, zoom, and explore the network architecture.
+					</p>
+				</div>
+			</div>
+
+			<!-- Main Content: Canvas + 3D Visualization -->
+			<div class="row mt-3">
+				<!-- Drawing Canvas Column -->
+				<div class="col-md-4">
+					<h5 class="text-center">Draw a Digit</h5>
+					<canvas id='canvas' width='280' height='280' style='border: 2px solid #333; cursor: crosshair;'></canvas>
+					
+					<!-- Control Buttons -->
+					<div class="text-center mt-3">
+					<button id="btn-clear" class="btn btn-secondary btn-sm">Clear</button>
+					<button id="btn-visualize" class="btn btn-primary btn-sm">Predict!</button>
+					</div>
+
+					<!-- Prediction Results -->
+					<div id="prediction-panel" class="mt-4 p-3 border rounded" style="display:none;">
+						<h6>Top 3 Predictions:</h6>
+						<div id="top-3-list"></div>
+					</div>
+
+					<!-- Loading Indicator -->
+					<div id="loading-indicator" class="text-center mt-3" style="display:none;">
+						<div class="spinner-border text-primary" role="status">
+							<span class="visually-hidden">Loading...</span>
+						</div>
+						<p class="mt-2">Processing...</p>
+					</div>
+				</div>
+
+				<!-- 3D Visualization Column -->
+				<div class="col-md-8">
+					<h5 class="text-center">Neural Network Activations</h5>
+					<div id="visualization-container" style="width: 100%; height: 500px; border: 2px solid #333; background: #000;">
+						<!-- Three.js canvas will be inserted here -->
+					</div>
+
+					<!-- Network Info Panel -->
+					<div id="network-info" class="mt-3 p-2 border rounded bg-light" style="display:none;">
+						<small>
+							<b>Architecture:</b> <span id="arch-summary">-</span><br>
+							<b>Layers:</b> <span id="layer-count">-</span><br>
+							<b>Parameters:</b> <span id="param-count">-</span>
+						</small>
+					</div>
+				</div>
+			</div>
+
+			<!-- Explanation Section -->
+			<div class="row mt-4">
+				<div class="col-12">
+					<p>
+						<b>How does it work?</b> When you draw a digit and click "Visualize!", the canvas image is sent to a CNN model deployed on Google Cloud Run. 
+						The model not only predicts the digit but also returns the internal activations of all layers (convolutional feature maps and dense neuron activations). 
+						These activations are then rendered in 3D using Three.js, allowing you to explore how the network processes the input step-by-step.
+					</p>
+					<p>
+						<b>What you're seeing:</b>
+					</p>
+					<ul>
+						<li><b>Convolutional layers:</b> Grids of feature maps showing patterns detected (edges, curves, shapes)</li>
+						<li><b>Dense layers:</b> Neurons represented as spheres, colored by activation intensity</li>
+						<li><b>Network flow:</b> Layers arranged sequentially to show data transformation</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+{% endblock %}
+{% block scripts_extra %}
+<!-- Three.js library (classic version) -->
+<script src="https://unpkg.com/three@0.150.0/build/three.min.js"></script>
+<script src="https://unpkg.com/three@0.150.0/examples/js/controls/OrbitControls.js"></script>
+
+<!-- Debug script to check if OrbitControls loaded -->
+<script nonce="{{ g.csp_nonce }}">
+    window.addEventListener('load', function() {
+        console.log('THREE loaded:', typeof THREE !== 'undefined');
+        console.log('OrbitControls:', typeof THREE !== 'undefined' && typeof THREE.OrbitControls);
+        if (typeof THREE !== 'undefined') {
+            console.log('THREE.OrbitControls available:', THREE.OrbitControls !== undefined);
+        }
+    });
+</script>
+
+<!-- Main visualization script -->
+<script type="text/javascript" src="{{ url_for('static', filename='js/mnist_visual.js') }}"></script>
+{% endblock %}
