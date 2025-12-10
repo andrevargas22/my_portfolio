@@ -50,12 +50,6 @@
 					<button id="btn-visualize" class="btn btn-primary btn-sm">Predict!</button>
 					</div>
 
-					<!-- Prediction Results -->
-					<div id="prediction-panel" class="mt-4 p-3 border rounded" style="display:none;">
-						<h6>Top 3 Predictions:</h6>
-						<div id="top-3-list"></div>
-					</div>
-
 					<!-- Loading Indicator -->
 					<div id="loading-indicator" class="text-center mt-3" style="display:none;">
 						<div class="spinner-border text-primary" role="status">
@@ -70,6 +64,24 @@
 					<h5 class="text-center">Neural Network Activations</h5>
 					<div id="visualization-container" style="width: 100%; height: 280px; border: 2px solid #333; background: #000;">
 						<!-- Three.js canvas will be inserted here -->
+					</div>
+				</div>
+			</div>
+
+			<!-- Feature Maps Preview Section -->
+			<div class="row mt-4">
+				<!-- Left side: Top 3 Predictions -->
+				<div class="col-md-4">
+					<div id="prediction-panel-bottom" class="p-3 border rounded" style="display:none; background: #f8f9fa;">
+						<h6>Top 3 Predictions:</h6>
+						<div id="top-3-list-bottom"></div>
+					</div>
+				</div>
+				
+				<!-- Right side: Feature Maps -->
+				<div class="col-md-8">
+					<div id="feature-maps-container" style="display:none; padding: 0; border: none; background: transparent;">
+						<!-- Feature map previews will be inserted here -->
 					</div>
 				</div>
 			</div>

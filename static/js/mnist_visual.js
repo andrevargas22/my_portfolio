@@ -142,6 +142,9 @@ function clearCanvas() {
     if (window.cnnVisualizer) {
         window.cnnVisualizer.resetToEmpty();
     }
+    
+    // Clear feature map previews
+    clearFeatureMapPreviews();
 }
 
 function getCanvasImageData() {
@@ -233,11 +236,13 @@ function hideLoading() {
 }
 
 function showPredictionPanel() {
-    document.getElementById('prediction-panel').style.display = 'block';
+    const bottomPanel = document.getElementById('prediction-panel-bottom');
+    if (bottomPanel) bottomPanel.style.display = 'block';
 }
 
 function hidePredictionPanel() {
-    document.getElementById('prediction-panel').style.display = 'none';
+    const bottomPanel = document.getElementById('prediction-panel-bottom');
+    if (bottomPanel) bottomPanel.style.display = 'none';
 }
 
 function displayPrediction(data) {
@@ -249,7 +254,10 @@ function displayPrediction(data) {
         return;
     }
     
-    const top3List = document.getElementById('top-3-list');
+    // Populate only the bottom prediction panel (beside feature maps)
+    const top3List = document.getElementById('top-3-list-bottom');
+    if (!top3List) return;
+    
     top3List.innerHTML = '';
     
     // Create progress bars for each prediction
@@ -276,6 +284,128 @@ function displayPrediction(data) {
     });
     
     showPredictionPanel();
+}
+
+// ==================== TEMPORARY: FEATURE MAP EXPORT ====================
+/**
+ * Save feature maps as downloadable PNG images in a ZIP file
+ * TEMPORARY FUNCTION FOR DEVELOPMENT/ANALYSIS - TO BE REMOVED
+ */
+async function saveFeatureMapsAsImages(activations) {
+    console.log('Saving feature maps as images...');
+    
+    const layers = [
+        { name: 'conv2d', data: activations.conv2d, size: 26 },
+        { name: 'conv2d_1', data: activations.conv2d_1, size: 11 },
+        { name: 'conv2d_2', data: activations.conv2d_2, size: 3 }
+    ];
+    
+    const images = [];
+    
+    for (const layer of layers) {
+        console.log(`Processing ${layer.name}...`, layer.data);
+        
+        if (!layer.data || !layer.data.feature_maps) {
+            console.warn(`No feature maps for ${layer.name}`);
+            continue;
+        }
+        
+        // Save first 12 feature maps of each layer
+        const featureMaps = layer.data.feature_maps.slice(0, 12);
+        console.log(`${layer.name}: ${featureMaps.length} feature maps`);
+        
+        for (let idx = 0; idx < featureMaps.length; idx++) {
+            const fmap = featureMaps[idx];
+            const canvas = document.createElement('canvas');
+            const scaleFactor = 20; // Scale up small images
+            canvas.width = layer.size * scaleFactor;
+            canvas.height = layer.size * scaleFactor;
+            const ctx = canvas.getContext('2d');
+            
+            // Find min/max for normalization
+            let min = Infinity, max = -Infinity;
+            fmap.forEach(row => {
+                row.forEach(val => {
+                    min = Math.min(min, val);
+                    max = Math.max(max, val);
+                });
+            });
+            
+            const range = max - min || 1;
+            
+            // Draw feature map with viridis-like colormap
+            fmap.forEach((row, y) => {
+                row.forEach((val, x) => {
+                    // Normalize to 0-1
+                    const normalized = (val - min) / range;
+                    
+                    // Simple viridis approximation (blue -> cyan -> yellow)
+                    let r, g, b;
+                    if (normalized < 0.5) {
+                        const t = normalized * 2;
+                        r = 0;
+                        g = Math.floor(t * 255);
+                        b = Math.floor((1 - t * 0.5) * 255);
+                    } else {
+                        const t = (normalized - 0.5) * 2;
+                        r = Math.floor(t * 255);
+                        g = 255;
+                        b = Math.floor((1 - t) * 128);
+                    }
+                    
+                    ctx.fillStyle = `rgb(${r},${g},${b})`;
+                    ctx.fillRect(x * scaleFactor, y * scaleFactor, scaleFactor, scaleFactor);
+                });
+            });
+            
+            // Convert to blob and store
+            const blob = await new Promise(resolve => canvas.toBlob(resolve));
+            images.push({
+                name: `${layer.name}_fmap_${idx.toString().padStart(2, '0')}.png`,
+                blob: blob
+            });
+        }
+    }
+    
+    console.log(`Generated ${images.length} images, downloading as single ZIP...`);
+    
+    // Download all as a single ZIP file
+    const zip = await createZipFromImages(images);
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+    downloadBlob(zip, `feature_maps_${timestamp}.zip`);
+    
+    console.log('Feature maps ZIP downloaded! Extract to your maps folder.');
+}
+
+/**
+ * Create a ZIP file from image blobs
+ */
+async function createZipFromImages(images) {
+    // Use native browser APIs to create ZIP (basic implementation)
+    // For production, you'd use JSZip library, but for quick test:
+    
+    // Actually, let's just download them with delay to avoid blocking
+    // Browser blocks multiple simultaneous downloads
+    for (let i = 0; i < images.length; i++) {
+        await new Promise(resolve => setTimeout(resolve, 200)); // 200ms delay between downloads
+        downloadBlob(images[i].blob, images[i].name);
+    }
+    
+    return null; // Not using ZIP for now due to library requirement
+}
+
+/**
+ * Download a blob with given filename
+ */
+function downloadBlob(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a); // Required for Firefox
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
 }
 
 /**
@@ -432,7 +562,7 @@ class CNNVisualizer3D {
             neuronSpacing: 1.2,          // Spacing between neurons in grid
             neuronSize: 0.35,            // Sphere radius for neurons
             connectionRadius: 0.012,     // Cylinder radius for connections
-            maxConnectionsPerNeuron: 16, // Top-N connections to show
+            maxConnectionsPerNeuron: 64, // Top-N connections to show
             cameraDistance: 20,          // Initial camera distance (closer for better view)
             flattenSampleRate: 8,        // Show 1 out of every N neurons for flatten
             colors: {
@@ -766,7 +896,8 @@ class CNNVisualizer3D {
                     activations: sampledValues,
                     size: sampledValues.length,
                     shape: '8×8',
-                    channels: featureMaps.length
+                    channels: featureMaps.length,
+                    featureMaps: featureMaps.slice(0, 4) // First 4 feature maps for 2x2 preview
                 });
                 console.log('Conv2D layer added:', sampledValues.length, 'neurons');
             } catch (err) {
@@ -806,7 +937,8 @@ class CNNVisualizer3D {
                     activations: fullValues,
                     size: fullValues.length,
                     shape: '11×11',
-                    channels: featureMaps.length
+                    channels: featureMaps.length,
+                    featureMaps: featureMaps.slice(0, 4) // First 4 feature maps for 2x2 preview
                 });
                 console.log('Conv2D_1 layer added:', fullValues.length, 'neurons');
             } catch (err) {
@@ -847,7 +979,8 @@ class CNNVisualizer3D {
                     activations: flatValues,
                     size: flatValues.length,
                     shape: `${height}×${width}`,
-                    channels: featureMaps.length
+                    channels: featureMaps.length,
+                    featureMaps: featureMaps.slice(0, 4) // First 4 feature maps for 2x2 preview
                 });
                 console.log('Conv2D_2 layer added:', flatValues.length, 'neurons');
             } catch (err) {
@@ -1278,40 +1411,33 @@ class CNNVisualizer3D {
     }
     
     /**
-     * Select important connections to visualize (top-N by activation strength)
-     * Since we don't have actual weights, we use a heuristic based on activations
+     * Select important connections to visualize
+     * Shows all connections with significant activation (above threshold)
      */
     selectImportantConnections(sourceLayer, targetLayer, sourceActivations, targetActivations) {
         const connections = [];
-        const maxConnections = this.config.maxConnectionsPerNeuron;
+        const minStrengthThreshold = 0.001; // Minimum activation strength to show
         
-        // For each target neuron, select top-N source neurons
+        // For each target neuron, connect to all significantly active source neurons
         targetLayer.positions.forEach((targetPos, targetIndex) => {
             const targetActivation = targetActivations[targetIndex];
             
-            // Create candidate connections
-            const candidates = [];
+            // Skip if target has very low activation
+            if (targetActivation < minStrengthThreshold) return;
+            
             sourceLayer.positions.forEach((sourcePos, sourceIndex) => {
                 const sourceActivation = sourceActivations[sourceIndex];
                 
                 // Heuristic: connection strength = product of activations
                 const strength = sourceActivation * targetActivation;
                 
-                candidates.push({
-                    sourceIndex,
-                    targetIndex,
-                    strength
-                });
-            });
-            
-            // Sort by strength and take top-N
-            candidates.sort((a, b) => b.strength - a.strength);
-            const topN = candidates.slice(0, Math.min(maxConnections, candidates.length));
-            
-            // Only add connections with non-zero strength
-            topN.forEach(conn => {
-                if (conn.strength > 0.001) {
-                    connections.push(conn);
+                // Only add connections with significant strength
+                if (strength > minStrengthThreshold) {
+                    connections.push({
+                        sourceIndex,
+                        targetIndex,
+                        strength
+                    });
                 }
             });
         });
@@ -1440,8 +1566,255 @@ function visualize3D(apiResponse) {
     
     try {
         window.cnnVisualizer.visualize(apiResponse);
+        
+        // Render feature map previews in separate section
+        const layers = window.cnnVisualizer.extractDenseLayers(apiResponse, false);
+        renderFeatureMapPreviews(layers);
     } catch (error) {
         console.error('Error visualizing:', error);
+    }
+}
+
+// ==================== FEATURE MAP PREVIEW ====================
+/**
+ * Render feature maps in the preview section below the 3D visualization
+ * Shows 2x2 grid of sample feature maps for each Conv layer
+ */
+function renderFeatureMapPreviews(layers) {
+    const container = document.getElementById('feature-maps-container');
+    if (!container) return;
+    
+    // Clear previous previews
+    container.innerHTML = '';
+    
+    // Filter only Conv layers that have feature maps
+    const convLayers = layers.filter(layer => 
+        layer.type === 'conv' && layer.featureMaps && layer.featureMaps.length >= 4
+    );
+    
+    if (convLayers.length === 0) {
+        container.style.display = 'none';
+        return;
+    }
+    
+    container.style.display = 'block';
+    container.style.marginTop = '-20px'; // Move up
+    
+    // Create horizontal layout with labels on top
+    const wrapper = document.createElement('div');
+    wrapper.style.cssText = 'display: flex; justify-content: center; align-items: center; gap: 15px;';
+    
+    // Add Input image preview (from canvas)
+    const inputGroup = document.createElement('div');
+    inputGroup.style.cssText = 'display: flex; flex-direction: column; align-items: center;';
+    
+    const inputTitle = document.createElement('div');
+    inputTitle.textContent = 'Input';
+    inputTitle.style.cssText = 'color: #333; margin-bottom: 8px; font-size: 14px; font-weight: bold;';
+    inputGroup.appendChild(inputTitle);
+    
+    // Create single input canvas with activation heatmap (like 3D visualization)
+    const inputCanvas = document.createElement('canvas');
+    inputCanvas.width = 134; // 2x64 + 5px gap + border
+    inputCanvas.height = 134;
+    inputCanvas.style.cssText = 'border: 1px solid #444; background: #000;';
+    
+    const inputCtx = inputCanvas.getContext('2d');
+    
+    // Get pixel data from canvas and create heatmap
+    const sourceCanvas = document.getElementById('canvas');
+    if (sourceCanvas) {
+        const sourceCtx = sourceCanvas.getContext('2d');
+        const imageData = sourceCtx.getImageData(0, 0, sourceCanvas.width, sourceCanvas.height);
+        const pixels = imageData.data;
+        
+        const pixelSize = 134 / 28; // Size of each pixel in the visualization
+        
+        // Draw 28x28 grid with color gradient
+        for (let y = 0; y < 28; y++) {
+            for (let x = 0; x < 28; x++) {
+                // Sample from source canvas
+                const srcX = Math.floor((x / 28) * sourceCanvas.width);
+                const srcY = Math.floor((y / 28) * sourceCanvas.height);
+                const idx = (srcY * sourceCanvas.width + srcX) * 4;
+                
+                // Get grayscale value (use red channel since drawing is white on black)
+                const value = pixels[idx] / 255.0;
+                
+                // Apply same color gradient as 3D visualization (blue -> cyan -> yellow -> red)
+                let r, g, b;
+                if (value < 0.25) {
+                    const t = value * 4;
+                    r = 0;
+                    g = 0;
+                    b = Math.floor(128 + 127 * t);
+                } else if (value < 0.5) {
+                    const t = (value - 0.25) * 4;
+                    r = 0;
+                    g = Math.floor(255 * t);
+                    b = 255;
+                } else if (value < 0.75) {
+                    const t = (value - 0.5) * 4;
+                    r = Math.floor(255 * t);
+                    g = 255;
+                    b = Math.floor(255 * (1 - t));
+                } else {
+                    const t = (value - 0.75) * 4;
+                    r = 255;
+                    g = Math.floor(255 * (1 - t));
+                    b = 0;
+                }
+                
+                inputCtx.fillStyle = `rgb(${r},${g},${b})`;
+                inputCtx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
+            }
+        }
+    }
+    
+    inputGroup.appendChild(inputCanvas);
+    wrapper.appendChild(inputGroup);
+    
+    // Arrow from Input to first Conv layer
+    const inputArrow = document.createElement('div');
+    inputArrow.innerHTML = `
+        <svg width="60" height="80" viewBox="0 0 60 80" style="margin-top: 28px;">
+            <defs>
+                <marker id="arrowhead-input" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+                    <polygon points="0 0, 7 3, 0 6" fill="#333" />
+                </marker>
+            </defs>
+            <line x1="5" y1="40" x2="52" y2="40" stroke="#333" stroke-width="2" marker-end="url(#arrowhead-input)" />
+        </svg>
+    `;
+    wrapper.appendChild(inputArrow);
+    
+    // Create each Conv layer group with label on top
+    convLayers.forEach((layer, idx) => {
+        // Layer group container
+        const layerGroup = document.createElement('div');
+        layerGroup.style.cssText = 'display: flex; flex-direction: column; align-items: center;';
+        
+        // Layer title on top with better naming
+        const title = document.createElement('div');
+        let layerName = '';
+        if (layer.name === 'conv2d') {
+            layerName = `Conv2D (${layer.shape})`;
+        } else if (layer.name === 'conv2d_1') {
+            layerName = `Conv2D_1 (${layer.shape})`;
+        } else if (layer.name === 'conv2d_2') {
+            layerName = `Conv2D_2 (${layer.shape})`;
+        } else {
+            layerName = layer.name.replace('_', '');
+        }
+        title.textContent = layerName;
+        title.style.cssText = 'color: #333; margin-bottom: 8px; font-size: 14px; font-weight: bold;';
+        layerGroup.appendChild(title);
+        
+        // 2x2 grid container
+        const gridDiv = document.createElement('div');
+        gridDiv.style.cssText = 'display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px;';
+        
+        // Render first 4 feature maps in 2x2 grid
+        for (let i = 0; i < 4 && i < layer.featureMaps.length; i++) {
+            const featureMap = layer.featureMaps[i];
+            const canvas = createFeatureMapCanvas(featureMap, layer.shape);
+            gridDiv.appendChild(canvas);
+        }
+        
+        layerGroup.appendChild(gridDiv);
+        wrapper.appendChild(layerGroup);
+        
+        // Add arrow between layers (except after last layer)
+        if (idx < convLayers.length - 1) {
+            const arrow = document.createElement('div');
+            arrow.innerHTML = `
+                <svg width="60" height="80" viewBox="0 0 60 80" style="margin-top: 28px;">
+                    <defs>
+                        <marker id="arrowhead-${idx}" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+                            <polygon points="0 0, 7 3, 0 6" fill="#333" />
+                        </marker>
+                    </defs>
+                    <line x1="5" y1="40" x2="52" y2="40" stroke="#333" stroke-width="2" marker-end="url(#arrowhead-${idx})" />
+                </svg>
+            `;
+            wrapper.appendChild(arrow);
+        }
+    });
+    
+    container.appendChild(wrapper);
+}
+
+/**
+ * Create a canvas element displaying a feature map with viridis colormap
+ */
+function createFeatureMapCanvas(featureMap, shapeStr) {
+    const size = parseInt(shapeStr.split('×')[0]); // Extract dimension (e.g., "8" from "8×8")
+    const displaySize = 64; // Fixed display size (compact)
+    
+    const canvas = document.createElement('canvas');
+    canvas.width = displaySize;
+    canvas.height = displaySize;
+    canvas.style.cssText = 'border: 1px solid #444; background: #000;';
+    
+    const ctx = canvas.getContext('2d');
+    
+    // Find min/max for normalization
+    let min = Infinity, max = -Infinity;
+    featureMap.forEach(row => {
+        row.forEach(val => {
+            min = Math.min(min, val);
+            max = Math.max(max, val);
+        });
+    });
+    
+    const range = max - min || 1;
+    const pixelSize = displaySize / size;
+    
+    // Draw feature map with viridis-like colormap
+    featureMap.forEach((row, y) => {
+        row.forEach((val, x) => {
+            const normalized = (val - min) / range;
+            
+            // Viridis approximation (blue -> cyan -> yellow -> orange)
+            let r, g, b;
+            if (normalized < 0.25) {
+                const t = normalized * 4;
+                r = Math.floor(68 * t);
+                g = Math.floor(1 + 71 * t);
+                b = Math.floor(84 + 100 * t);
+            } else if (normalized < 0.5) {
+                const t = (normalized - 0.25) * 4;
+                r = Math.floor(68 + 32 * t);
+                g = Math.floor(72 + 61 * t);
+                b = Math.floor(184 - 52 * t);
+            } else if (normalized < 0.75) {
+                const t = (normalized - 0.5) * 4;
+                r = Math.floor(100 + 125 * t);
+                g = Math.floor(133 + 90 * t);
+                b = Math.floor(132 - 98 * t);
+            } else {
+                const t = (normalized - 0.75) * 4;
+                r = Math.floor(225 + 28 * t);
+                g = Math.floor(223 - 29 * t);
+                b = Math.floor(34 - 2 * t);
+            }
+            
+            ctx.fillStyle = `rgb(${r},${g},${b})`;
+            ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
+        });
+    });
+    
+    return canvas;
+}
+
+/**
+ * Clear feature map previews
+ */
+function clearFeatureMapPreviews() {
+    const container = document.getElementById('feature-maps-container');
+    if (container) {
+        container.innerHTML = '';
+        container.style.display = 'none';
     }
 }
 
