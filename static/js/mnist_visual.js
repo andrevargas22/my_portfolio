@@ -773,34 +773,46 @@ class CNNVisualizer3D {
             }
         }
         
-        // Add flatten layer (576 values - bridge between Conv and Dense)
-        if (apiResponse.activations.flatten) {
-            const flattenSize = apiResponse.activations.flatten.shape ? 
-                apiResponse.activations.flatten.shape[1] : 576;
-            
-            // Sample the flatten activations (e.g., 1 out of 8 = ~72 neurons)
-            const sampleRate = this.config.flattenSampleRate;
-            const sampledActivations = [];
-            
-            // Check if this is empty initialization
+        // Add flatten layer (576 values = 64 feature maps of 3x3)
+        // Render as 64 layers of 3x3 grids to show all activations from Conv2D_2
+        if (apiResponse.activations.flatten && apiResponse.activations.conv2d_2) {
             const isEmpty = apiResponse.activations.flatten.isEmpty === true;
+            const featureMaps = apiResponse.activations.conv2d_2.feature_maps || [];
             
-            for (let i = 0; i < flattenSize; i += sampleRate) {
-                if (isEmpty) {
-                    // Empty initialization - all zeros
-                    sampledActivations.push(0);
-                } else {
-                    // Use random value (placeholder until API provides actual values)
-                    sampledActivations.push(Math.random() * 0.5);
+            // Each feature map is 3x3, we have 64 of them
+            const allActivations = [];
+            
+            if (isEmpty) {
+                // Empty initialization - all zeros
+                for (let i = 0; i < 576; i++) {
+                    allActivations.push(0);
+                }
+            } else {
+                // Extract all values from the 64 feature maps (3x3 each)
+                featureMaps.forEach(map => {
+                    if (Array.isArray(map)) {
+                        map.forEach(row => {
+                            if (Array.isArray(row)) {
+                                allActivations.push(...row);
+                            }
+                        });
+                    }
+                });
+                
+                // If we don't have 576 values, pad with random
+                while (allActivations.length < 576) {
+                    allActivations.push(Math.random() * 0.5);
                 }
             }
             
             layers.push({
                 name: 'flatten',
-                type: 'flatten',
-                activations: sampledActivations,
-                size: sampledActivations.length,
-                fullSize: flattenSize
+                type: 'flatten_3d', // New type to render as stacked 3x3 grids
+                activations: allActivations,
+                size: allActivations.length,
+                gridSize: 3,        // Each layer is 3x3
+                numLayers: 64,      // 64 feature maps stacked
+                fullSize: 576
             });
         }
         
@@ -852,10 +864,11 @@ class CNNVisualizer3D {
     buildNeuronLayers(denseLayers) {
         denseLayers.forEach((layer, layerIndex) => {
             const neuronCount = layer.size;
-            const positions = this.computeLayerPositions(layerIndex, neuronCount, denseLayers.length, layer.type, denseLayers);
+            const positions = this.computeLayerPositions(layerIndex, neuronCount, denseLayers.length, layer.type, layer);
             
             // Use smaller spheres for flatten layer
-            const neuronSize = layer.type === 'flatten' ? this.config.neuronSize * 0.5 : this.config.neuronSize;
+            const neuronSize = (layer.type === 'flatten' || layer.type === 'flatten_3d') ? 
+                this.config.neuronSize * 0.5 : this.config.neuronSize;
             const sphereGeometry = new THREE.SphereGeometry(neuronSize, 16, 16);
             
             // Create instanced mesh for neurons
@@ -921,6 +934,8 @@ class CNNVisualizer3D {
             labelText = `${layerName} (${layer.shape})`;
         } else if (layer.type === 'flatten') {
             labelText = `Flatten (${layer.size})`;
+        } else if (layer.type === 'flatten_3d') {
+            labelText = `Flatten (64×3×3)`;
         } else if (layer.type === 'hidden') {
             labelText = `Dense (${layer.size})`;
         } else if (layer.type === 'output') {
@@ -975,9 +990,29 @@ class CNNVisualizer3D {
     /**
      * Compute 3D positions for neurons in a layer
      */
-    computeLayerPositions(layerIndex, neuronCount, totalLayers, layerType) {
+    computeLayerPositions(layerIndex, neuronCount, totalLayers, layerType, layer = null) {
         const positions = [];
         const layerX = layerIndex * this.config.layerSpacing;
+        
+        // Special handling for flatten_3d: 64 layers of 3x3 grids
+        if (layerType === 'flatten_3d' && layer && layer.gridSize && layer.numLayers) {
+            const gridSize = layer.gridSize; // 3
+            const numLayers = layer.numLayers; // 64
+            const gridSpacing = this.config.neuronSpacing * 0.6;
+            const layerDepth = 0.15; // Space between each 3x3 layer
+            
+            for (let depth = 0; depth < numLayers; depth++) {
+                for (let i = 0; i < gridSize * gridSize; i++) {
+                    const row = Math.floor(i / gridSize);
+                    const col = i % gridSize;
+                    const y = ((gridSize - 1) / 2 - row) * gridSpacing;
+                    const z = (col - (gridSize - 1) / 2) * gridSpacing + (depth - numLayers / 2) * layerDepth;
+                    positions.push(new THREE.Vector3(layerX, y, z));
+                }
+            }
+            
+            return positions;
+        }
         
         // Arrange neurons based on layer type and size
         if (layerType === 'input') {
