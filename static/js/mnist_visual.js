@@ -399,7 +399,7 @@ class CNNVisualizer3D {
             cameraDistance: 40,
             flattenSampleRate: 8,        // Show 1 out of every N neurons for flatten
             colors: {
-                background: 0x0a0e1a,    // Dark blue background
+                background: 0x000000,    // Pure black background (matching canvas)
                 neuron: 0xffffff,
                 connectionPositive: 0x00ff00,  // Green for positive contribution
                 connectionNegative: 0xff0000   // Red for negative contribution
@@ -541,6 +541,68 @@ class CNNVisualizer3D {
         
         // Update camera to look at center
         this.updateCameraPosition();
+    }
+    
+    /**
+     * Initialize visualization with zero activations (empty state)
+     */
+    initializeEmpty() {
+        const emptyResponse = {
+            activations: {
+                conv2d: { feature_maps: [], shape: [1, 26, 26, 32] },
+                conv2d_1: { feature_maps: [], shape: [1, 11, 11, 64] },
+                conv2d_2: { feature_maps: [], shape: [1, 3, 3, 64] },
+                flatten: { shape: [1, 576] },
+                dense: { activations: Array(64).fill(0) },
+                dense_1: { activations: Array(10).fill(0) }
+            },
+            input_image: Array(784).fill(0) // 28x28 = 784 zeros
+        };
+        
+        // Create dummy feature maps (all zeros)
+        emptyResponse.activations.conv2d.feature_maps = Array(32).fill(null).map(() => 
+            Array(26).fill(null).map(() => Array(26).fill(0))
+        );
+        emptyResponse.activations.conv2d_1.feature_maps = Array(64).fill(null).map(() => 
+            Array(11).fill(null).map(() => Array(11).fill(0))
+        );
+        emptyResponse.activations.conv2d_2.feature_maps = Array(64).fill(null).map(() => 
+            Array(3).fill(null).map(() => Array(3).fill(0))
+        );
+        
+        console.log('Initializing empty visualization...');
+        this.visualize(emptyResponse);
+    }
+    
+    /**
+     * Initialize visualization with zero activations (empty state)
+     */
+    initializeEmpty() {
+        const emptyResponse = {
+            activations: {
+                conv2d: { feature_maps: [], shape: [1, 26, 26, 32] },
+                conv2d_1: { feature_maps: [], shape: [1, 11, 11, 64] },
+                conv2d_2: { feature_maps: [], shape: [1, 3, 3, 64] },
+                flatten: { shape: [1, 576] },
+                dense: { activations: Array(64).fill(0) },
+                dense_1: { activations: Array(10).fill(0) }
+            },
+            input_image: Array(784).fill(0) // 28x28 = 784 zeros
+        };
+        
+        // Create dummy feature maps (all zeros)
+        emptyResponse.activations.conv2d.feature_maps = Array(32).fill(null).map(() => 
+            Array(26).fill(null).map(() => Array(26).fill(0))
+        );
+        emptyResponse.activations.conv2d_1.feature_maps = Array(64).fill(null).map(() => 
+            Array(11).fill(null).map(() => Array(11).fill(0))
+        );
+        emptyResponse.activations.conv2d_2.feature_maps = Array(64).fill(null).map(() => 
+            Array(3).fill(null).map(() => Array(3).fill(0))
+        );
+        
+        console.log('Initializing empty visualization...');
+        this.visualize(emptyResponse);
     }
     
     /**
@@ -1268,8 +1330,6 @@ class CNNVisualizer3D {
 }
 
 // ==================== VISUALIZATION ENTRY POINT ====================
-let visualizer = null;
-
 function visualize3D(apiResponse) {
     // Check if Three.js is loaded
     if (typeof THREE === 'undefined') {
@@ -1279,17 +1339,14 @@ function visualize3D(apiResponse) {
         return;
     }
     
-    if (!visualizer) {
-        try {
-            visualizer = new CNNVisualizer3D('visualization-container');
-        } catch (error) {
-            console.error('Error creating visualizer:', error);
-            return;
-        }
+    // Use the global visualizer instance created at initialization
+    if (!window.cnnVisualizer) {
+        console.error('Visualizer not initialized!');
+        return;
     }
     
     try {
-        visualizer.visualize(apiResponse);
+        window.cnnVisualizer.visualize(apiResponse);
     } catch (error) {
         console.error('Error visualizing:', error);
     }
@@ -1297,6 +1354,17 @@ function visualize3D(apiResponse) {
 
 // ==================== INITIALIZATION ====================
 function initializeVisualization() {
+    if (typeof THREE === 'undefined') {
+        console.error('THREE.js not loaded!');
+        return;
+    }
+    
+    // Create visualizer instance
+    window.cnnVisualizer = new CNNVisualizer3D('visualization-container');
+    
+    // Initialize with empty/zero state
+    window.cnnVisualizer.initializeEmpty();
+    
     console.log('MNIST 3D Visualization initialized');
     console.log('API Endpoint:', window.apiEndpoint);
     console.log('THREE.js available:', typeof THREE !== 'undefined');
