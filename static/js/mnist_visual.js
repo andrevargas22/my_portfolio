@@ -25,6 +25,7 @@ function init() {
 let canvas, ctx;
 let isDrawing = false;
 let lastPos = { x: 0, y: 0 };
+let updateInputLayerTimer = null; // Throttle timer for real-time updates
 
 function initializeCanvas() {
     console.log('initializeCanvas called');
@@ -76,6 +77,9 @@ function setupCanvasEvents() {
         ctx.lineTo(currentPos.x, currentPos.y);
         ctx.stroke();
         lastPos = currentPos;
+        
+        // Update Input layer in real-time
+        updateInputLayerRealtime();
     });
 
     canvas.addEventListener('mouseleave', () => {
@@ -169,6 +173,52 @@ function getCanvasPixelData() {
     }
     
     return pixels;
+}
+
+/**
+ * Update only the Input layer in real-time as user draws
+ * Uses throttling to avoid excessive updates
+ */
+function updateInputLayerRealtime() {
+    // Clear any pending update
+    if (updateInputLayerTimer) {
+        clearTimeout(updateInputLayerTimer);
+    }
+    
+    // Schedule update with throttle (100ms)
+    updateInputLayerTimer = setTimeout(() => {
+        if (window.cnnVisualizer && window.cnnVisualizer.layerMeshes.length > 0) {
+            // Get current canvas pixels
+            const pixels = getCanvasPixelData();
+            
+            // Update only the Input layer (first layer, index 0)
+            const inputLayerMesh = window.cnnVisualizer.layerMeshes[0];
+            if (inputLayerMesh && inputLayerMesh.name === 'input') {
+                const mesh = inputLayerMesh.mesh;
+                
+                // Update each neuron color based on pixel intensity
+                pixels.forEach((value, index) => {
+                    // Color mapping: 0 (black/no drawing) = blue, 1 (white/drawn) = yellow/red
+                    if (value < 0.1) {
+                        // Dark blue for empty pixels
+                        window.cnnVisualizer.tempColor.setRGB(0, 0, 1);
+                    } else if (value < 0.5) {
+                        // Blue to Cyan
+                        const t = value * 2;
+                        window.cnnVisualizer.tempColor.setRGB(0, t, 1);
+                    } else {
+                        // Cyan to Yellow/White
+                        const t = (value - 0.5) * 2;
+                        window.cnnVisualizer.tempColor.setRGB(t, 1, 1 - t * 0.5);
+                    }
+                    
+                    mesh.setColorAt(index, window.cnnVisualizer.tempColor);
+                });
+                
+                mesh.instanceColor.needsUpdate = true;
+            }
+        }
+    }, 50); // 50ms throttle
 }
 
 // ==================== UI FUNCTIONS ====================
@@ -383,7 +433,7 @@ class CNNVisualizer3D {
             neuronSize: 0.35,            // Sphere radius for neurons
             connectionRadius: 0.012,     // Cylinder radius for connections
             maxConnectionsPerNeuron: 16, // Top-N connections to show
-            cameraDistance: 40,
+            cameraDistance: 20,          // Initial camera distance (closer for better view)
             flattenSampleRate: 8,        // Show 1 out of every N neurons for flatten
             colors: {
                 background: 0x000000,    // Pure black background (matching canvas)
@@ -442,7 +492,7 @@ class CNNVisualizer3D {
     setupBasicControls() {
         this.isDragging = false;
         this.previousMousePosition = { x: 0, y: 0 };
-        this.rotation = { x: 0.2, y: 0.5 }; // Initial rotation
+        this.rotation = { x: 0.15, y: 0.1 }; // Initial rotation (slightly tilted for better depth view)
         
         this.renderer.domElement.addEventListener('mousedown', (e) => {
             this.isDragging = true;
