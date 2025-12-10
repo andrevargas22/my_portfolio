@@ -133,6 +133,11 @@ function clearCanvas() {
     
     // Hide prediction panels
     hidePredictionPanel();
+    
+    // Reset 3D visualization to empty state (without rebuilding)
+    if (window.cnnVisualizer) {
+        window.cnnVisualizer.resetToEmpty();
+    }
 }
 
 function getCanvasImageData() {
@@ -575,15 +580,41 @@ class CNNVisualizer3D {
     }
     
     /**
+     * Reset all activations to zero without rebuilding the scene
+     * Used when clearing the canvas
+     */
+    resetToEmpty() {
+        // Reset all neuron colors to dark blue (zero activation)
+        this.layerMeshes.forEach(layerMesh => {
+            const mesh = layerMesh.mesh;
+            const count = mesh.count;
+            
+            // Set all neurons to dark blue (zero activation color)
+            this.tempColor.setRGB(0, 0, 1); // Blue for zero
+            for (let i = 0; i < count; i++) {
+                mesh.setColorAt(i, this.tempColor);
+            }
+            mesh.instanceColor.needsUpdate = true;
+        });
+        
+        // Hide all connections (InstancedMesh)
+        this.connectionGroups.forEach(group => {
+            const mesh = group.mesh;
+            if (mesh && mesh.material) {
+                mesh.material.opacity = 0;
+                mesh.material.needsUpdate = true;
+                mesh.visible = false;
+            }
+        });
+    }
+    
+    /**
      * Main visualization function - called with API response data
      */
     visualize(apiResponse) {
         console.log('Visualizing API response:', apiResponse);
         console.log('Has activations:', !!apiResponse.activations);
         console.log('Has input_image:', !!apiResponse.input_image);
-        
-        // Clear previous visualization
-        this.clearScene();
         
         // Extract dense layers from API response
         const denseLayers = this.extractDenseLayers(apiResponse);
@@ -593,17 +624,36 @@ class CNNVisualizer3D {
             return;
         }
         
-        // Build neuron meshes for each layer
-        this.buildNeuronLayers(denseLayers);
+        // Check if scene already exists (after initial build)
+        const sceneExists = this.layerMeshes.length > 0;
         
-        // Build connections between layers (simulated - API doesn't return weights)
+        if (!sceneExists) {
+            // First time - build complete scene
+            console.log('Building initial scene...');
+            
+            // Build neuron meshes for each layer
+            this.buildNeuronLayers(denseLayers);
+            
+            // Calculate and center camera on entire scene
+            this.centerCameraOnScene();
+        } else {
+            // Scene exists - need to rebuild connections for new activations
+            // Clear old connections
+            this.connectionGroups.forEach(group => {
+                if (group.mesh) {
+                    this.scene.remove(group.mesh);
+                    if (group.mesh.geometry) group.mesh.geometry.dispose();
+                    if (group.mesh.material) group.mesh.material.dispose();
+                }
+            });
+            this.connectionGroups = [];
+        }
+        
+        // Build/rebuild connections based on current activations
         this.buildConnections(denseLayers);
         
-        // Apply activation colors
+        // Update activation colors (works for both initial and updates)
         this.updateActivationColors(denseLayers);
-        
-        // Calculate and center camera on entire scene
-        this.centerCameraOnScene();
         
         console.log('Visualization complete - Layers rendered:', this.layerMeshes.length);
         console.log('Total meshes in scene:', this.meshes.length);
