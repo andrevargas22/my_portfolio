@@ -259,18 +259,6 @@ function animateProgressBar(element, targetPercentage) {
     }, 10);
 }
 
-function displayNetworkInfo(data) {
-    if (data.architecture) {
-        const arch = data.architecture;
-        document.getElementById('arch-summary').textContent = arch.name || 'CNN';
-        document.getElementById('layer-count').textContent = 
-            `${arch.conv_layers || 0} Conv + ${arch.dense_layers || 0} Dense`;
-        document.getElementById('param-count').textContent = 
-            (arch.total_params || 0).toLocaleString();
-        document.getElementById('network-info').style.display = 'block';
-    }
-}
-
 function showError(message) {
     alert(`Error: ${message}\n\nPlease try again or check the console for details.`);
 }
@@ -324,11 +312,6 @@ async function visualizeDigit() {
         
         // Display prediction results
         displayPrediction(data);
-        
-        // Display network info if available
-        if (data.architecture) {
-            displayNetworkInfo(data);
-        }
         
         // Visualize activations in 3D - pass entire response object
         if (data.activations) {
