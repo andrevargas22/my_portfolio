@@ -552,38 +552,7 @@ class CNNVisualizer3D {
                 conv2d: { feature_maps: [], shape: [1, 26, 26, 32] },
                 conv2d_1: { feature_maps: [], shape: [1, 11, 11, 64] },
                 conv2d_2: { feature_maps: [], shape: [1, 3, 3, 64] },
-                flatten: { shape: [1, 576] },
-                dense: { activations: Array(64).fill(0) },
-                dense_1: { activations: Array(10).fill(0) }
-            },
-            input_image: Array(784).fill(0) // 28x28 = 784 zeros
-        };
-        
-        // Create dummy feature maps (all zeros)
-        emptyResponse.activations.conv2d.feature_maps = Array(32).fill(null).map(() => 
-            Array(26).fill(null).map(() => Array(26).fill(0))
-        );
-        emptyResponse.activations.conv2d_1.feature_maps = Array(64).fill(null).map(() => 
-            Array(11).fill(null).map(() => Array(11).fill(0))
-        );
-        emptyResponse.activations.conv2d_2.feature_maps = Array(64).fill(null).map(() => 
-            Array(3).fill(null).map(() => Array(3).fill(0))
-        );
-        
-        console.log('Initializing empty visualization...');
-        this.visualize(emptyResponse);
-    }
-    
-    /**
-     * Initialize visualization with zero activations (empty state)
-     */
-    initializeEmpty() {
-        const emptyResponse = {
-            activations: {
-                conv2d: { feature_maps: [], shape: [1, 26, 26, 32] },
-                conv2d_1: { feature_maps: [], shape: [1, 11, 11, 64] },
-                conv2d_2: { feature_maps: [], shape: [1, 3, 3, 64] },
-                flatten: { shape: [1, 576] },
+                flatten: { shape: [1, 576], isEmpty: true },
                 dense: { activations: Array(64).fill(0) },
                 dense_1: { activations: Array(10).fill(0) }
             },
@@ -810,13 +779,20 @@ class CNNVisualizer3D {
                 apiResponse.activations.flatten.shape[1] : 576;
             
             // Sample the flatten activations (e.g., 1 out of 8 = ~72 neurons)
-            // This makes visualization cleaner while maintaining representativeness
             const sampleRate = this.config.flattenSampleRate;
             const sampledActivations = [];
             
+            // Check if this is empty initialization
+            const isEmpty = apiResponse.activations.flatten.isEmpty === true;
+            
             for (let i = 0; i < flattenSize; i += sampleRate) {
-                // Use random value for now (placeholder until API provides actual values)
-                sampledActivations.push(Math.random() * 0.5);
+                if (isEmpty) {
+                    // Empty initialization - all zeros
+                    sampledActivations.push(0);
+                } else {
+                    // Use random value (placeholder until API provides actual values)
+                    sampledActivations.push(Math.random() * 0.5);
+                }
             }
             
             layers.push({
@@ -824,7 +800,7 @@ class CNNVisualizer3D {
                 type: 'flatten',
                 activations: sampledActivations,
                 size: sampledActivations.length,
-                fullSize: flattenSize  // Keep track of original size
+                fullSize: flattenSize
             });
         }
         
