@@ -188,7 +188,6 @@ function showPredictionPanel() {
 
 function hidePredictionPanel() {
     document.getElementById('prediction-panel').style.display = 'none';
-    document.getElementById('network-info').style.display = 'none';
 }
 
 function displayPrediction(data) {
