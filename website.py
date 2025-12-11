@@ -166,13 +166,13 @@ def games():
 @app.route("/mnist_api")
 def mnist():
     """
-    Renders the MNIST page and passes the MNIST API endpoint.
+    Renders the MNIST 3D Visualization page with the API endpoint.
 
     Returns:
-        Template: The mnist.html template with the MNIST API endpoint.
+        Template: The mnist_visual.html template with the MNIST API endpoint.
     """
     mnist_endpoint = os.getenv("MNIST_ENDPOINT")
-    return render_template("pages/mnist.html", mnist_endpoint=mnist_endpoint)
+    return render_template("pages/mnist_visual.html", mnist_endpoint=mnist_endpoint)
 
 
 @app.route("/game_of_life")
@@ -187,18 +187,6 @@ def game_of_life():
 
 
 ############################## TESTING FEATURES ##############################
-@app.route("/mnist_visual")
-def mnist_visual():
-    """
-    Renders the MNIST 3D Visualization page with the API endpoint.
-
-    Returns:
-        Template: The mnist_visual.html template with the MNIST API endpoint.
-    """
-    mnist_endpoint = os.getenv("MNIST_ENDPOINT")
-    return render_template("pages/mnist_visual.html", mnist_endpoint=mnist_endpoint)
-
-
 #### WebSub Callback:
 @app.route("/websub/callback", methods=["GET", "POST"])
 def websub_callback():

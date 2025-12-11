@@ -17,10 +17,10 @@
 			<!-- Page Header -->
 			<div class="row">
 				<div class="col-lg-12 text-center my-2">
-					<h4 class="border-bottom border-dark p-2">MNIST 3D Neural Network Visualization</h4>
+					<h4 class="border-bottom border-dark p-2">MNIST Classifier API</h4>
 					<center>
 						<p>
-							Explore how a convolutional neural network recognizes handwritten digits by visualizing its internal activations in 3D.
+							An end-to-end MLOps pipeline showcasing model training, versioning with MLFlow, CI/CD deployment to Google Cloud Run, and interactive 3D visualization of CNN activations.
 						</p>
 					</center>
 				</div>
@@ -30,9 +30,8 @@
 			<div class="row">
 				<div class="col-12">
 					<p>
-						<b>Instructions</b>: Draw a digit in the canvas below and click "Visualize!" to see the neural network's internal activations. 
-						The 3D visualization shows feature maps from convolutional layers and neuron activations from dense layers. 
-						Use your mouse to rotate, zoom, and explore the network architecture.
+						<b>Instructions</b>: Draw a digit and click "Predict!" to query the deployed model endpoint. 
+						The API returns predictions and layer activations, visualized in real-time 3D (use mouse to rotate/zoom).
 					</p>
 				</div>
 			</div>
@@ -88,22 +87,73 @@
 				</div>
 			</div>
 
-			<!-- Explanation Section -->
+			<!-- MLOps Architecture Section -->
 			<div class="row mt-4">
 				<div class="col-12">
 					<p>
-						<b>How does it work?</b> When you draw a digit and click "Visualize!", the canvas image is sent to a CNN model deployed on Google Cloud Run. 
-						The model not only predicts the digit but also returns the internal activations of all layers (convolutional feature maps and dense neuron activations). 
-						These activations are then rendered in 3D using Three.js, allowing you to explore how the network processes the input step-by-step.
+						<b>MLOps Pipeline Overview:</b>
 					</p>
-					<p>
-						<b>What you're seeing:</b>
+					<p style="margin-bottom: 20px;">
+						This project demonstrates a complete MLOps workflow: the model is trained on MNIST data, versioned in MLFlow Model Registry, 
+						and deployed to Google Cloud Run as a containerized FastAPI service. When you draw a digit, the request flows through the 
+						interactive canvas to the production endpoint, which returns predictions and internal layer activations for real-time 3D visualization.
 					</p>
-					<ul>
-						<li><b>Convolutional layers:</b> Grids of feature maps showing patterns detected (edges, curves, shapes)</li>
-						<li><b>Dense layers:</b> Neurons represented as spheres, colored by activation intensity</li>
-						<li><b>Network flow:</b> Layers arranged sequentially to show data transformation</li>
-					</ul>
+					
+					<!-- Mermaid Architecture Diagram -->
+					<div class="mermaid" style="display: flex; justify-content: center; margin: 30px 0;">
+						%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#2d3748','primaryTextColor':'#fff','primaryBorderColor':'#2d3748','lineColor':'#2d3748','secondaryColor':'#2d3748','tertiaryColor':'#2d3748'}}}%%
+						graph LR
+							subgraph train["<span style='color:#000'>🔬 Training Environment</span>"]
+								T1[MNIST Dataset]
+								T2[Training Script]
+								T3[MLFlow Model Registry]
+							end
+							
+							subgraph ui["<span style='color:#000'>👤 User Interface</span>"]
+								A[User]
+								B[Interactive Canvas]
+								C[3D Visualization]
+							end
+							
+							subgraph prod["<span style='color:#000'>🚀 Production Environment</span>"]
+								D[FastAPI Service]
+								E[Google Cloud Run]
+							end
+							
+							T1 --> T2
+							T2 -->|Keras Model| T3
+							T3 -.->|Model| E
+							
+							A -->|Draws Digit| B
+							B -.->|Predict| D
+							D -->|Docker Container| E
+							E -.->|Predictions + Activations| C
+							
+							style train fill:#fecaca,stroke:#ef4444,stroke-width:3px
+							style ui fill:#fed7aa,stroke:#ed8936,stroke-width:3px
+							style prod fill:#bfdbfe,stroke:#4299e1,stroke-width:3px
+							
+							classDef trainStyle fill:#ef4444,stroke:#dc2626,stroke-width:2px,color:#fff
+							classDef uiStyle fill:#ed8936,stroke:#c05621,stroke-width:2px,color:#fff
+							classDef prodStyle fill:#4299e1,stroke:#2b6cb0,stroke-width:2px,color:#fff
+							
+							class T1,T2,T3 trainStyle
+							class A,B,C uiStyle
+							class D,E prodStyle
+					</div>
+					
+					<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+					<script nonce="{{ g.csp_nonce }}">
+						mermaid.initialize({ 
+							startOnLoad: true,
+							theme: 'base',
+							flowchart: {
+								useMaxWidth: true,
+								htmlLabels: true,
+								curve: 'basis'
+							}
+						});
+					</script>
 				</div>
 			</div>
 		</div>
