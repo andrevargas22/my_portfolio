@@ -862,44 +862,41 @@ class CNNVisualizer3D {
             console.warn('No input_image in API response - Input layer skipped');
         }
         
-        // Add Conv2D layer (26x26x32 - sample to 8x8) - FIRST conv layer
+        // Add Conv2D layer (use full H×W resolution, average across channels)
         if (apiResponse.activations.conv2d && apiResponse.activations.conv2d.feature_maps) {
             try {
                 const featureMaps = apiResponse.activations.conv2d.feature_maps;
-                const shape = apiResponse.activations.conv2d.shape; // [1, 26, 26, 32]
-                
-                console.log('Conv2D shape:', shape, 'feature_maps length:', featureMaps.length);
-                
-                const height = shape[1]; // 26
-                const width = shape[2];  // 26
-                const sampleRate = 3; // Sample every 3rd pixel
-                
-                const sampledValues = [];
-                
-                // Sample to create ~8x8 grid (26/3 ≈ 8.67)
-                for (let i = 0; i < height; i += sampleRate) {
-                    for (let j = 0; j < width; j += sampleRate) {
-                        // Average across all feature maps at this spatial position
+                const shape = apiResponse.activations.conv2d.shape; // [1, H, W, C]
+
+                const height = shape[1];
+                const width = shape[2];
+
+                const fullValues = [];
+                for (let i = 0; i < height; i++) {
+                    for (let j = 0; j < width; j++) {
                         let sum = 0;
-                        featureMaps.forEach(map => {
+                        let count = 0;
+                        for (let k = 0; k < featureMaps.length; k++) {
+                            const map = featureMaps[k];
                             if (map && map[i] && map[i][j] !== undefined) {
                                 sum += map[i][j];
+                                count++;
                             }
-                        });
-                        sampledValues.push(sum / featureMaps.length);
+                        }
+                        fullValues.push(count > 0 ? sum / count : 0);
                     }
                 }
-                
+
                 layers.push({
                     name: 'conv2d',
                     type: 'conv',
-                    activations: sampledValues,
-                    size: sampledValues.length,
-                    shape: '8×8',
+                    activations: fullValues,
+                    size: fullValues.length,
+                    shape: `${height}×${width}`,
                     channels: featureMaps.length,
-                    featureMaps: featureMaps.slice(0, 4) // First 4 feature maps for 2x2 preview
+                    featureMaps: featureMaps
                 });
-                console.log('Conv2D layer added:', sampledValues.length, 'neurons');
+                console.log('Conv2D layer added:', fullValues.length, 'neurons');
             } catch (err) {
                 console.error('Error adding Conv2D layer:', err);
             }
@@ -938,7 +935,7 @@ class CNNVisualizer3D {
                     size: fullValues.length,
                     shape: '11×11',
                     channels: featureMaps.length,
-                    featureMaps: featureMaps.slice(0, 4) // First 4 feature maps for 2x2 preview
+                    featureMaps: featureMaps
                 });
                 console.log('Conv2D_1 layer added:', fullValues.length, 'neurons');
             } catch (err) {
@@ -980,7 +977,7 @@ class CNNVisualizer3D {
                     size: flatValues.length,
                     shape: `${height}×${width}`,
                     channels: featureMaps.length,
-                    featureMaps: featureMaps.slice(0, 4) // First 4 feature maps for 2x2 preview
+                    featureMaps: featureMaps
                 });
                 console.log('Conv2D_2 layer added:', flatValues.length, 'neurons');
             } catch (err) {
@@ -1233,7 +1230,7 @@ class CNNVisualizer3D {
         if (layerType === 'input') {
             // 28x28 grid for input layer (784 neurons)
             const gridSize = Math.sqrt(neuronCount);
-            const spacing = this.config.neuronSpacing * 0.4; // Tighter spacing for large grid
+            const spacing = this.config.neuronSpacing * 0.4; // Uniform spacing for all grid layers
             
             for (let i = 0; i < neuronCount; i++) {
                 const row = Math.floor(i / gridSize);
@@ -1243,9 +1240,9 @@ class CNNVisualizer3D {
                 positions.push(new THREE.Vector3(layerX, y, z));
             }
         } else if (layerType === 'conv') {
-            // Grid for conv layers - use actual dimensions from shape
+            // Grid for conv layers - use same uniform spacing for all
             const gridSize = Math.sqrt(neuronCount);
-            const spacing = neuronCount > 50 ? this.config.neuronSpacing * 0.6 : this.config.neuronSpacing * 0.8;
+            const spacing = this.config.neuronSpacing * 0.4; // Same as input for consistent scale
             
             for (let i = 0; i < neuronCount; i++) {
                 const row = Math.floor(i / gridSize);
@@ -1412,13 +1409,31 @@ class CNNVisualizer3D {
     
     /**
      * Select important connections to visualize
-     * Shows all connections with significant activation (above threshold)
+     * Optimized for large layers - limits total connections to prevent performance issues
      */
     selectImportantConnections(sourceLayer, targetLayer, sourceActivations, targetActivations) {
         const connections = [];
-        const minStrengthThreshold = 0.001; // Minimum activation strength to show
+        const minStrengthThreshold = 0.001;
         
-        // For each target neuron, connect to all significantly active source neurons
+        // Calculate total possible connections
+        const totalPossible = sourceLayer.positions.length * targetLayer.positions.length;
+        
+        // Set max connections based on layer sizes to prevent browser freeze
+        let maxConnections;
+        if (totalPossible > 500000) {
+            // Very large (Input→Conv2D: 784×676 = 529,984)
+            maxConnections = 5000; // Drastically limit
+        } else if (totalPossible > 100000) {
+            maxConnections = 10000;
+        } else if (totalPossible > 10000) {
+            maxConnections = 20000;
+        } else {
+            maxConnections = 50000; // No limit for small layers
+        }
+        
+        // Collect all potential connections with their strengths
+        const candidates = [];
+        
         targetLayer.positions.forEach((targetPos, targetIndex) => {
             const targetActivation = targetActivations[targetIndex];
             
@@ -1431,9 +1446,9 @@ class CNNVisualizer3D {
                 // Heuristic: connection strength = product of activations
                 const strength = sourceActivation * targetActivation;
                 
-                // Only add connections with significant strength
+                // Only consider connections with significant strength
                 if (strength > minStrengthThreshold) {
-                    connections.push({
+                    candidates.push({
                         sourceIndex,
                         targetIndex,
                         strength
@@ -1442,7 +1457,14 @@ class CNNVisualizer3D {
             });
         });
         
-        return connections;
+        // If we have too many connections, keep only the strongest ones
+        if (candidates.length > maxConnections) {
+            console.log(`Limiting connections: ${candidates.length} → ${maxConnections} (${sourceLayer.name}→${targetLayer.name})`);
+            candidates.sort((a, b) => b.strength - a.strength);
+            return candidates.slice(0, maxConnections);
+        }
+        
+        return candidates;
     }
     
     /**
@@ -1589,7 +1611,7 @@ function renderFeatureMapPreviews(layers) {
     
     // Filter only Conv layers that have feature maps
     const convLayers = layers.filter(layer => 
-        layer.type === 'conv' && layer.featureMaps && layer.featureMaps.length >= 4
+        layer.type === 'conv' && layer.featureMaps && layer.featureMaps.length > 0
     );
     
     if (convLayers.length === 0) {
@@ -1710,18 +1732,9 @@ function renderFeatureMapPreviews(layers) {
         title.style.cssText = 'color: #333; margin-bottom: 8px; font-size: 14px; font-weight: bold;';
         layerGroup.appendChild(title);
         
-        // 2x2 grid container
-        const gridDiv = document.createElement('div');
-        gridDiv.style.cssText = 'display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px;';
-        
-        // Render first 4 feature maps in 2x2 grid
-        for (let i = 0; i < 4 && i < layer.featureMaps.length; i++) {
-            const featureMap = layer.featureMaps[i];
-            const canvas = createFeatureMapCanvas(featureMap, layer.shape);
-            gridDiv.appendChild(canvas);
-        }
-        
-        layerGroup.appendChild(gridDiv);
+        // Create averaged feature map from all channels
+        const avgCanvas = createAveragedFeatureMapCanvas(layer.featureMaps, layer.shape);
+        layerGroup.appendChild(avgCanvas);
         wrapper.appendChild(layerGroup);
         
         // Add arrow between layers (except after last layer)
@@ -1742,6 +1755,89 @@ function renderFeatureMapPreviews(layers) {
     });
     
     container.appendChild(wrapper);
+}
+
+/**
+ * Create a canvas element displaying the average of all feature maps
+ */
+function createAveragedFeatureMapCanvas(featureMaps, shapeStr) {
+    const size = parseInt(shapeStr.split('×')[0]); // Extract dimension (e.g., "26" from "26×26")
+    const displaySize = 134; // Same size as input canvas
+    
+    const canvas = document.createElement('canvas');
+    canvas.width = displaySize;
+    canvas.height = displaySize;
+    canvas.style.cssText = 'border: 1px solid #444; background: #000;';
+    
+    const ctx = canvas.getContext('2d');
+    
+    // Calculate average across all feature maps
+    const avgFeatureMap = [];
+    for (let y = 0; y < size; y++) {
+        avgFeatureMap[y] = [];
+        for (let x = 0; x < size; x++) {
+            let sum = 0;
+            let count = 0;
+            
+            // Average across all feature maps
+            featureMaps.forEach(featureMap => {
+                if (featureMap[y] && featureMap[y][x] !== undefined) {
+                    sum += featureMap[y][x];
+                    count++;
+                }
+            });
+            
+            avgFeatureMap[y][x] = count > 0 ? sum / count : 0;
+        }
+    }
+    
+    // Find min/max for normalization
+    let min = Infinity, max = -Infinity;
+    avgFeatureMap.forEach(row => {
+        row.forEach(val => {
+            min = Math.min(min, val);
+            max = Math.max(max, val);
+        });
+    });
+    
+    const range = max - min || 1;
+    const pixelSize = displaySize / size;
+    
+    // Draw averaged feature map with same gradient as input (blue -> cyan -> yellow -> red)
+    avgFeatureMap.forEach((row, y) => {
+        row.forEach((val, x) => {
+            const normalized = (val - min) / range;
+            
+            // Apply same color gradient as input visualization
+            let r, g, b;
+            if (normalized < 0.25) {
+                const t = normalized * 4;
+                r = 0;
+                g = 0;
+                b = Math.floor(128 + 127 * t);
+            } else if (normalized < 0.5) {
+                const t = (normalized - 0.25) * 4;
+                r = 0;
+                g = Math.floor(255 * t);
+                b = 255;
+            } else if (normalized < 0.75) {
+                const t = (normalized - 0.5) * 4;
+                r = Math.floor(255 * t);
+                g = 255;
+                b = Math.floor(255 * (1 - t));
+            } else {
+                const t = (normalized - 0.75) * 4;
+                r = 255;
+                g = Math.floor(255 * (1 - t));
+                b = 0;
+            }
+            
+            ctx.fillStyle = `rgb(${r},${g},${b})`;
+            ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
+        });
+    });
+    
+    return canvas;
 }
 
 /**
