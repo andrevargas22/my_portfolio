@@ -67,7 +67,7 @@ def add_security_headers(response):
         "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; "
         "connect-src 'self' https://api.mapbox.com https://mnist-api-622916111375.us-central1.run.app http://localhost:8001; "
         "worker-src 'self' blob:; "
-        "object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self';"
+        "object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests"
     )
 
     # Referrer Policy

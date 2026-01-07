@@ -5,7 +5,7 @@
  * - Interactive canvas for drawing digits (28x28 resolution)
  * - POST requests to MNIST API with activations
  * - Display of predictions and confidence scores
- * - Integration point for 3D visualization (to be implemented)
+ * - Real-time 3D visualization of CNN layer activations using Three.js
  */
 
 // Initialize when DOM is ready
@@ -16,7 +16,6 @@ if (document.readyState === 'loading') {
 }
 
 function init() {
-    console.log('MNIST 3D Visualization - Initializing...');
     initializeCanvas();
     initializeVisualization();
 }
@@ -198,14 +197,11 @@ function updateInputLayerRealtime() {
                 pixels.forEach((value, index) => {
                     // Color mapping: 0 (black/no drawing) = blue, 1 (white/drawn) = yellow/red
                     if (value < 0.1) {
-                        // Dark blue for empty pixels
                         window.cnnVisualizer.tempColor.setRGB(0, 0, 1);
                     } else if (value < 0.5) {
-                        // Blue to Cyan
                         const t = value * 2;
                         window.cnnVisualizer.tempColor.setRGB(0, t, 1);
                     } else {
-                        // Cyan to Yellow/White
                         const t = (value - 0.5) * 2;
                         window.cnnVisualizer.tempColor.setRGB(t, 1, 1 - t * 0.5);
                     }
@@ -217,6 +213,38 @@ function updateInputLayerRealtime() {
             }
         }
     }, 50); // 50ms throttle
+}
+
+// ==================== UTILITY: COLOR GRADIENT ====================
+/**
+ * Get RGB color for activation value using consistent gradient
+ * @param {number} normalized - Normalized value between 0 and 1
+ * @returns {object} - RGB color object {r, g, b} with values 0-255
+ */
+function getActivationColorRGB(normalized) {
+    let r, g, b;
+    if (normalized < 0.25) {
+        const t = normalized * 4;
+        r = 0;
+        g = 0;
+        b = Math.floor(128 + 127 * t);
+    } else if (normalized < 0.5) {
+        const t = (normalized - 0.25) * 4;
+        r = 0;
+        g = Math.floor(255 * t);
+        b = 255;
+    } else if (normalized < 0.75) {
+        const t = (normalized - 0.5) * 4;
+        r = Math.floor(255 * t);
+        g = 255;
+        b = Math.floor(255 * (1 - t));
+    } else {
+        const t = (normalized - 0.75) * 4;
+        r = 255;
+        g = Math.floor(255 * (1 - t));
+        b = 0;
+    }
+    return { r, g, b };
 }
 
 // ==================== UI FUNCTIONS ====================
@@ -257,7 +285,6 @@ function displayPrediction(data) {
     
     // Create progress bars for each prediction
     data.predictions.forEach((pred, idx) => {
-        const probability = (pred.probability * 100).toFixed(2);
         const progressBarColor = idx === 0 ? 'bg-success' : idx === 1 ? 'bg-primary' : 'bg-danger';
         
         top3List.innerHTML += `
@@ -328,7 +355,7 @@ async function visualizeDigit() {
     
     // Check if canvas is empty (mostly black)
     if (isCanvasEmpty()) {
-        alert('Please draw a digit first!');
+        alert('Please draw a digit first.');
         return;
     }
     
@@ -870,9 +897,9 @@ class CNNVisualizer3D {
                     }
                 });
                 
-                // If we don't have 576 values, pad with random
+                // If we don't have 576 values, pad with zeros to keep deterministic
                 while (allActivations.length < 576) {
-                    allActivations.push(Math.random() * 0.5);
+                    allActivations.push(0);
                 }
             }
             
@@ -1015,7 +1042,6 @@ class CNNVisualizer3D {
         if (!labelText) return;
         
         // Calculate position above the layer
-        const minY = Math.min(...positions.map(p => p.y));
         const maxY = Math.max(...positions.map(p => p.y));
         const avgX = positions.length > 0 ? positions[0].x : 0;
         const avgZ = positions.reduce((sum, p) => sum + p.z, 0) / positions.length;
@@ -1273,20 +1299,26 @@ class CNNVisualizer3D {
         const connections = [];
         const minStrengthThreshold = 0.001;
         
+        // Connection limits to maintain rendering performance
+        // Based on empirical testing with Three.js LineSegments performance
+        const MAX_CONNECTIONS_VERY_LARGE = 5000;   // >500K possible connections (e.g., Input→Conv2D: 784×676=529K)
+        const MAX_CONNECTIONS_LARGE = 10000;       // 100K-500K possible connections
+        const MAX_CONNECTIONS_MEDIUM = 20000;      // 10K-100K possible connections
+        const MAX_CONNECTIONS_SMALL = 50000;       // <10K possible connections
+        
         // Calculate total possible connections
         const totalPossible = sourceLayer.positions.length * targetLayer.positions.length;
         
         // Set max connections based on layer sizes to prevent browser freeze
         let maxConnections;
         if (totalPossible > 500000) {
-            // Very large (Input→Conv2D: 784×676 = 529,984)
-            maxConnections = 5000; // Drastically limit
+            maxConnections = MAX_CONNECTIONS_VERY_LARGE;
         } else if (totalPossible > 100000) {
-            maxConnections = 10000;
+            maxConnections = MAX_CONNECTIONS_LARGE;
         } else if (totalPossible > 10000) {
-            maxConnections = 20000;
+            maxConnections = MAX_CONNECTIONS_MEDIUM;
         } else {
-            maxConnections = 50000; // No limit for small layers
+            maxConnections = MAX_CONNECTIONS_SMALL;
         }
         
         // Collect all potential connections with their strengths
@@ -1428,18 +1460,23 @@ class CNNVisualizer3D {
 }
 
 // ==================== VISUALIZATION ENTRY POINT ====================
-function visualize3D(apiResponse) {
+function visualize3D(apiResponse, retryCount = 0) {
+    const MAX_RETRIES = 50;
+    
     // Check if Three.js is loaded
     if (typeof THREE === 'undefined') {
-        console.error('THREE.js not loaded yet, waiting...');
-        // Retry after a short delay
-        setTimeout(() => visualize3D(apiResponse), 100);
+        if (retryCount >= MAX_RETRIES) {
+            console.error('THREE.js failed to load after ' + MAX_RETRIES + ' attempts. Aborting 3D visualization.');
+            return;
+        }
+        console.error('THREE.js not loaded yet, waiting... (retry ' + (retryCount + 1) + '/' + MAX_RETRIES + ')');
+        setTimeout(() => visualize3D(apiResponse, retryCount + 1), 100);
         return;
     }
     
     // Use the global visualizer instance created at initialization
     if (!window.cnnVisualizer) {
-        console.error('Visualizer not initialized!');
+        console.error('Visualizer not initialized');
         return;
     }
     
@@ -1447,7 +1484,7 @@ function visualize3D(apiResponse) {
         window.cnnVisualizer.visualize(apiResponse);
         
         // Render feature map previews in separate section
-        const layers = window.cnnVisualizer.extractDenseLayers(apiResponse, false);
+        const layers = window.cnnVisualizer.extractDenseLayers(apiResponse);
         renderFeatureMapPreviews(layers);
     } catch (error) {
         console.error('Error visualizing:', error);
@@ -1520,31 +1557,10 @@ function renderFeatureMapPreviews(layers) {
                 // Get grayscale value (use red channel since drawing is white on black)
                 const value = pixels[idx] / 255.0;
                 
-                // Apply same color gradient as 3D visualization (blue -> cyan -> yellow -> red)
-                let r, g, b;
-                if (value < 0.25) {
-                    const t = value * 4;
-                    r = 0;
-                    g = 0;
-                    b = Math.floor(128 + 127 * t);
-                } else if (value < 0.5) {
-                    const t = (value - 0.25) * 4;
-                    r = 0;
-                    g = Math.floor(255 * t);
-                    b = 255;
-                } else if (value < 0.75) {
-                    const t = (value - 0.5) * 4;
-                    r = Math.floor(255 * t);
-                    g = 255;
-                    b = Math.floor(255 * (1 - t));
-                } else {
-                    const t = (value - 0.75) * 4;
-                    r = 255;
-                    g = Math.floor(255 * (1 - t));
-                    b = 0;
-                }
+                // Apply same color gradient as 3D visualization
+                const color = getActivationColorRGB(value);
                 
-                inputCtx.fillStyle = `rgb(${r},${g},${b})`;
+                inputCtx.fillStyle = `rgb(${color.r},${color.g},${color.b})`;
                 inputCtx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
             }
         }
@@ -1666,93 +1682,9 @@ function createAveragedFeatureMapCanvas(featureMaps, shapeStr) {
             const normalized = (val - min) / range;
             
             // Apply same color gradient as input visualization
-            let r, g, b;
-            if (normalized < 0.25) {
-                const t = normalized * 4;
-                r = 0;
-                g = 0;
-                b = Math.floor(128 + 127 * t);
-            } else if (normalized < 0.5) {
-                const t = (normalized - 0.25) * 4;
-                r = 0;
-                g = Math.floor(255 * t);
-                b = 255;
-            } else if (normalized < 0.75) {
-                const t = (normalized - 0.5) * 4;
-                r = Math.floor(255 * t);
-                g = 255;
-                b = Math.floor(255 * (1 - t));
-            } else {
-                const t = (normalized - 0.75) * 4;
-                r = 255;
-                g = Math.floor(255 * (1 - t));
-                b = 0;
-            }
+            const color = getActivationColorRGB(normalized);
             
-            ctx.fillStyle = `rgb(${r},${g},${b})`;
-            ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
-        });
-    });
-    
-    return canvas;
-}
-
-/**
- * Create a canvas element displaying a feature map with viridis colormap
- */
-function createFeatureMapCanvas(featureMap, shapeStr) {
-    const size = parseInt(shapeStr.split('×')[0]); // Extract dimension (e.g., "8" from "8×8")
-    const displaySize = 64; // Fixed display size (compact)
-    
-    const canvas = document.createElement('canvas');
-    canvas.width = displaySize;
-    canvas.height = displaySize;
-    canvas.style.cssText = 'border: 1px solid #444; background: #000;';
-    
-    const ctx = canvas.getContext('2d');
-    
-    // Find min/max for normalization
-    let min = Infinity, max = -Infinity;
-    featureMap.forEach(row => {
-        row.forEach(val => {
-            min = Math.min(min, val);
-            max = Math.max(max, val);
-        });
-    });
-    
-    const range = max - min || 1;
-    const pixelSize = displaySize / size;
-    
-    // Draw feature map with viridis-like colormap
-    featureMap.forEach((row, y) => {
-        row.forEach((val, x) => {
-            const normalized = (val - min) / range;
-            
-            // Viridis approximation (blue -> cyan -> yellow -> orange)
-            let r, g, b;
-            if (normalized < 0.25) {
-                const t = normalized * 4;
-                r = Math.floor(68 * t);
-                g = Math.floor(1 + 71 * t);
-                b = Math.floor(84 + 100 * t);
-            } else if (normalized < 0.5) {
-                const t = (normalized - 0.25) * 4;
-                r = Math.floor(68 + 32 * t);
-                g = Math.floor(72 + 61 * t);
-                b = Math.floor(184 - 52 * t);
-            } else if (normalized < 0.75) {
-                const t = (normalized - 0.5) * 4;
-                r = Math.floor(100 + 125 * t);
-                g = Math.floor(133 + 90 * t);
-                b = Math.floor(132 - 98 * t);
-            } else {
-                const t = (normalized - 0.75) * 4;
-                r = Math.floor(225 + 28 * t);
-                g = Math.floor(223 - 29 * t);
-                b = Math.floor(34 - 2 * t);
-            }
-            
-            ctx.fillStyle = `rgb(${r},${g},${b})`;
+            ctx.fillStyle = `rgb(${color.r},${color.g},${color.b})`;
             ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
         });
     });
@@ -1783,8 +1715,4 @@ function initializeVisualization() {
     
     // Initialize with empty/zero state
     window.cnnVisualizer.initializeEmpty();
-    
-    console.log('MNIST 3D Visualization initialized');
-    console.log('API Endpoint:', window.apiEndpoint);
-    console.log('THREE.js available:', typeof THREE !== 'undefined');
 }

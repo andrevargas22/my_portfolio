@@ -164,17 +164,6 @@
 <script src="https://unpkg.com/three@0.150.0/build/three.min.js"></script>
 <script src="https://unpkg.com/three@0.150.0/examples/js/controls/OrbitControls.js"></script>
 
-<!-- Debug script to check if OrbitControls loaded -->
-<script nonce="{{ g.csp_nonce }}">
-    window.addEventListener('load', function() {
-        console.log('THREE loaded:', typeof THREE !== 'undefined');
-        console.log('OrbitControls:', typeof THREE !== 'undefined' && typeof THREE.OrbitControls);
-        if (typeof THREE !== 'undefined') {
-            console.log('THREE.OrbitControls available:', THREE.OrbitControls !== undefined);
-        }
-    });
-</script>
-
 <!-- Main visualization script -->
 <script type="text/javascript" src="{{ url_for('static', filename='js/mnist_visual.js') }}"></script>
 {% endblock %}
