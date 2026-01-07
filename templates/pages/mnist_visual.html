@@ -1,0 +1,180 @@
+<!--
+	Personal Website - MNIST 3D Visualization
+	Description: Interactive 3D visualization of CNN activations for handwritten digit recognition.
+	Shows real-time feature maps and neuron activations using Three.js.
+-->
+	
+{% extends 'base/layout.html' %}
+{% block title %}MNIST 3D Visualization - André Vargas{% endblock %}
+{% block head_extra %}
+    <meta name="description" content="Interactive 3D visualization of CNN layer activations for MNIST digit classification">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/mnist_visual.css') }}">
+    <script nonce="{{ g.csp_nonce }}" type="text/javascript">window.apiEndpoint = "{{ mnist_endpoint|e }}";</script>
+{% endblock %}
+{% block content %}
+
+		<div class="container">
+			<!-- Page Header -->
+			<div class="row">
+				<div class="col-lg-12 text-center my-2">
+					<h4 class="border-bottom border-dark p-2">MNIST Classifier API</h4>
+					<center>
+						<p>
+							An end-to-end MLOps pipeline showcasing model training, versioning with MLFlow, CI/CD deployment to Google Cloud Run, and interactive 3D visualization of CNN activations.
+						</p>
+					</center>
+				</div>
+			</div>
+			
+			<!-- Instructions -->
+			<div class="row">
+				<div class="col-12">
+					<p>
+						<b>Instructions</b>: Draw a digit and click "Predict!" to query the deployed model endpoint. 
+						The API returns predictions and layer activations, visualized in real-time 3D (use mouse to rotate/zoom).
+					</p>
+				</div>
+			</div>
+
+			<!-- Main Content: Canvas + 3D Visualization -->
+			<div class="row mt-3">
+				<!-- Drawing Canvas Column -->
+				<div class="col-md-4 col-12 mb-3 mb-md-0">
+					<h5 class="text-center">Draw a Digit</h5>
+					<div class="d-flex justify-content-center">
+						<canvas id='canvas' width='280' height='280' style='border: 2px solid #333; cursor: crosshair;'></canvas>
+					</div>
+					
+					<!-- Control Buttons -->
+					<div class="text-center mt-3">
+						<button id="btn-clear" class="btn btn-secondary btn-sm">Clear</button>
+						<button id="btn-visualize" class="btn btn-primary btn-sm">Predict!</button>
+					</div>
+
+					<!-- Loading Indicator -->
+					<div id="loading-indicator" class="text-center mt-3" style="display:none;">
+						<div class="spinner-border text-primary" role="status">
+							<span class="visually-hidden">Loading...</span>
+						</div>
+						<p class="mt-2">Processing...</p>
+					</div>
+				</div>
+
+				<!-- 3D Visualization Column -->
+				<div class="col-md-8 col-12">
+					<h5 class="text-center">Neural Network Activations</h5>
+					<div id="visualization-container" style="width: 100%; height: 280px; border: 2px solid #333; background: #000;">
+						<!-- Three.js canvas will be inserted here -->
+					</div>
+				</div>
+			</div>
+
+			<!-- Feature Maps Preview Section -->
+			<div class="row mt-4">
+				<!-- Left side: Top 3 Predictions -->
+				<div class="col-md-4 col-12 mb-3 mb-md-0">
+					<div id="prediction-panel-bottom" class="p-3 border rounded" style="display:none; background: #f8f9fa;">
+						<h6>Top 3 Predictions:</h6>
+						<div id="top-3-list-bottom"></div>
+					</div>
+				</div>
+				
+				<!-- Right side: Feature Maps -->
+				<div class="col-md-8 col-12">
+					<div id="feature-maps-container" style="display:none; padding: 0; border: none; background: transparent; overflow-x: auto;">
+						<!-- Feature map previews will be inserted here -->
+					</div>
+				</div>
+			</div>
+
+			<!-- MLOps Architecture Section -->
+			<div class="row mt-4">
+				<div class="col-12">
+					<p>
+						<b>MLOps Pipeline Overview:</b>
+					</p>
+					<p style="margin-bottom: 20px;">
+						This project demonstrates a complete MLOps workflow: the model is trained on MNIST data, versioned in MLFlow Model Registry, 
+						and deployed to Google Cloud Run as a containerized FastAPI service. When you draw a digit, the request flows through the 
+						interactive canvas to the production endpoint, which returns predictions and internal layer activations for real-time 3D visualization.
+					</p>
+					
+					<!-- Mermaid Architecture Diagram -->
+					<div class="mermaid" style="display: flex; justify-content: center; margin: 30px 0;">
+						%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#2d3748','primaryTextColor':'#fff','primaryBorderColor':'#2d3748','lineColor':'#2d3748','secondaryColor':'#2d3748','tertiaryColor':'#2d3748'}}}%%
+						graph LR
+							subgraph train["<span style='color:#000'>🔬 Training Environment</span>"]
+								T1[MNIST Dataset]
+								T2[Training Script]
+								T3[MLFlow Model Registry]
+							end
+							
+							subgraph ui["<span style='color:#000'>👤 User Interface</span>"]
+								A[User]
+								B[Interactive Canvas]
+								C[3D Visualization]
+							end
+							
+							subgraph prod["<span style='color:#000'>🚀 Production Environment</span>"]
+								D[FastAPI Service]
+								E[Google Cloud Run]
+							end
+							
+							T1 --> T2
+							T2 -->|Keras Model| T3
+							T3 -.->|Model| E
+							
+							A -->|Draws Digit| B
+							B -.->|Predict| D
+							D -->|Docker Container| E
+							E -.->|Predictions + Activations| C
+							
+							style train fill:#fecaca,stroke:#ef4444,stroke-width:3px
+							style ui fill:#fed7aa,stroke:#ed8936,stroke-width:3px
+							style prod fill:#bfdbfe,stroke:#4299e1,stroke-width:3px
+							
+							classDef trainStyle fill:#ef4444,stroke:#dc2626,stroke-width:2px,color:#fff
+							classDef uiStyle fill:#ed8936,stroke:#c05621,stroke-width:2px,color:#fff
+							classDef prodStyle fill:#4299e1,stroke:#2b6cb0,stroke-width:2px,color:#fff
+							
+							class T1,T2,T3 trainStyle
+							class A,B,C uiStyle
+							class D,E prodStyle
+					</div>
+					
+					<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+					<script nonce="{{ g.csp_nonce }}">
+						mermaid.initialize({ 
+							startOnLoad: true,
+							theme: 'base',
+							flowchart: {
+								useMaxWidth: true,
+								htmlLabels: true,
+								curve: 'basis'
+							}
+						});
+					</script>
+				</div>
+			</div>
+		</div>
+
+{% endblock %}
+{% block scripts_extra %}
+<!-- Three.js library (classic version) -->
+<script src="https://unpkg.com/three@0.150.0/build/three.min.js"></script>
+<script src="https://unpkg.com/three@0.150.0/examples/js/controls/OrbitControls.js"></script>
+
+<!-- Debug script to check if OrbitControls loaded -->
+<script nonce="{{ g.csp_nonce }}">
+    window.addEventListener('load', function() {
+        console.log('THREE loaded:', typeof THREE !== 'undefined');
+        console.log('OrbitControls:', typeof THREE !== 'undefined' && typeof THREE.OrbitControls);
+        if (typeof THREE !== 'undefined') {
+            console.log('THREE.OrbitControls available:', THREE.OrbitControls !== undefined);
+        }
+    });
+</script>
+
+<!-- Main visualization script -->
+<script type="text/javascript" src="{{ url_for('static', filename='js/mnist_visual.js') }}"></script>
+{% endblock %}

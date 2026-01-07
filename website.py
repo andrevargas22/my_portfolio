@@ -61,13 +61,13 @@ def add_security_headers(response):
     nonce = getattr(g, "csp_nonce", "")
     response.headers["Content-Security-Policy"] = (
         "default-src 'self'; "
-        f"script-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://maxcdn.bootstrapcdn.com https://api.mapbox.com 'nonce-{nonce}' blob:; "
+        f"script-src 'self' https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com https://maxcdn.bootstrapcdn.com https://api.mapbox.com 'nonce-{nonce}' blob:; "
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://api.mapbox.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://maxcdn.bootstrapcdn.com; "
         "img-src 'self' data: https://api.mapbox.com https://miro.medium.com https://cdn-images-1.medium.com https://i.gifer.com; "
         "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; "
-        "connect-src 'self' https://api.mapbox.com https://mnist-api-622916111375.us-central1.run.app; "
+        "connect-src 'self' https://api.mapbox.com https://mnist-api-622916111375.us-central1.run.app http://localhost:8001; "
         "worker-src 'self' blob:; "
-        "object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests"
+        "object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self';"
     )
 
     # Referrer Policy
@@ -87,6 +87,11 @@ def add_security_headers(response):
     response.headers["Cross-Origin-Opener-Policy"] = "same-origin"
 
     response.headers["Origin-Agent-Cluster"] = "?1"
+
+    # Cache static assets
+    if request.path.startswith('/static/'):
+        response.cache_control.max_age = 31536000  # 1 year
+        response.cache_control.public = True
 
     return response
 
@@ -166,13 +171,13 @@ def games():
 @app.route("/mnist_api")
 def mnist():
     """
-    Renders the MNIST page and passes the MNIST API endpoint.
+    Renders the MNIST 3D Visualization page with the API endpoint.
 
     Returns:
-        Template: The mnist.html template with the MNIST API endpoint.
+        Template: The mnist_visual.html template with the MNIST API endpoint.
     """
     mnist_endpoint = os.getenv("MNIST_ENDPOINT")
-    return render_template("pages/mnist.html", mnist_endpoint=mnist_endpoint)
+    return render_template("pages/mnist_visual.html", mnist_endpoint=mnist_endpoint)
 
 
 @app.route("/game_of_life")
@@ -207,7 +212,7 @@ def websub_callback():
         return result
     
     return result
-
+ 
 ############################## MAIN EXECUTION ##############################
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))

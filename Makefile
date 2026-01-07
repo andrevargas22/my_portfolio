@@ -8,7 +8,7 @@ merge:
 	git merge $(DEV_BRANCH) --no-edit
 	git push origin $(MAIN_BRANCH)
 	git checkout $(DEV_BRANCH)
-	@echo "✅ Merge completed successfully!"
+	@echo "Merge completed successfully!"
 
 debug:
 	bash -c 'set -a && source .env.local && DEBUG=1 FLASK_APP=website.py flask run --debug'
