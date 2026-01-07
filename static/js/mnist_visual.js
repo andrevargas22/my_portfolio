@@ -414,26 +414,32 @@ function downloadBlob(blob, filename) {
  * @param {number} targetPercentage - Final percentage to animate to
  */
 function animateProgressBar(element, targetPercentage) {
-    // Round to avoid showing tiny percentages as 1%
-    const roundedTarget = Math.round(targetPercentage);
+    // Keep one decimal place for precision
+    const finalTarget = targetPercentage;
     
-    // Skip animation for values < 1%
-    if (roundedTarget < 1) {
+    // Skip animation for values < 0.1%
+    if (finalTarget < 0.1) {
         element.style.width = '0%';
         element.setAttribute('aria-valuenow', 0);
-        element.innerHTML = '< 1%';
+        element.innerHTML = '< 0.1%';
         return;
     }
     
-    let width = 0;
+    let currentWidth = 0;
+    const step = finalTarget / 20; // 20 steps for smooth animation
     const interval = setInterval(function() {
-        if (width >= roundedTarget) {
+        if (currentWidth >= finalTarget) {
+            // Ensure final value is exact
+            element.style.width = finalTarget + '%';
+            element.setAttribute('aria-valuenow', finalTarget);
+            element.innerHTML = finalTarget.toFixed(1) + '%';
             clearInterval(interval);
         } else {
-            width++;
-            element.style.width = width + '%';
-            element.setAttribute('aria-valuenow', width);
-            element.innerHTML = width + '%';
+            currentWidth += step;
+            const displayWidth = Math.min(currentWidth, finalTarget);
+            element.style.width = displayWidth + '%';
+            element.setAttribute('aria-valuenow', displayWidth);
+            element.innerHTML = displayWidth.toFixed(1) + '%';
         }
     }, 10);
 }
