@@ -28,14 +28,12 @@ let lastPos = { x: 0, y: 0 };
 let updateInputLayerTimer = null; // Throttle timer for real-time updates
 
 function initializeCanvas() {
-    console.log('initializeCanvas called');
     canvas = document.getElementById('canvas');
     if (!canvas) {
         console.error('Canvas element not found!');
         return;
     }
     
-    console.log('Canvas element found:', canvas);
     ctx = canvas.getContext('2d');
     
     // Canvas configuration
@@ -51,15 +49,12 @@ function initializeCanvas() {
     // Setup event listeners
     setupCanvasEvents();
     
-    console.log('Canvas initialized successfully, event listeners attached');
 }
 
 function setupCanvasEvents() {
-    console.log('setupCanvasEvents called, canvas:', canvas);
     
     // ==================== MOUSE EVENTS ====================
     canvas.addEventListener('mousedown', (e) => {
-        console.log('mousedown event');
         isDrawing = true;
         lastPos = getMousePos(canvas, e);
     });
@@ -286,128 +281,6 @@ function displayPrediction(data) {
     showPredictionPanel();
 }
 
-// ==================== TEMPORARY: FEATURE MAP EXPORT ====================
-/**
- * Save feature maps as downloadable PNG images in a ZIP file
- * TEMPORARY FUNCTION FOR DEVELOPMENT/ANALYSIS - TO BE REMOVED
- */
-async function saveFeatureMapsAsImages(activations) {
-    console.log('Saving feature maps as images...');
-    
-    const layers = [
-        { name: 'conv2d', data: activations.conv2d, size: 26 },
-        { name: 'conv2d_1', data: activations.conv2d_1, size: 11 },
-        { name: 'conv2d_2', data: activations.conv2d_2, size: 3 }
-    ];
-    
-    const images = [];
-    
-    for (const layer of layers) {
-        console.log(`Processing ${layer.name}...`, layer.data);
-        
-        if (!layer.data || !layer.data.feature_maps) {
-            console.warn(`No feature maps for ${layer.name}`);
-            continue;
-        }
-        
-        // Save first 12 feature maps of each layer
-        const featureMaps = layer.data.feature_maps.slice(0, 12);
-        console.log(`${layer.name}: ${featureMaps.length} feature maps`);
-        
-        for (let idx = 0; idx < featureMaps.length; idx++) {
-            const fmap = featureMaps[idx];
-            const canvas = document.createElement('canvas');
-            const scaleFactor = 20; // Scale up small images
-            canvas.width = layer.size * scaleFactor;
-            canvas.height = layer.size * scaleFactor;
-            const ctx = canvas.getContext('2d');
-            
-            // Find min/max for normalization
-            let min = Infinity, max = -Infinity;
-            fmap.forEach(row => {
-                row.forEach(val => {
-                    min = Math.min(min, val);
-                    max = Math.max(max, val);
-                });
-            });
-            
-            const range = max - min || 1;
-            
-            // Draw feature map with viridis-like colormap
-            fmap.forEach((row, y) => {
-                row.forEach((val, x) => {
-                    // Normalize to 0-1
-                    const normalized = (val - min) / range;
-                    
-                    // Simple viridis approximation (blue -> cyan -> yellow)
-                    let r, g, b;
-                    if (normalized < 0.5) {
-                        const t = normalized * 2;
-                        r = 0;
-                        g = Math.floor(t * 255);
-                        b = Math.floor((1 - t * 0.5) * 255);
-                    } else {
-                        const t = (normalized - 0.5) * 2;
-                        r = Math.floor(t * 255);
-                        g = 255;
-                        b = Math.floor((1 - t) * 128);
-                    }
-                    
-                    ctx.fillStyle = `rgb(${r},${g},${b})`;
-                    ctx.fillRect(x * scaleFactor, y * scaleFactor, scaleFactor, scaleFactor);
-                });
-            });
-            
-            // Convert to blob and store
-            const blob = await new Promise(resolve => canvas.toBlob(resolve));
-            images.push({
-                name: `${layer.name}_fmap_${idx.toString().padStart(2, '0')}.png`,
-                blob: blob
-            });
-        }
-    }
-    
-    console.log(`Generated ${images.length} images, downloading as single ZIP...`);
-    
-    // Download all as a single ZIP file
-    const zip = await createZipFromImages(images);
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
-    downloadBlob(zip, `feature_maps_${timestamp}.zip`);
-    
-    console.log('Feature maps ZIP downloaded! Extract to your maps folder.');
-}
-
-/**
- * Create a ZIP file from image blobs
- */
-async function createZipFromImages(images) {
-    // Use native browser APIs to create ZIP (basic implementation)
-    // For production, you'd use JSZip library, but for quick test:
-    
-    // Actually, let's just download them with delay to avoid blocking
-    // Browser blocks multiple simultaneous downloads
-    for (let i = 0; i < images.length; i++) {
-        await new Promise(resolve => setTimeout(resolve, 200)); // 200ms delay between downloads
-        downloadBlob(images[i].blob, images[i].name);
-    }
-    
-    return null; // Not using ZIP for now due to library requirement
-}
-
-/**
- * Download a blob with given filename
- */
-function downloadBlob(blob, filename) {
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a); // Required for Firefox
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-}
-
 /**
  * Animates a progress bar to show prediction confidence
  * @param {Element} element - The progress bar element
@@ -463,7 +336,6 @@ async function visualizeDigit() {
     showLoading();
     
     // Debug: log first 100 chars of base64 to verify it's changing
-    console.log('Sending image (first 100 chars):', imageData.substring(0, 100));
     
     try {
         // Get API endpoint from window (set in template)
@@ -490,7 +362,6 @@ async function visualizeDigit() {
         
         const data = await response.json();
         
-        console.log('Full API response:', data);
         
         // Add canvas pixel data to response for input layer visualization
         data.input_image = getCanvasPixelData();
@@ -500,7 +371,6 @@ async function visualizeDigit() {
         
         // Visualize activations in 3D - pass entire response object
         if (data.activations) {
-            console.log('Starting 3D visualization...');
             visualize3D(data);  // Pass full response, not just activations
         } else {
             console.warn('No activations in API response');
@@ -619,7 +489,6 @@ class CNNVisualizer3D {
         // Start animation loop
         this.animate();
         
-        console.log('CNNVisualizer3D initialized');
     }
     
     /**
@@ -710,7 +579,6 @@ class CNNVisualizer3D {
             (minZ + maxZ) / 2
         );
         
-        console.log('Scene centered at:', this.sceneCenter);
         
         // Update camera to look at center
         this.updateCameraPosition();
@@ -743,7 +611,6 @@ class CNNVisualizer3D {
             Array(3).fill(null).map(() => Array(3).fill(0))
         );
         
-        console.log('Initializing empty visualization...');
         this.visualize(emptyResponse);
     }
     
@@ -780,9 +647,6 @@ class CNNVisualizer3D {
      * Main visualization function - called with API response data
      */
     visualize(apiResponse) {
-        console.log('Visualizing API response:', apiResponse);
-        console.log('Has activations:', !!apiResponse.activations);
-        console.log('Has input_image:', !!apiResponse.input_image);
         
         // Extract dense layers from API response
         const denseLayers = this.extractDenseLayers(apiResponse);
@@ -797,7 +661,6 @@ class CNNVisualizer3D {
         
         if (!sceneExists) {
             // First time - build complete scene
-            console.log('Building initial scene...');
             
             // Build neuron meshes for each layer
             this.buildNeuronLayers(denseLayers);
@@ -823,8 +686,6 @@ class CNNVisualizer3D {
         // Update activation colors (works for both initial and updates)
         this.updateActivationColors(denseLayers);
         
-        console.log('Visualization complete - Layers rendered:', this.layerMeshes.length);
-        console.log('Total meshes in scene:', this.meshes.length);
     }
     
     /**
@@ -833,7 +694,6 @@ class CNNVisualizer3D {
     extractDenseLayers(apiResponse) {
         const layers = [];
         
-        console.log('Extracting layers from API response...');
         
         // Check if activations exist
         if (!apiResponse.activations) {
@@ -841,7 +701,6 @@ class CNNVisualizer3D {
             return layers;
         }
         
-        console.log('Available activations:', Object.keys(apiResponse.activations));
         
         // Build layers in correct order: Input → Conv2D → Conv2D_1 → Conv2D_2 → Flatten → Dense → Output
         
@@ -860,7 +719,6 @@ class CNNVisualizer3D {
                     size: inputData.length,
                     shape: '28×28'
                 });
-                console.log('Input layer added: 28x28 =', inputData.length, 'pixels');
             } catch (err) {
                 console.warn('Failed to add Input layer:', err);
             }
@@ -902,7 +760,6 @@ class CNNVisualizer3D {
                     channels: featureMaps.length,
                     featureMaps: featureMaps
                 });
-                console.log('Conv2D layer added:', fullValues.length, 'neurons');
             } catch (err) {
                 console.error('Error adding Conv2D layer:', err);
             }
@@ -914,7 +771,6 @@ class CNNVisualizer3D {
                 const featureMaps = apiResponse.activations.conv2d_1.feature_maps;
                 const shape = apiResponse.activations.conv2d_1.shape; // [1, 11, 11, 64]
                 
-                console.log('Conv2D_1 shape:', shape, 'feature_maps length:', featureMaps.length);
                 
                 const height = shape[1]; // 11
                 const width = shape[2];  // 11
@@ -943,7 +799,6 @@ class CNNVisualizer3D {
                     channels: featureMaps.length,
                     featureMaps: featureMaps
                 });
-                console.log('Conv2D_1 layer added:', fullValues.length, 'neurons');
             } catch (err) {
                 console.error('Error adding Conv2D_1 layer:', err);
             }
@@ -955,7 +810,6 @@ class CNNVisualizer3D {
                 const featureMaps = apiResponse.activations.conv2d_2.feature_maps;
                 const shape = apiResponse.activations.conv2d_2.shape; // [1, 3, 3, 64]
                 
-                console.log('Conv2D_2 shape:', shape, 'feature_maps length:', featureMaps.length);
                 
                 // Average all feature maps into a single 3x3 representation
                 const height = shape[1]; // 3
@@ -985,7 +839,6 @@ class CNNVisualizer3D {
                     channels: featureMaps.length,
                     featureMaps: featureMaps
                 });
-                console.log('Conv2D_2 layer added:', flatValues.length, 'neurons');
             } catch (err) {
                 console.error('Error adding Conv2D_2 layer:', err);
             }
@@ -1054,7 +907,6 @@ class CNNVisualizer3D {
             });
         }
         
-        console.log('Extracted layers:', layers.map(l => `${l.name} (${l.size})`));
         return layers;
     }
     
@@ -1465,7 +1317,6 @@ class CNNVisualizer3D {
         
         // If we have too many connections, keep only the strongest ones
         if (candidates.length > maxConnections) {
-            console.log(`Limiting connections: ${candidates.length} → ${maxConnections} (${sourceLayer.name}→${targetLayer.name})`);
             candidates.sort((a, b) => b.strength - a.strength);
             return candidates.slice(0, maxConnections);
         }

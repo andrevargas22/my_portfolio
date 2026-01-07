@@ -88,6 +88,11 @@ def add_security_headers(response):
 
     response.headers["Origin-Agent-Cluster"] = "?1"
 
+    # Cache static assets
+    if request.path.startswith('/static/'):
+        response.cache_control.max_age = 31536000  # 1 year
+        response.cache_control.public = True
+
     return response
 
 
