@@ -13,8 +13,4 @@ __pycache__/
 test_notification.xml
 
 # Scripts
-find_channel_id.py
-
-Neural-Network-Visualisation/
-
-roadmap.txt
+add_game.py

@@ -23,7 +23,7 @@
 						(Effectively finished! Credits roll, The End on the screen). 
 						I used this as an experiment to create this interactive menu with HTML, CSS and JS.
 					</center>
-					<center><b>2026 entries:</b> Tunic<br>
+					<center><b>2026 entries:</b> A Juggler's Tale, Middle-Earth: Shadow of War, Papers Please, Tunic<br>
 					</center>
 				</div>
 			</div>
@@ -54,37 +54,20 @@
 					{% with games = get_games_by_letter(letter) %}
 						{% if games %}
 							{% for game in games %}
-								{% set platform_class = game.platform|replace("Super Nintendo", "snes")
-                                                   |replace("Nintendo Switch", "switch")
-                                                   |replace("Nintendo 64", "n64")
-                                                   |replace("PlayStation 1", "ps1")
-                                                   |replace("PlayStation 2", "ps2")
-                                                   |replace("Game Boy Advance", "gba")
-                                                   |replace("Game Boy", "gb")
-                                                   |replace("Nintendo GameCube", "gc")
-                                                   |replace("Nintendo 3DS", "ds3")
-												   |replace("Nintendo DS", "ds")
-                                                   |lower %}
-								{% set genre_class = game.genre|replace("3D Platformer", "dplat")
-                                             |replace("Beat 'em up", "beat-em-up")
-                                             |replace("Run and Gun", "run-and-gun")
-                                             |replace(" ", "-")
-                                             |lower %}
-								{% set display_genre = game.genre %}
-								<div class="item {{platform_class}} {% if game.top_10 %}top-10{% endif %} col-lg-3 col-md-4 col-6 col-sm" data-top-rank="{% if game.top_10 %}{{ game.top_10 }}{% else %}999{% endif %}">
+								<div class="item {{game.platform_id}} {% if game.top_10 %}top-10{% endif %} col-lg-3 col-md-4 col-6 col-sm" data-top-rank="{% if game.top_10 %}{{ game.top_10 }}{% else %}999{% endif %}">
 									<div class="image-container">
 										<p class="image-description">{{game.title}} ({{game.year}})</p>
 										<div class="tags">
 											{% if game.top_10 %}
 											<span class="tag top-badge">🥇 Top {{ game.top_10}}</span>
 											{% endif %}
-											<span class="tag {{platform_class}}">{{game.platform}}</span>
-											<span class="tag {{genre_class}}">{{display_genre}}</span>
-											{% if game.beaten != "Untracked" %}
+											<span class="tag {{game.platform_id}}">{{game.platform}}</span>
+											<span class="tag {{game.genre_id}}">{{game.genre}}</span>
+											{% if game.beaten %}
 											<span class="tag beaten">✔️ {{game.beaten}}</span>
 											{% endif %}
 										</div>
-										<a href="{{ url_for('static', filename='images/games/' + game.image) }}" class="fancylight popup-btn" data-fancybox-group="light">
+										<a href="{{ url_for('static', filename='images/games/' + game.image) }}" class="fancylight popup-btn" data-fancybox-group="light" title="{{game.title}} ({{game.year}}) - {{game.platform}}">
 											<img class="img-fluid" src="{{ url_for('static', filename='images/games/' + game.image) }}" alt="{{game.title}} ({{game.year}})">
 										</a>
 									</div>
@@ -103,3 +86,4 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js"></script>
 <script src="{{ url_for('static', filename='js/game_list.js') }}"></script>
 {% endblock %}
+ 

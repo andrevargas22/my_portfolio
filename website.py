@@ -180,17 +180,6 @@ def mnist():
     return render_template("pages/mnist_visual.html", mnist_endpoint=mnist_endpoint)
 
 
-@app.route("/game_of_life")
-def game_of_life():
-    """
-    Renders the Game of Life page.
-
-    Returns:
-        Template: The game_of_life.html template for the section.
-    """
-    return render_template("pages/game_of_life.html")
-
-
 ############################## TESTING FEATURES ##############################
 #### WebSub Callback:
 @app.route("/websub/callback", methods=["GET", "POST"])
