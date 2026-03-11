@@ -13,7 +13,6 @@ Source code for my personal website showcasing projects, blog posts, and interac
 
 - **MNIST 3D Visualization**: Real-time 3D visualization of CNN activations using Three.js
 - **Travel Map**: Interactive world map with Mapbox integration
-- **Game of Life**: Conway's Game of Life implementation
 - **Games Archive**: Filterable gallery of completed video games
 
 ## Production
