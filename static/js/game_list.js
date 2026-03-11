@@ -22,6 +22,9 @@ $(document).ready(function() {
         type: 'image',
         gallery: {
             enabled: true
+        },
+        image: {
+            titleSrc: 'title'
         }
     });
 

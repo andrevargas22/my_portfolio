@@ -103,23 +103,58 @@ def fetch_articles():
         socket.setdefaulttimeout(original_timeout)
 
 
+# Games data cache
+_GAMES_CACHE = None
+_GAMES_BY_LETTER_CACHE = None
+
+
 def load_games():
     """
-    Loads games data from JSON file. If file doesn't exist, returns empty list.
+    Loads games data from JSON file with caching. If file doesn't exist, returns empty list.
     """
+    global _GAMES_CACHE
+    
+    if _GAMES_CACHE is not None:
+        return _GAMES_CACHE
+    
     try:
         # Get the parent directory of this script, then navigate to static/json
         json_path = Path(__file__).parent.parent / "static" / "json" / "games.json"
         with open(json_path, "r", encoding="utf-8") as f:
-            return json.load(f)["games"]
+            _GAMES_CACHE = json.load(f)["games"]
+            return _GAMES_CACHE
     except (FileNotFoundError, json.JSONDecodeError) as e:
         print(f"Error loading games.json: {e}")
         return []
 
 
+def get_games_dict():
+    """
+    Returns games organized by first letter for efficient template rendering.
+    Uses caching to avoid repeated processing.
+    """
+    global _GAMES_BY_LETTER_CACHE
+    
+    if _GAMES_BY_LETTER_CACHE is not None:
+        return _GAMES_BY_LETTER_CACHE
+    
+    games = load_games()
+    by_letter = {}
+    
+    for game in games:
+        letter = game["title"][0].upper()
+        if letter not in by_letter:
+            by_letter[letter] = []
+        by_letter[letter].append(game)
+    
+    _GAMES_BY_LETTER_CACHE = by_letter
+    return by_letter
+
+
 def get_games_by_letter(letter):
     """
     Returns list of games that start with given letter.
+    Uses cached pre-organized dictionary for efficiency.
     """
-    games = load_games()
-    return [g for g in games if g["title"].upper().startswith(letter)]
+    games_dict = get_games_dict()
+    return games_dict.get(letter, [])
