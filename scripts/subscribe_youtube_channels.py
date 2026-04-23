@@ -34,13 +34,6 @@ def subscribe_to_youtube_channels():
         {"name": "Alexandre Ernst", "channel_id": "UCBgSy_cNIoGYnyLjmKHQOAg"},
         {"name": "Lucas Dias", "channel_id": "UCIMDIPyS1vsHBa4t9wlN8IQ"},
         {"name": "Canal do Vaguinha", "channel_id": "UCkoqa3e5oFNkEGvgrxLAmrQ"},
-        {"name": "Careca de Saber", "channel_id": "UCUaNjDcaVliZyWd-MgsDAzw"},
-        {"name": "César Cidade Dias", "channel_id": "UC-vcAXksTA21wp1iN4ZGv6Q"},
-        {"name": "Cristiano Oliveira", "channel_id": "UC66qTkwGt0VOzejqDmzQyjg"},
-        {"name": "A Dupla", "channel_id": "UCRbfE8wK0_f5BPXtH424G_Q"},
-        {"name": "JB Filho Repórter", "channel_id": "UCkPxmeuHR2EJR8DJpX8utMQ"},
-        {"name": "Leonardo Meneghetti", "channel_id": "UCZqLwvgBgcSV5onlSrxkjQQ"},
-        {"name": "Marinho Saldanha", "channel_id": "UC7a6C6H12xIAYZUKa_f9GKQ"},
     ]
 
     hub_url = "https://pubsubhubbub.appspot.com/subscribe"
@@ -149,20 +142,21 @@ def main():
     """Main execution function with optional unsubscribe mode."""
     args = parse_args()
 
-    # Empty placeholder list for manual unsubscription (populate when needed)
+    # Channels to unsubscribe from
     channels_to_unsubscribe = [
-        # Example structure:
-        # {"name": "Some Channel", "channel_id": "UCxxxxxxxxxxxxxxxxx"},
+        {"name": "Careca de Saber", "channel_id": "UCUaNjDcaVliZyWd-MgsDAzw"},
+        {"name": "César Cidade Dias", "channel_id": "UC-vcAXksTA21wp1iN4ZGv6Q"},
+        {"name": "Cristiano Oliveira", "channel_id": "UC66qTkwGt0VOzejqDmzQyjg"},
+        {"name": "A Dupla", "channel_id": "UCRbfE8wK0_f5BPXtH424G_Q"},
+        {"name": "JB Filho Repórter", "channel_id": "UCkPxmeuHR2EJR8DJpX8utMQ"},
+        {"name": "Leonardo Meneghetti", "channel_id": "UCZqLwvgBgcSV5onlSrxkjQQ"},
+        {"name": "Marinho Saldanha", "channel_id": "UC7a6C6H12xIAYZUKa_f9GKQ"},
     ]
 
     try:
         if args.unsub:
-            logging.info("Running in --unsub mode (no network calls executed by default).")
-            logging.info("Populate 'channels_to_unsubscribe' list in the script to target channels.")
-            # To actually execute unsubscription requests, uncomment the following line:
-            # success = unsubscribe_from_youtube_channels(channels_to_unsubscribe)
-            # For now we simulate success so you can test the flag wiring.
-            success = True
+            logging.info("Running in --unsub mode: unsubscribing from channels...")
+            success = unsubscribe_from_youtube_channels(channels_to_unsubscribe)
         else:
             success = subscribe_to_youtube_channels()
         sys.exit(0 if success else 1)
