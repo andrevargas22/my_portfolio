@@ -201,6 +201,30 @@ def websub_callback():
         return result
     
     return result
+
+
+@app.route("/websub/health", methods=["GET"])
+def websub_health():
+    """
+    Health check endpoint for WebSub functionality.
+    
+    Returns diagnostic information about WebSub configuration.
+    """
+    import os
+    
+    health_status = {
+        "status": "ok",
+        "endpoint": "/websub/callback",
+        "hmac_configured": bool(os.getenv("WEBHOOK_HMAC_SECRET")),
+        "github_app_configured": bool(
+            os.getenv("GRENALBOT_ID") and 
+            os.getenv("GRENALBOT_INSTALLATION_ID") and 
+            os.getenv("GRENALBOT_PRIVATE_KEY")
+        ),
+        "timestamp": request.headers.get("X-Request-Time", "unknown")
+    }
+    
+    return health_status, 200
  
 ############################## MAIN EXECUTION ##############################
 if __name__ == "__main__":

@@ -58,7 +58,7 @@ def subscribe_to_youtube_channels():
                 "hub.topic": topic_url,
                 "hub.verify": "async",
                 "hub.mode": "subscribe",
-                "hub.lease_seconds": "2764800",
+                "hub.lease_seconds": "864000",  # 10 days (reduced from 32 for more frequent renewal)
                 # Always include secret (validated earlier)
                 "hub.secret": webhook_secret,
             }

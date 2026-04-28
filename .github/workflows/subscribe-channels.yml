@@ -1,10 +1,9 @@
 name: YouTube Channel Subscription Maintenance
 
 on:
-  # 1st and 15th day of every month at 6:00 AM UTC (3:00 AM BRT)
+  # Every 7 days at 6:00 AM UTC (3:00 AM BRT) to ensure subscriptions don't expire
   schedule:
-    - cron: '0 6 1 * *'   # Day 1 of every month
-    - cron: '0 6 15 * *'  # Day 15 of every month
+    - cron: '0 6 */7 * *'  # Every 7 days
   
   # Allow manual execution
   workflow_dispatch:
