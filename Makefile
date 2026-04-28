@@ -23,7 +23,7 @@ test:
 	echo "Using signature: sha1=$$SIGNATURE"; \
 	curl -X POST https://andrevargas.com.br/websub/callback \
 	-H "Content-Type: application/atom+xml" \
-	-H "User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)" \
+	-H "User-Agent: Manual-Test-WebSub" \
 	-H "X-Hub-Signature: sha1=$$SIGNATURE" \
 	--data-binary @test_notification.xml \
 	-v'
@@ -38,7 +38,7 @@ test-local:
 	echo "Using signature: sha1=$$SIGNATURE"; \
 	curl -X POST http://localhost:5000/websub/callback \
 	-H "Content-Type: application/atom+xml" \
-	-H "User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)" \
+	-H "User-Agent: Manual-Test-WebSub" \
 	-H "X-Hub-Signature: sha1=$$SIGNATURE" \
 	--data-binary @test_notification.xml \
 	-v'
@@ -46,7 +46,7 @@ test-local:
 test-local-invalid:
 	curl -X POST http://localhost:5000/websub/callback \
 	-H "Content-Type: application/atom+xml" \
-	-H "User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)" \
+	-H "User-Agent: Manual-Test-WebSub" \
 	-H "X-Hub-Signature: sha1=fakeinvalidsignature123" \
 	-d @test_notification.xml \
 	-v
