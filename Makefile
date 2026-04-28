@@ -50,3 +50,11 @@ test-local-invalid:
 	-H "X-Hub-Signature: sha1=fakeinvalidsignature123" \
 	-d @test_notification.xml \
 	-v
+
+diagnose-websub:
+	@echo "Running WebSub diagnostics..."
+	@bash -c 'set -a && source .env.local && python3 scripts/debug_websub.py'
+
+resubscribe:
+	@echo "Resubscribing to all YouTube channels..."
+	@bash -c 'set -a && source .env.local && python3 scripts/subscribe_youtube_channels.py'

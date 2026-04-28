@@ -256,10 +256,19 @@ def handle_websub_callback(
     Returns:
         tuple: (response_body, status_code) or just response_body for 200 OK
     """
+    # Log all incoming requests for debugging
+    user_agent = request_headers.get('User-Agent', 'Unknown') if request_headers else 'Unknown'
+    is_youtube = 'FeedFetcher-Google' in user_agent
+    source_type = "🔴 REAL (YouTube)" if is_youtube else "🧪 TEST (Manual)"
+    
+    logging.info(f"[WebSub] {source_type} {request_method} request from: {user_agent}")
+    
     if request_method == "GET":
         challenge = request_args.get("hub.challenge") if request_args else None
+        mode = request_args.get("hub.mode") if request_args else None
+        topic = request_args.get("hub.topic") if request_args else None
 
-        logging.info("[WebSub] GET request received")
+        logging.info(f"[WebSub] GET request - Mode: {mode}, Topic: {topic}")
 
         if challenge:
             if re.match(r"^[a-zA-Z0-9_-]{1,128}$", challenge):
@@ -302,7 +311,8 @@ def handle_websub_callback(
         try:
             video_data = parse_youtube_notification(request_data)
             if video_data:
-                logging.info("########### [VIDEO PARSED] ###########")
+                source_label = "REAL VIDEO" if is_youtube else "TEST VIDEO"
+                logging.info(f"########### [{source_label} PARSED] ###########")
                 logging.info(f"Link: {video_data['url']}")
                 logging.info(f"Channel: {video_data['channel']}")
                 logging.info(f"Title: {video_data['title']}")
