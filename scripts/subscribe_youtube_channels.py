@@ -34,6 +34,7 @@ def subscribe_to_youtube_channels():
         {"name": "Alexandre Ernst", "channel_id": "UCBgSy_cNIoGYnyLjmKHQOAg"},
         {"name": "Lucas Dias", "channel_id": "UCIMDIPyS1vsHBa4t9wlN8IQ"},
         {"name": "Canal do Vaguinha", "channel_id": "UCkoqa3e5oFNkEGvgrxLAmrQ"},
+        {"name": "A Dupla", "channel_id": "UC4SkxWmVRnERdmdl16SFcCQ"},
     ]
 
     hub_url = "https://pubsubhubbub.appspot.com/subscribe"
