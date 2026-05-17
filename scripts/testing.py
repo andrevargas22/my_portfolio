@@ -193,6 +193,53 @@ def _valid_video_id(video_id: str) -> bool:
     return bool(re.fullmatch(r"[A-Za-z0-9_-]{6,20}", video_id or ""))
 
 
+def should_filter_video(video_data: dict) -> bool:
+    """
+    Determine if a video should be filtered (ignored) based on content rules.
+    
+    Args:
+        video_data: Dict with 'url', 'channel', 'title' keys
+        
+    Returns:
+        bool: True if video should be filtered (ignored), False if should be processed
+    """
+    url = video_data.get("url", "")
+    channel = video_data.get("channel", "")
+    title = video_data.get("title", "")
+    
+    # Filter 1: YouTube Shorts
+    if "/shorts/" in url:
+        logging.info(f"[Filter] IGNORED: YouTube Short detected")
+        return True
+    
+    # Filter 2: Canal "A Dupla" + "Hora da Dupla"
+    if channel == "A Dupla" and "Hora da Dupla" in title:
+        logging.info(f"[Filter] [IGNORED: A Dupla - Hora da Dupla")
+        return True
+    
+    # Filter 3: Canal "A Dupla" + título começa com "🔵⚫️" (Grêmio)
+    if channel == "A Dupla" and title.startswith("🔵⚫️"):
+        logging.info(f"[Filter] IGNORED: A Dupla - Grêmio content")
+        return True
+    
+    # Filter 4: Alexandre Ernst + "INTERVENÇÃO #"
+    if channel == "Alexandre Ernst" and "INTERVENÇÃO #" in title:
+        logging.info(f"[Filter] IGNORED: Alexandre Ernst - INTERVENÇÃO")
+        return True
+    
+    # Filter 5: Collar Repórter + specific programs
+    if channel == "Collar Repórter":
+        ignored_programs = ["INTERVALO DO COLLAR", "PÓS-JOGO", "LIVE DO COLLAR"]
+        for program in ignored_programs:
+            if program in title:
+                logging.info(f"[Filter] ⏭IGNORED: Collar Repórter - {program}")
+                return True
+    
+    # Video passes all filters - should be processed
+    logging.info(f"[Filter] PASSED: Video will be processed")
+    return False
+
+
 def trigger_video_processing_workflow(video_data):
     """
     Dispatch a workflow event in the target repository using a GitHub App token.
@@ -203,6 +250,11 @@ def trigger_video_processing_workflow(video_data):
 
     if not _valid_video_id(video_data.get("video_id", "")):
         logging.error("[GitHub] Video ID pattern invalid - aborting dispatch")
+        return
+    
+    # Check if video should be filtered
+    if should_filter_video(video_data):
+        logging.info("[GitHub] Video filtered - skipping workflow dispatch")
         return
 
     repo_owner = "andrevargas22"
