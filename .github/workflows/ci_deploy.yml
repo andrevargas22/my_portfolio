@@ -48,6 +48,7 @@ jobs:
       GRENALBOT_ID: ${{ secrets.GRENALBOT_ID }}
       GRENALBOT_INSTALLATION_ID: ${{ secrets.GRENALBOT_INSTALLATION_ID }}
       GRENALBOT_PRIVATE_KEY: ${{ secrets.GRENALBOT_PRIVATE_KEY }}
+      YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
       
     steps:
       - name: Checkout
@@ -87,5 +88,6 @@ jobs:
               WEBHOOK_HMAC_SECRET=${{ env.WEBHOOK_HMAC_SECRET }},\
               GRENALBOT_ID=${{ env.GRENALBOT_ID }},\
               GRENALBOT_INSTALLATION_ID=${{ env.GRENALBOT_INSTALLATION_ID }},\
-              GRENALBOT_PRIVATE_KEY=${{ env.GRENALBOT_PRIVATE_KEY }}\
+              GRENALBOT_PRIVATE_KEY=${{ env.GRENALBOT_PRIVATE_KEY }},\
+              YOUTUBE_API_KEY=${{ env.YOUTUBE_API_KEY }}\
               "

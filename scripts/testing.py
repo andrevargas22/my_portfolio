@@ -71,6 +71,73 @@ def parse_youtube_notification(xml_data):
         return None
 
 
+def check_video_availability(video_id: str) -> bool:
+    """
+    Check if a YouTube video is ready for download using YouTube Data API v3.
+    
+    Returns True only if ALL conditions are met:
+    - uploadStatus == "processed"
+    - liveBroadcastContent == "none"
+    - privacyStatus == "public"
+    
+    Args:
+        video_id: YouTube video ID
+        
+    Returns:
+        bool: True if ready for download, False otherwise
+    """
+    api_key = os.getenv("YOUTUBE_API_KEY")
+    if not api_key:
+        logging.warning("[YouTube API] YOUTUBE_API_KEY not configured - skipping availability check")
+        return True  # Assume ready if API key not configured
+    
+    url = "https://www.googleapis.com/youtube/v3/videos"
+    params = {
+        "part": "status,snippet",
+        "id": video_id,
+        "key": api_key
+    }
+    
+    try:
+        r = requests.get(url, params=params, timeout=10)
+        
+        if r.status_code != 200:
+            logging.warning(f"[YouTube API] HTTP {r.status_code} - assuming video ready")
+            return True
+        
+        data = r.json()
+        
+        if not data.get("items"):
+            logging.warning(f"[YouTube API] Video {video_id} not found")
+            return False
+        
+        item = data["items"][0]
+        upload_status = item.get("status", {}).get("uploadStatus")
+        live_status = item.get("snippet", {}).get("liveBroadcastContent")
+        privacy_status = item.get("status", {}).get("privacyStatus")
+        
+        is_ready = (
+            upload_status == "processed"
+            and live_status == "none"
+            and privacy_status == "public"
+        )
+        
+        # Log detailed status
+        if is_ready:
+            logging.info(f"[YouTube API] ✅ Video {video_id} is READY for download")
+        else:
+            logging.warning(
+                f"[YouTube API] ⚠️  Video {video_id} NOT READY - "
+                f"upload={upload_status}, live={live_status}, privacy={privacy_status}"
+            )
+        
+        return is_ready
+        
+    except Exception as e:
+        logging.error(f"[YouTube API] Error checking video {video_id}: {e}")
+        return True  # Don't block on API errors
+
+
 def verify_webhook_signature(body: bytes, signature_header: str) -> bool:
     """
     Verify HMAC-SHA1 signature from WebSub notification.
@@ -370,6 +437,9 @@ def handle_websub_callback(
                 logging.info(f"Title: {video_data['title']}")
                 logging.info(f"Published at: {video_data['published']}")
                 logging.info("######################################")
+
+                # Check video availability (non-blocking)
+                check_video_availability(video_data['video_id'])
 
                 trigger_video_processing_workflow(video_data)
 
