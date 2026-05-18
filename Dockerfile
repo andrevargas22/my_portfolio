@@ -7,8 +7,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certifi
     && apt-get install -y --no-install-recommends ffmpeg nodejs \
     && rm -rf /var/lib/apt/lists/*
 
-# Create a non-root user for security
-RUN groupadd -r appuser && useradd -r -g appuser appuser
+# Create a non-root user for security (with home directory for yt-dlp cache)
+RUN groupadd -r appuser && useradd -r -m -g appuser appuser
 
 # Set the working directory in the container
 WORKDIR /app
