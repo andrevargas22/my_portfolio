@@ -12,6 +12,135 @@ import requests
 import xml.etree.ElementTree as ET
 import jwt
 import threading
+import tempfile
+from pathlib import Path
+from datetime import datetime
+
+
+def sanitize_filename(name: str) -> str:
+    """
+    Sanitize filename by removing/replacing invalid characters.
+    
+    Args:
+        name: Original filename
+        
+    Returns:
+        str: Sanitized filename
+    """
+    # Replace spaces with underscores
+    name = name.replace(" ", "_")
+    # Remove invalid characters
+    name = re.sub(r'[<>:"/\\|?*]', '', name)
+    # Remove emojis and special unicode characters
+    name = re.sub(r'[^\x00-\x7F]+', '', name)
+    # Collapse multiple underscores
+    name = re.sub(r'_+', '_', name)
+    # Remove leading/trailing underscores
+    name = name.strip('_')
+    return name or "unknown"
+
+
+def download_audio_ytdlp(video_id: str, video_url: str) -> Path | None:
+    """
+    Download audio from YouTube using yt-dlp.
+    
+    Args:
+        video_id: YouTube video ID
+        video_url: Full YouTube video URL
+        
+    Returns:
+        Path: Path to downloaded MP3 file, or None on failure
+    """
+    try:
+        import yt_dlp
+        
+        # Create temporary directory for download
+        temp_dir = Path(tempfile.mkdtemp(prefix="ytdlp_"))
+        logging.info(f"[Download] Starting yt-dlp download for video_id={video_id}")
+        logging.info(f"[Download] Temp directory: {temp_dir}")
+        
+        ydl_opts = {
+            'format': 'bestaudio/best',
+            'outtmpl': str(temp_dir / '%(id)s.%(ext)s'),
+            'postprocessors': [{
+                'key': 'FFmpegExtractAudio',
+                'preferredcodec': 'mp3',
+                'preferredquality': '192',
+            }],
+            'quiet': True,
+            'no_warnings': True,
+        }
+        
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(video_url, download=True)
+            
+            mp3_path = temp_dir / f"{video_id}.mp3"
+            
+            if not mp3_path.exists():
+                logging.error(f"[Download] Expected file not found: {mp3_path}")
+                return None
+            
+            file_size_mb = mp3_path.stat().st_size / (1024 * 1024)
+            duration_sec = info.get('duration', 0)
+            
+            logging.info(f"[Download] Success - {file_size_mb:.2f} MB, {duration_sec}s")
+            return mp3_path
+            
+    except Exception as e:
+        logging.error(f"[Download] Failed: {e}")
+        return None
+
+
+def upload_audio_to_gcs(local_path: Path, channel: str, published_at: str, video_id: str) -> str | None:
+    """
+    Upload audio file to Google Cloud Storage.
+    
+    Args:
+        local_path: Local path to audio file
+        channel: Channel name
+        published_at: Publication timestamp
+        video_id: YouTube video ID
+        
+    Returns:
+        str: GCS path if successful, None otherwise
+    """
+    try:
+        from google.cloud import storage
+        
+        bucket_name = os.getenv("GCS_BUCKET_NAME")
+        if not bucket_name:
+            logging.error("[GCS] GCS_BUCKET_NAME not configured")
+            return None
+        
+        # Generate GCS path: <channel>/<timestamp>_<video_id>/audio.mp3
+        channel_sanitized = sanitize_filename(channel)
+        
+        # Parse timestamp
+        try:
+            dt = datetime.fromisoformat(published_at.replace('Z', '+00:00'))
+            timestamp = dt.strftime("%Y-%m-%d_%H-%M-%S")
+        except:
+            timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        
+        # Create directory structure: channel/timestamp_videoid/audio.mp3
+        video_dir = f"{timestamp}_{video_id}"
+        gcs_path = f"{channel_sanitized}/{video_dir}/audio.mp3"
+        
+        logging.info(f"[GCS] Uploading to gs://{bucket_name}/{gcs_path}")
+        
+        # Upload
+        client = storage.Client()
+        bucket = client.bucket(bucket_name)
+        blob = bucket.blob(gcs_path)
+        
+        blob.upload_from_filename(str(local_path))
+        
+        logging.info("[GCS] Upload successful")
+        return gcs_path
+        
+    except Exception as e:
+        logging.error(f"[GCS] Upload failed: {e}")
+        return None
 
 
 def parse_youtube_notification(xml_data):
@@ -125,10 +254,10 @@ def check_video_availability(video_id: str) -> bool:
         
         # Log detailed status
         if is_ready:
-            logging.info(f"[YouTube API] ✅ Video {video_id} is READY for download")
+            logging.info(f"[YouTube API] Video {video_id} is ready")
         else:
             logging.warning(
-                f"[YouTube API] ⚠️  Video {video_id} NOT READY - "
+                f"[YouTube API] Video {video_id} not ready - "
                 f"upload={upload_status}, live={live_status}, privacy={privacy_status}"
             )
         
@@ -312,10 +441,18 @@ def process_video_in_background(video_data: dict, is_youtube: bool) -> None:
     """
     Process video in background thread (after WebSub response).
     
+    Full workflow:
+    1. Check video availability (YouTube API)
+    2. Apply content filters
+    3. Download audio with yt-dlp
+    4. Upload to GCS
+    5. Trigger GitHub Actions workflow
+    
     Args:
         video_data: Parsed video data
         is_youtube: True if notification from YouTube, False if manual test
     """
+    audio_path = None
     try:
         source_label = "REAL VIDEO" if is_youtube else "TEST VIDEO"
         
@@ -327,21 +464,66 @@ def process_video_in_background(video_data: dict, is_youtube: bool) -> None:
         logging.info(f"Published at: {video_data['published']}")
         logging.info("######################################")
         
-        # Check video availability
-        check_video_availability(video_data['video_id'])
+        # Step 1: Check video availability
+        is_available = check_video_availability(video_data['video_id'])
+        if not is_available:
+            logging.warning(f"[Background] ⏭️  Video not ready - aborting processing")
+            return
         
-        # Trigger workflow
-        #trigger_video_processing_workflow(video_data)
+        # Step 2: Apply content filters
+        if should_filter_video(video_data):
+            logging.info(f"[Background] ⏭️  Video filtered - aborting processing")
+            return
         
-        logging.info(f"[Background] Processing completed for video_id={video_data['video_id']}")
+        # Step 3: Download audio with yt-dlp
+        logging.info(f"[Background] Starting audio download...")
+        audio_path = download_audio_ytdlp(video_data['video_id'], video_data['url'])
+        
+        if not audio_path:
+            logging.error(f"[Background] Download failed - aborting processing")
+            return
+        
+        # Step 4: Upload to GCS
+        gcs_path = upload_audio_to_gcs(
+            audio_path,
+            video_data['channel'],
+            video_data['published'],
+            video_data['video_id']
+        )
+        
+        if not gcs_path:
+            logging.error(f"[Background] GCS upload failed - aborting processing")
+            return
+        
+        # Step 5: Trigger workflow with audio ready flag
+        logging.info("[Background] Audio ready")
+        trigger_video_processing_workflow(video_data, audio_ready=True, gcs_path=gcs_path)
+        
+        logging.info("[Background] Processing completed")
         
     except Exception as e:
         logging.error(f"[Background] Error processing video: {e}", exc_info=True)
+        # Processing aborted due to error
+    finally:
+        # Cleanup temporary file
+        if audio_path and audio_path.exists():
+            try:
+                audio_path.unlink()
+                if audio_path.parent.name.startswith("ytdlp_"):
+                    audio_path.parent.rmdir()
+                logging.info(f"[Background] Cleanup: Removed temporary file")
+            except Exception as e:
+                logging.warning(f"[Background] Cleanup failed: {e}")
 
 
-def trigger_video_processing_workflow(video_data):
+def trigger_video_processing_workflow(video_data, audio_ready=False, gcs_path=None):
     """
     Dispatch a workflow event in the target repository using a GitHub App token.
+    
+    Args:
+        video_data: Video metadata dict
+        audio_ready: Whether audio is already downloaded and uploaded to GCS
+        gcs_path: GCS path to audio file (if audio_ready=True)
     """
     if not video_data or video_data.get("video_id") in (None, "Unknown"):
         logging.error("[GitHub] Missing or invalid video data")
@@ -349,11 +531,6 @@ def trigger_video_processing_workflow(video_data):
 
     if not _valid_video_id(video_data.get("video_id", "")):
         logging.error("[GitHub] Video ID pattern invalid - aborting dispatch")
-        return
-    
-    # Check if video should be filtered
-    if should_filter_video(video_data):
-        logging.info("[GitHub] Video filtered - skipping workflow dispatch")
         return
 
     repo_owner = "andrevargas22"
@@ -363,15 +540,24 @@ def trigger_video_processing_workflow(video_data):
         return
 
     url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/dispatches"
+    
+    # Build payload with audio status
+    client_payload = {
+        "video_id": video_data["video_id"],
+        "video_url": video_data["url"],
+        "title": video_data["title"],
+        "channel": video_data["channel"],
+        "published_at": video_data["published"],
+        "audio_ready": audio_ready,
+    }
+    
+    # Add GCS path if audio is ready
+    if audio_ready and gcs_path:
+        client_payload["gcs_path"] = gcs_path
+    
     payload = {
         "event_type": "video_published",
-        "client_payload": {
-            "video_id": video_data["video_id"],
-            "video_url": video_data["url"],
-            "title": video_data["title"],
-            "channel": video_data["channel"],
-            "published_at": video_data["published"],
-        },
+        "client_payload": client_payload,
     }
 
     headers = {

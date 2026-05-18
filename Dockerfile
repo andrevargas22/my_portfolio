@@ -1,6 +1,11 @@
 # Use the official Python image from the Docker Hub 
 FROM python:3.10-slim
 
+# Install ffmpeg (required by yt-dlp for audio conversion)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ffmpeg \
+    && rm -rf /var/lib/apt/lists/*
+
 # Create a non-root user for security
 RUN groupadd -r appuser && useradd -r -g appuser appuser
 

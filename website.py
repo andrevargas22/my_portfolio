@@ -222,6 +222,7 @@ def websub_health():
             os.getenv("GRENALBOT_PRIVATE_KEY")
         ),
         "youtube_api_configured": bool(os.getenv("YOUTUBE_API_KEY")),
+        "gcs_configured": bool(os.getenv("GCS_BUCKET_NAME")),
         "timestamp": request.headers.get("X-Request-Time", "unknown")
     }
     
