@@ -79,10 +79,22 @@ def download_audio_ytdlp(video_id: str, video_url: str) -> Path | None:
                 'preferredquality': '192',
             }],
             'logger': YtdlpLogger(),
-            # android/ios clients use app APIs that bypass bot detection on data center IPs
-            # and don't require n-challenge JS solver
-            'extractor_args': {'youtube': {'player_client': ['android', 'ios']}},
         }
+
+        youtube_cookies_b64 = os.getenv("YOUTUBE_COOKIES_B64")
+        if youtube_cookies_b64:
+            # Cloud/datacenter IPs: use cookies + web client (needs Node.js 20+ for n-challenge)
+            import base64
+            cookies_file = Path(tempfile.mktemp(suffix=".txt", prefix="yt_cookies_"))
+            cookies_file.write_bytes(base64.b64decode(youtube_cookies_b64))
+            ydl_opts['cookiefile'] = str(cookies_file)
+            ydl_opts['js_runtimes'] = {'node': {}}
+            ydl_opts['remote_components'] = ['ejs:github']
+            logging.info("[Download] Cloud mode: using cookies for authentication")
+        else:
+            # Local/residential IPs: android/ios clients bypass bot detection without cookies
+            ydl_opts['extractor_args'] = {'youtube': {'player_client': ['android', 'ios']}}
+            logging.info("[Download] Local mode: using android/ios client")
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(video_url, download=True)
@@ -102,6 +114,9 @@ def download_audio_ytdlp(video_id: str, video_url: str) -> Path | None:
     except Exception as e:
         logging.error(f"[Download] Failed: {e}")
         return None
+    finally:
+        if 'cookies_file' in dir() and cookies_file and cookies_file.exists():
+            cookies_file.unlink()
 
 
 def upload_audio_to_gcs(local_path: Path, channel: str, published_at: str, video_id: str) -> str | None:
