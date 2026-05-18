@@ -11,6 +11,7 @@ import hashlib
 import requests
 import xml.etree.ElementTree as ET
 import jwt
+import threading
 
 
 def parse_youtube_notification(xml_data):
@@ -307,6 +308,37 @@ def should_filter_video(video_data: dict) -> bool:
     return False
 
 
+def process_video_in_background(video_data: dict, is_youtube: bool) -> None:
+    """
+    Process video in background thread (after WebSub response).
+    
+    Args:
+        video_data: Parsed video data
+        is_youtube: True if notification from YouTube, False if manual test
+    """
+    try:
+        source_label = "REAL VIDEO" if is_youtube else "TEST VIDEO"
+        
+        # Log video details
+        logging.info(f"########### [{source_label} PARSED - BACKGROUND] ###########")
+        logging.info(f"Link: {video_data['url']}")
+        logging.info(f"Channel: {video_data['channel']}")
+        logging.info(f"Title: {video_data['title']}")
+        logging.info(f"Published at: {video_data['published']}")
+        logging.info("######################################")
+        
+        # Check video availability
+        check_video_availability(video_data['video_id'])
+        
+        # Trigger workflow
+        trigger_video_processing_workflow(video_data)
+        
+        logging.info(f"[Background] Processing completed for video_id={video_data['video_id']}")
+        
+    except Exception as e:
+        logging.error(f"[Background] Error processing video: {e}", exc_info=True)
+
+
 def trigger_video_processing_workflow(video_data):
     """
     Dispatch a workflow event in the target repository using a GitHub App token.
@@ -430,25 +462,22 @@ def handle_websub_callback(
         try:
             video_data = parse_youtube_notification(request_data)
             if video_data:
-                source_label = "REAL VIDEO" if is_youtube else "TEST VIDEO"
-                logging.info(f"########### [{source_label} PARSED] ###########")
-                logging.info(f"Link: {video_data['url']}")
-                logging.info(f"Channel: {video_data['channel']}")
-                logging.info(f"Title: {video_data['title']}")
-                logging.info(f"Published at: {video_data['published']}")
-                logging.info("######################################")
-
-                # Check video availability (non-blocking)
-                check_video_availability(video_data['video_id'])
-
-                trigger_video_processing_workflow(video_data)
+                logging.info(f"[WebSub] Video parsed successfully, starting background processing...")
+                
+                # Start background processing thread (non-blocking)
+                thread = threading.Thread(
+                    target=process_video_in_background,
+                    args=(video_data, is_youtube),
+                    daemon=False  # Thread continues after request ends
+                )
+                thread.start()
+                
+                logging.info(f"[WebSub] Background thread started, returning OK to YouTube")
 
         except ET.ParseError as e:
             logging.error(f"[WebSub] XML ParseError processing notification: {e}")
-        except requests.RequestException as e:
-            logging.error(f"[WebSub] RequestException during video processing workflow: {e}")
         except Exception as e:
-            logging.critical(f"[WebSub] Unexpected error processing notification: {e}", exc_info=True)
+            logging.error(f"[WebSub] Error parsing notification: {e}", exc_info=True)
 
         
         return "OK"
