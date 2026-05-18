@@ -331,7 +331,7 @@ def process_video_in_background(video_data: dict, is_youtube: bool) -> None:
         check_video_availability(video_data['video_id'])
         
         # Trigger workflow
-        trigger_video_processing_workflow(video_data)
+        #trigger_video_processing_workflow(video_data)
         
         logging.info(f"[Background] Processing completed for video_id={video_data['video_id']}")
         
