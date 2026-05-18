@@ -81,6 +81,8 @@ jobs:
             --region "${{ env.REGION }}" \
             --service-account "${{ env.SERVICE_ACCOUNT }}" \
             --memory 2Gi \
+            --cpu 2 \
+            --timeout 600 \
             --allow-unauthenticated \
             --port 8080 \
             --set-env-vars "\
@@ -91,9 +93,4 @@ jobs:
               GRENALBOT_INSTALLATION_ID=${{ env.GRENALBOT_INSTALLATION_ID }},\
               GRENALBOT_PRIVATE_KEY=${{ env.GRENALBOT_PRIVATE_KEY }},\
               YOUTUBE_API_KEY=${{ env.YOUTUBE_API_KEY }},\
-              GCS_BUCKET_NAME=${{ env.GCS_BUCKET_NAME }}\
-              "
-              GRENALBOT_INSTALLATION_ID=${{ env.GRENALBOT_INSTALLATION_ID }},\
-              GRENALBOT_PRIVATE_KEY=${{ env.GRENALBOT_PRIVATE_KEY }},\
-              YOUTUBE_API_KEY=${{ env.YOUTUBE_API_KEY }}\
-              "
+              GCS_BUCKET_NAME=${{ env.GCS_BUCKET_NAME }}"
