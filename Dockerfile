@@ -1,10 +1,9 @@
 # Use the official Python image from the Docker Hub 
 FROM python:3.10-slim
 
-# Install ffmpeg and Node.js (ffmpeg for audio conversion, Node.js for yt-dlp n-challenge solving)
+# Install ffmpeg (required by yt-dlp for audio conversion)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ffmpeg \
-    nodejs \
     && rm -rf /var/lib/apt/lists/*
 
 # Create a non-root user for security

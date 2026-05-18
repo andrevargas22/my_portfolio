@@ -52,7 +52,16 @@ def download_audio_ytdlp(video_id: str, video_url: str) -> Path | None:
         Path: Path to downloaded MP3 file, or None on failure
     """
     import yt_dlp
-    import base64
+
+    class YtdlpLogger:
+        def debug(self, msg):
+            if msg.startswith('[debug] '):
+                return
+            logging.info(f"[yt-dlp] {msg}")
+        def warning(self, msg):
+            logging.warning(f"[yt-dlp] {msg}")
+        def error(self, msg):
+            logging.error(f"[yt-dlp] {msg}")
 
     cookies_file = None
 
@@ -69,20 +78,12 @@ def download_audio_ytdlp(video_id: str, video_url: str) -> Path | None:
                 'preferredcodec': 'mp3',
                 'preferredquality': '192',
             }],
-            'quiet': True,
-            'no_warnings': True,
+            'logger': YtdlpLogger(),
+            # android/ios clients use app APIs that bypass bot detection on data center IPs
+            # and don't require n-challenge JS solver
+            'extractor_args': {'youtube': {'player_client': ['android', 'ios']}},
         }
 
-        # Use cookies if available (required to avoid bot detection on cloud IPs)
-        youtube_cookies_b64 = os.getenv("YOUTUBE_COOKIES_B64")
-        if youtube_cookies_b64:
-            cookies_file = Path(tempfile.mktemp(suffix=".txt", prefix="yt_cookies_"))
-            cookies_file.write_bytes(base64.b64decode(youtube_cookies_b64))
-            ydl_opts['cookiefile'] = str(cookies_file)
-            logging.info("[Download] Using cookies for authentication")
-        else:
-            logging.warning("[Download] No YOUTUBE_COOKIES_B64 set - may fail on cloud IPs")
-        
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(video_url, download=True)
             
@@ -101,9 +102,6 @@ def download_audio_ytdlp(video_id: str, video_url: str) -> Path | None:
     except Exception as e:
         logging.error(f"[Download] Failed: {e}")
         return None
-    finally:
-        if cookies_file and cookies_file.exists():
-            cookies_file.unlink()
 
 
 def upload_audio_to_gcs(local_path: Path, channel: str, published_at: str, video_id: str) -> str | None:
