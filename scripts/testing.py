@@ -51,13 +51,15 @@ def download_audio_ytdlp(video_id: str, video_url: str) -> Path | None:
     Returns:
         Path: Path to downloaded MP3 file, or None on failure
     """
+    import yt_dlp
+    import base64
+
+    cookies_file = None
+
     try:
-        import yt_dlp
-        
         # Create temporary directory for download
         temp_dir = Path(tempfile.mkdtemp(prefix="ytdlp_"))
         logging.info(f"[Download] Starting yt-dlp download for video_id={video_id}")
-        logging.info(f"[Download] Temp directory: {temp_dir}")
         
         ydl_opts = {
             'format': 'bestaudio/best',
@@ -70,6 +72,16 @@ def download_audio_ytdlp(video_id: str, video_url: str) -> Path | None:
             'quiet': True,
             'no_warnings': True,
         }
+
+        # Use cookies if available (required to avoid bot detection on cloud IPs)
+        youtube_cookies_b64 = os.getenv("YOUTUBE_COOKIES_B64")
+        if youtube_cookies_b64:
+            cookies_file = Path(tempfile.mktemp(suffix=".txt", prefix="yt_cookies_"))
+            cookies_file.write_bytes(base64.b64decode(youtube_cookies_b64))
+            ydl_opts['cookiefile'] = str(cookies_file)
+            logging.info("[Download] Using cookies for authentication")
+        else:
+            logging.warning("[Download] No YOUTUBE_COOKIES_B64 set - may fail on cloud IPs")
         
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(video_url, download=True)
@@ -89,6 +101,9 @@ def download_audio_ytdlp(video_id: str, video_url: str) -> Path | None:
     except Exception as e:
         logging.error(f"[Download] Failed: {e}")
         return None
+    finally:
+        if cookies_file and cookies_file.exists():
+            cookies_file.unlink()
 
 
 def upload_audio_to_gcs(local_path: Path, channel: str, published_at: str, video_id: str) -> str | None:

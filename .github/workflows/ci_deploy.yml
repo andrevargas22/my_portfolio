@@ -50,6 +50,7 @@ jobs:
       GRENALBOT_PRIVATE_KEY: ${{ secrets.GRENALBOT_PRIVATE_KEY }}
       YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
       GCS_BUCKET_NAME: ${{ secrets.GCS_BUCKET_NAME }}
+      YOUTUBE_COOKIES_B64: ${{ secrets.YOUTUBE_COOKIES_B64 }}
       
     steps:
       - name: Checkout
@@ -93,4 +94,5 @@ jobs:
               GRENALBOT_INSTALLATION_ID=${{ env.GRENALBOT_INSTALLATION_ID }},\
               GRENALBOT_PRIVATE_KEY=${{ env.GRENALBOT_PRIVATE_KEY }},\
               YOUTUBE_API_KEY=${{ env.YOUTUBE_API_KEY }},\
-              GCS_BUCKET_NAME=${{ env.GCS_BUCKET_NAME }}"
+              GCS_BUCKET_NAME=${{ env.GCS_BUCKET_NAME }},\
+              YOUTUBE_COOKIES_B64=${{ env.YOUTUBE_COOKIES_B64 }}"
