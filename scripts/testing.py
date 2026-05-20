@@ -171,6 +171,49 @@ def upload_audio_to_gcs(local_path: Path, channel: str, published_at: str, video
         return None
 
 
+def send_telegram_notification(title: str, channel: str, url: str) -> bool:
+    """
+    Send a simple Telegram notification about a new video.
+    
+    Args:
+        title: Video title
+        channel: Channel name
+        url: Video URL
+        
+    Returns:
+        bool: True if sent successfully, False otherwise
+    """
+    telegram_token = os.getenv("TELEGRAM_BOT_TOKEN")
+    telegram_chat_id = os.getenv("TELEGRAM_CHAT_ID")
+    
+    if not telegram_token or not telegram_chat_id:
+        logging.warning("[Telegram] Bot token or chat ID not configured - skipping notification")
+        return False
+    
+    try:
+        message = f"Novo video\n\nCanal: {channel}\nTitulo: {title}\nLink: {url}"
+        
+        response = requests.post(
+            f"https://api.telegram.org/bot{telegram_token}/sendMessage",
+            data={
+                "chat_id": telegram_chat_id,
+                "text": message,
+            },
+            timeout=10,
+        )
+        
+        if response.status_code == 200:
+            logging.info("[Telegram] Notification sent successfully")
+            return True
+        else:
+            logging.error(f"[Telegram] Failed to send notification: HTTP {response.status_code}")
+            return False
+            
+    except Exception as e:
+        logging.error(f"[Telegram] Error sending notification: {e}")
+        return False
+
+
 def parse_youtube_notification(xml_data):
     """
     Parses the XML notification from YouTube WebSub.
@@ -229,7 +272,7 @@ def parse_youtube_notification(xml_data):
         return None
 
 
-def check_video_availability(video_id: str) -> bool:
+def check_video_availability(video_id: str) -> tuple[bool, dict]:
     """
     Check if a YouTube video is ready for download using YouTube Data API v3.
     
@@ -242,12 +285,12 @@ def check_video_availability(video_id: str) -> bool:
         video_id: YouTube video ID
         
     Returns:
-        bool: True if ready for download, False otherwise
+        tuple: (is_ready: bool, status_details: dict)
     """
     api_key = os.getenv("YOUTUBE_API_KEY")
     if not api_key:
         logging.warning("[YouTube API] YOUTUBE_API_KEY not configured - skipping availability check")
-        return True  # Assume ready if API key not configured
+        return True, {}  # Assume ready if API key not configured
     
     url = "https://www.googleapis.com/youtube/v3/videos"
     params = {
@@ -261,18 +304,24 @@ def check_video_availability(video_id: str) -> bool:
         
         if r.status_code != 200:
             logging.warning(f"[YouTube API] HTTP {r.status_code} - assuming video ready")
-            return True
+            return True, {}
         
         data = r.json()
         
         if not data.get("items"):
             logging.warning(f"[YouTube API] Video {video_id} not found")
-            return False
+            return False, {"error": "video_not_found"}
         
         item = data["items"][0]
         upload_status = item.get("status", {}).get("uploadStatus")
         live_status = item.get("snippet", {}).get("liveBroadcastContent")
         privacy_status = item.get("status", {}).get("privacyStatus")
+        
+        status_details = {
+            "uploadStatus": upload_status,
+            "liveBroadcastContent": live_status,
+            "privacyStatus": privacy_status,
+        }
         
         is_ready = (
             upload_status == "processed"
@@ -289,11 +338,11 @@ def check_video_availability(video_id: str) -> bool:
                 f"upload={upload_status}, live={live_status}, privacy={privacy_status}"
             )
         
-        return is_ready
+        return is_ready, status_details
         
     except Exception as e:
         logging.error(f"[YouTube API] Error checking video {video_id}: {e}")
-        return True  # Don't block on API errors
+        return True, {"error": str(e)}  # Don't block on API errors
 
 
 def verify_webhook_signature(body: bytes, signature_header: str) -> bool:
@@ -418,7 +467,7 @@ def _valid_video_id(video_id: str) -> bool:
     return bool(re.fullmatch(r"[A-Za-z0-9_-]{6,20}", video_id or ""))
 
 
-def should_filter_video(video_data: dict) -> bool:
+def should_filter_video(video_data: dict) -> tuple[bool, str]:
     """
     Determine if a video should be filtered (ignored) based on content rules.
     
@@ -426,7 +475,7 @@ def should_filter_video(video_data: dict) -> bool:
         video_data: Dict with 'url', 'channel', 'title' keys
         
     Returns:
-        bool: True if video should be filtered (ignored), False if should be processed
+        tuple: (should_filter: bool, reason: str)
     """
     url = video_data.get("url", "")
     channel = video_data.get("channel", "")
@@ -435,22 +484,22 @@ def should_filter_video(video_data: dict) -> bool:
     # Filter 1: YouTube Shorts
     if "/shorts/" in url:
         logging.info(f"[Filter] IGNORED: YouTube Short detected")
-        return True
+        return True, "YouTube Short"
     
     # Filter 2: Canal "A Dupla" + "Hora da Dupla"
     if channel == "A Dupla" and "Hora da Dupla" in title:
         logging.info(f"[Filter] [IGNORED: A Dupla - Hora da Dupla")
-        return True
+        return True, "A Dupla - Hora da Dupla"
     
     # Filter 3: Canal "A Dupla" + título começa com "🔵⚫️" (Grêmio)
     if channel == "A Dupla" and title.startswith("🔵⚫️"):
         logging.info(f"[Filter] IGNORED: A Dupla - Grêmio content")
-        return True
+        return True, "A Dupla - Conteudo Gremio"
     
     # Filter 4: Alexandre Ernst + "INTERVENÇÃO #"
     if channel == "Alexandre Ernst" and "INTERVENÇÃO #" in title:
         logging.info(f"[Filter] IGNORED: Alexandre Ernst - INTERVENÇÃO")
-        return True
+        return True, "Alexandre Ernst - INTERVENCAO"
     
     # Filter 5: Collar Repórter + specific programs
     if channel == "Collar Repórter":
@@ -458,11 +507,11 @@ def should_filter_video(video_data: dict) -> bool:
         for program in ignored_programs:
             if program in title:
                 logging.info(f"[Filter] ⏭IGNORED: Collar Repórter - {program}")
-                return True
+                return True, f"Collar Reporter - {program}"
     
     # Video passes all filters - should be processed
     logging.info(f"[Filter] PASSED: Video will be processed")
-    return False
+    return False, ""
 
 
 def process_video_in_background(video_data: dict, is_youtube: bool) -> None:
@@ -493,13 +542,30 @@ def process_video_in_background(video_data: dict, is_youtube: bool) -> None:
         logging.info("######################################")
         
         # Step 1: Check video availability
-        is_available = check_video_availability(video_data['video_id'])
+        is_available, status_details = check_video_availability(video_data['video_id'])
+        
+        # Send Telegram notification with availability status
+        status_msg = "Video disponivel" if is_available else "Video nao disponivel"
+        if status_details:
+            status_msg += f"\n\nuploadStatus: {status_details.get('uploadStatus', 'N/A')}"
+            status_msg += f"\nliveBroadcastContent: {status_details.get('liveBroadcastContent', 'N/A')}"
+            status_msg += f"\nprivacyStatus: {status_details.get('privacyStatus', 'N/A')}"
+            if "error" in status_details:
+                status_msg += f"\nErro: {status_details['error']}"
+        send_telegram_notification(video_data['title'], video_data['channel'], status_msg)
+        
         if not is_available:
             logging.warning(f"[Background] ⏭️  Video not ready - aborting processing")
             return
         
         # Step 2: Apply content filters
-        if should_filter_video(video_data):
+        should_filter, filter_reason = should_filter_video(video_data)
+        if should_filter:
+            send_telegram_notification(
+                video_data['title'],
+                video_data['channel'],
+                f"Video ignorado\n\nMotivo: {filter_reason}"
+            )
             logging.info(f"[Background] ⏭️  Video filtered - aborting processing")
             return
         
@@ -508,8 +574,19 @@ def process_video_in_background(video_data: dict, is_youtube: bool) -> None:
         audio_path = download_audio_ytdlp(video_data['video_id'], video_data['url'])
         
         if not audio_path:
+            send_telegram_notification(
+                video_data['title'],
+                video_data['channel'],
+                "Download falhou"
+            )
             logging.error(f"[Background] Download failed - aborting processing")
             return
+        
+        send_telegram_notification(
+            video_data['title'],
+            video_data['channel'],
+            "Download concluido"
+        )
         
         # Step 4: Upload to GCS
         gcs_path = upload_audio_to_gcs(
@@ -520,8 +597,19 @@ def process_video_in_background(video_data: dict, is_youtube: bool) -> None:
         )
         
         if not gcs_path:
+            send_telegram_notification(
+                video_data['title'],
+                video_data['channel'],
+                "Upload GCS falhou"
+            )
             logging.error(f"[Background] GCS upload failed - aborting processing")
             return
+        
+        send_telegram_notification(
+            video_data['title'],
+            video_data['channel'],
+            f"Upload GCS concluido\n\nPath: {gcs_path}"
+        )
         
         # Step 5: Trigger workflow with audio ready flag
         logging.info("[Background] Audio ready")
@@ -676,6 +764,13 @@ def handle_websub_callback(
         try:
             video_data = parse_youtube_notification(request_data)
             if video_data:
+                # Send immediate Telegram notification (before any filtering/processing)
+                send_telegram_notification(
+                    title=video_data["title"],
+                    channel=video_data["channel"],
+                    url=video_data["url"]
+                )
+                
                 logging.info(f"[WebSub] Video parsed successfully, starting background processing...")
                 
                 # Start background processing thread (non-blocking)
