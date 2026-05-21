@@ -2,6 +2,8 @@
 Testing and experimental features for my portfolio website.
 """
 
+import csv
+import io
 import os
 import time
 import logging
@@ -14,7 +16,136 @@ import jwt
 import threading
 import tempfile
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
+
+
+# ==================== Pipeline Logger ====================
+
+class PipelineLogger:
+    """Writes pipeline events to GitHub Gist CSV log."""
+    
+    def __init__(self, gist_id: str, github_token: str):
+        """
+        Initialize logger with Gist credentials.
+        
+        Args:
+            gist_id: GitHub Gist ID (LOG_GIST_ID)
+            github_token: GitHub Personal Access Token (GH_PAT)
+        """
+        self.gist_id = gist_id
+        self.headers = {
+            "Authorization": f"Bearer {github_token}",
+            "Accept": "application/vnd.github+json",
+            "X-GitHub-Api-Version": "2022-11-28",
+        }
+        self.gist_filename = "pipelog.csv"
+        self.brasilia_tz = timezone(timedelta(hours=-3))
+        self.fieldnames = ["video_id", "channel", "title", "status", "timestamp", "info", "env"]
+    
+    def _read_csv(self) -> list[dict]:
+        """Read current CSV content from Gist."""
+        try:
+            response = requests.get(
+                f"https://api.github.com/gists/{self.gist_id}",
+                headers=self.headers,
+                timeout=10,
+            )
+            
+            if response.status_code != 200:
+                return []
+            
+            content = response.json()["files"][self.gist_filename]["content"]
+            return list(csv.DictReader(io.StringIO(content)))
+        
+        except Exception as e:
+            logging.warning(f"[Logger] Error reading gist: {e}")
+            return []
+    
+    def _write_csv(self, rows: list[dict]) -> bool:
+        """Write CSV content back to Gist."""
+        try:
+            output = io.StringIO()
+            writer = csv.DictWriter(output, fieldnames=self.fieldnames)
+            writer.writeheader()
+            writer.writerows(rows)
+            
+            response = requests.patch(
+                f"https://api.github.com/gists/{self.gist_id}",
+                headers=self.headers,
+                json={"files": {self.gist_filename: {"content": output.getvalue()}}},
+                timeout=10,
+            )
+            
+            return response.status_code == 200
+        
+        except Exception as e:
+            logging.warning(f"[Logger] Error writing gist: {e}")
+            return False
+    
+    def log(self, video_id: str, channel: str, title: str, status: str, info: str = "") -> bool:
+        """
+        Append a status entry to the pipeline log.
+        
+        Args:
+            video_id: YouTube video ID
+            channel: Channel name
+            title: Video title
+            status: Status code (e.g., 'pipeline_start', 'download_success')
+            info: Optional additional information
+            
+        Returns:
+            bool: True if log was written successfully
+        """
+        timestamp = datetime.now(self.brasilia_tz).strftime("%d/%m/%Y %H:%M:%S")
+        
+        # Read existing rows
+        rows = self._read_csv()
+        
+        # Append new row
+        rows.append({
+            "video_id": video_id,
+            "channel": channel,
+            "title": title,
+            "status": status,
+            "timestamp": timestamp,
+            "info": info,
+            "env": "prd",
+        })
+        
+        # Write back to Gist
+        return self._write_csv(rows)
+
+
+def log_pipeline_event(video_id: str, channel: str, title: str, status: str, info: str = "") -> bool:
+    """
+    Helper function to log pipeline events.
+    
+    Args:
+        video_id: YouTube video ID
+        channel: Channel name
+        title: Video title
+        status: Status code
+        info: Optional additional information
+        
+    Returns:
+        bool: True if logged successfully
+    """
+    gist_id = os.getenv("LOG_GIST_ID")
+    gh_token = os.getenv("GH_PAT")
+    
+    if not gist_id or not gh_token:
+        logging.debug("[Logger] LOG_GIST_ID or GH_PAT not configured - skipping log")
+        return False
+    
+    try:
+        logger = PipelineLogger(gist_id, gh_token)
+        return logger.log(video_id, channel, title, status, info)
+    except Exception as e:
+        logging.warning(f"[Logger] Failed to log event: {e}")
+        return False
+
+
+# ==================== Utility Functions ====================
 
 
 def sanitize_filename(name: str) -> str:
@@ -541,6 +672,14 @@ def process_video_in_background(video_data: dict, is_youtube: bool) -> None:
         logging.info(f"Published at: {video_data['published']}")
         logging.info("######################################")
         
+        # Log pipeline start
+        log_pipeline_event(
+            video_data['video_id'],
+            video_data['channel'],
+            video_data['title'],
+            "pipeline_start"
+        )
+        
         # Step 1: Check video availability
         is_available, status_details = check_video_availability(video_data['video_id'])
         
@@ -554,13 +693,36 @@ def process_video_in_background(video_data: dict, is_youtube: bool) -> None:
                 status_msg += f"\nErro: {status_details['error']}"
         send_telegram_notification(video_data['title'], video_data['channel'], status_msg)
         
-        if not is_available:
+        # Log availability check result
+        if is_available:
+            log_pipeline_event(
+                video_data['video_id'],
+                video_data['channel'],
+                video_data['title'],
+                "video_ready",
+                info=str(status_details)
+            )
+        else:
+            log_pipeline_event(
+                video_data['video_id'],
+                video_data['channel'],
+                video_data['title'],
+                "video_not_ready",
+                info=str(status_details)
+            )
             logging.warning(f"[Background] ⏭️  Video not ready - aborting processing")
             return
         
         # Step 2: Apply content filters
         should_filter, filter_reason = should_filter_video(video_data)
         if should_filter:
+            log_pipeline_event(
+                video_data['video_id'],
+                video_data['channel'],
+                video_data['title'],
+                "video_filtered",
+                info=filter_reason
+            )
             send_telegram_notification(
                 video_data['title'],
                 video_data['channel'],
@@ -574,6 +736,12 @@ def process_video_in_background(video_data: dict, is_youtube: bool) -> None:
         audio_path = download_audio_ytdlp(video_data['video_id'], video_data['url'])
         
         if not audio_path:
+            log_pipeline_event(
+                video_data['video_id'],
+                video_data['channel'],
+                video_data['title'],
+                "download_failed"
+            )
             send_telegram_notification(
                 video_data['title'],
                 video_data['channel'],
@@ -582,6 +750,12 @@ def process_video_in_background(video_data: dict, is_youtube: bool) -> None:
             logging.error(f"[Background] Download failed - aborting processing")
             return
         
+        log_pipeline_event(
+            video_data['video_id'],
+            video_data['channel'],
+            video_data['title'],
+            "download_success"
+        )
         send_telegram_notification(
             video_data['title'],
             video_data['channel'],
@@ -597,6 +771,12 @@ def process_video_in_background(video_data: dict, is_youtube: bool) -> None:
         )
         
         if not gcs_path:
+            log_pipeline_event(
+                video_data['video_id'],
+                video_data['channel'],
+                video_data['title'],
+                "gcs_upload_failed"
+            )
             send_telegram_notification(
                 video_data['title'],
                 video_data['channel'],
@@ -605,6 +785,13 @@ def process_video_in_background(video_data: dict, is_youtube: bool) -> None:
             logging.error(f"[Background] GCS upload failed - aborting processing")
             return
         
+        log_pipeline_event(
+            video_data['video_id'],
+            video_data['channel'],
+            video_data['title'],
+            "gcs_upload_success",
+            info=gcs_path
+        )
         send_telegram_notification(
             video_data['title'],
             video_data['channel'],
@@ -619,6 +806,17 @@ def process_video_in_background(video_data: dict, is_youtube: bool) -> None:
         
     except Exception as e:
         logging.error(f"[Background] Error processing video: {e}", exc_info=True)
+        # Log pipeline failure
+        try:
+            log_pipeline_event(
+                video_data.get('video_id', 'unknown'),
+                video_data.get('channel', 'unknown'),
+                video_data.get('title', 'unknown'),
+                "pipeline_failed",
+                info=str(e)
+            )
+        except:
+            pass
         # Processing aborted due to error
     finally:
         # Cleanup temporary file

@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -53,14 +53,16 @@ jobs:
       YOUTUBE_COOKIES_B64: ${{ secrets.YOUTUBE_COOKIES_B64 }}
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      LOG_GIST_ID: ${{ secrets.LOG_GIST_ID }}
+      GH_PAT: ${{ secrets.GH_PAT }}
       
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - id: 'auth'
         name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v1
+        uses: google-github-actions/auth@v2
         with:
           project_id: ${{ env.PROJECT_ID }}
           credentials_json: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
@@ -100,4 +102,6 @@ jobs:
               GCS_BUCKET_NAME=${{ env.GCS_BUCKET_NAME }},\
               YOUTUBE_COOKIES_B64=${{ env.YOUTUBE_COOKIES_B64 }},\
               TELEGRAM_BOT_TOKEN=${{ env.TELEGRAM_BOT_TOKEN }},\
-              TELEGRAM_CHAT_ID=${{ env.TELEGRAM_CHAT_ID }}"
+              TELEGRAM_CHAT_ID=${{ env.TELEGRAM_CHAT_ID }},\
+              LOG_GIST_ID=${{ env.LOG_GIST_ID }},\
+              GH_PAT=${{ env.GH_PAT }}"
