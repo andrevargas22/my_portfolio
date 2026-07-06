@@ -29,7 +29,7 @@ jobs:
 
       - name: Vulnerability audit
         run: |
-          pip-audit -r requirements.txt --progress-spinner off --ignore-vuln PYSEC-2025-183
+          pip-audit -r requirements.txt --progress-spinner off
 
   deploy:
     name: Deploy to Cloud Run
@@ -85,10 +85,11 @@ jobs:
             --image "${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/website:${{ github.sha }}" \
             --region "${{ env.REGION }}" \
             --service-account "${{ env.SERVICE_ACCOUNT }}" \
-            --memory 2Gi \
-            --cpu 2 \
-            --timeout 600 \
-            --no-cpu-throttling \
+            --memory 512Mi \
+            --cpu 1 \
+            --timeout 60 \
+            --min-instances 0 \
+            --concurrency 80 \
             --allow-unauthenticated \
             --port 8080 \
             --set-env-vars "\
