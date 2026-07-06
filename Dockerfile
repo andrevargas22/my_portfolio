@@ -1,8 +1,14 @@
 # Use the official Python image from the Docker Hub 
 FROM python:3.10-slim
 
-# Create a non-root user for security
-RUN groupadd -r appuser && useradd -r -g appuser appuser
+# Install ffmpeg and Node.js 20.x (ffmpeg for audio, Node.js for yt-dlp n-challenge solving)
+RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y --no-install-recommends ffmpeg nodejs \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create a non-root user for security (with home directory for yt-dlp cache)
+RUN groupadd -r appuser && useradd -r -m -g appuser appuser
 
 # Set the working directory in the container
 WORKDIR /app

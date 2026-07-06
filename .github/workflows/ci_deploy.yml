@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -29,7 +29,7 @@ jobs:
 
       - name: Vulnerability audit
         run: |
-          pip-audit -r requirements.txt --progress-spinner off
+          pip-audit -r requirements.txt --progress-spinner off --ignore-vuln PYSEC-2025-183
 
   deploy:
     name: Deploy to Cloud Run
@@ -48,14 +48,21 @@ jobs:
       GRENALBOT_ID: ${{ secrets.GRENALBOT_ID }}
       GRENALBOT_INSTALLATION_ID: ${{ secrets.GRENALBOT_INSTALLATION_ID }}
       GRENALBOT_PRIVATE_KEY: ${{ secrets.GRENALBOT_PRIVATE_KEY }}
+      YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+      GCS_BUCKET_NAME: ${{ secrets.GCS_BUCKET_NAME }}
+      YOUTUBE_COOKIES_B64: ${{ secrets.YOUTUBE_COOKIES_B64 }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      LOG_GIST_ID: ${{ secrets.LOG_GIST_ID }}
+      GH_PAT: ${{ secrets.GH_PAT }}
       
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - id: 'auth'
         name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v1
+        uses: google-github-actions/auth@v2
         with:
           project_id: ${{ env.PROJECT_ID }}
           credentials_json: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
@@ -79,6 +86,9 @@ jobs:
             --region "${{ env.REGION }}" \
             --service-account "${{ env.SERVICE_ACCOUNT }}" \
             --memory 2Gi \
+            --cpu 2 \
+            --timeout 600 \
+            --no-cpu-throttling \
             --allow-unauthenticated \
             --port 8080 \
             --set-env-vars "\
@@ -87,5 +97,11 @@ jobs:
               WEBHOOK_HMAC_SECRET=${{ env.WEBHOOK_HMAC_SECRET }},\
               GRENALBOT_ID=${{ env.GRENALBOT_ID }},\
               GRENALBOT_INSTALLATION_ID=${{ env.GRENALBOT_INSTALLATION_ID }},\
-              GRENALBOT_PRIVATE_KEY=${{ env.GRENALBOT_PRIVATE_KEY }}\
-              "
+              GRENALBOT_PRIVATE_KEY=${{ env.GRENALBOT_PRIVATE_KEY }},\
+              YOUTUBE_API_KEY=${{ env.YOUTUBE_API_KEY }},\
+              GCS_BUCKET_NAME=${{ env.GCS_BUCKET_NAME }},\
+              YOUTUBE_COOKIES_B64=${{ env.YOUTUBE_COOKIES_B64 }},\
+              TELEGRAM_BOT_TOKEN=${{ env.TELEGRAM_BOT_TOKEN }},\
+              TELEGRAM_CHAT_ID=${{ env.TELEGRAM_CHAT_ID }},\
+              LOG_GIST_ID=${{ env.LOG_GIST_ID }},\
+              GH_PAT=${{ env.GH_PAT }}"

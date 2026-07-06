@@ -30,10 +30,11 @@ def subscribe_to_youtube_channels():
 
     # List of YouTube channels to subscribe to (renewal path used by GitHub Actions)
     channels_to_subscribe = [
-        {"name": "Lucas Collar", "channel_id": "UCAh4Y2AOSMwmatv9ktmhAAQ"},
+        {"name": "Collar Repórter", "channel_id": "UCAh4Y2AOSMwmatv9ktmhAAQ"},
         {"name": "Alexandre Ernst", "channel_id": "UCBgSy_cNIoGYnyLjmKHQOAg"},
-        {"name": "Lucas Dias", "channel_id": "UCIMDIPyS1vsHBa4t9wlN8IQ"},
+        {"name": "Lucas Dias Repórter", "channel_id": "UCIMDIPyS1vsHBa4t9wlN8IQ"},
         {"name": "Canal do Vaguinha", "channel_id": "UCkoqa3e5oFNkEGvgrxLAmrQ"},
+        {"name": "A Dupla", "channel_id": "UCRbfE8wK0_f5BPXtH424G_Q"},
     ]
 
     hub_url = "https://pubsubhubbub.appspot.com/subscribe"
@@ -144,13 +145,7 @@ def main():
 
     # Channels to unsubscribe from
     channels_to_unsubscribe = [
-        {"name": "Careca de Saber", "channel_id": "UCUaNjDcaVliZyWd-MgsDAzw"},
-        {"name": "César Cidade Dias", "channel_id": "UC-vcAXksTA21wp1iN4ZGv6Q"},
-        {"name": "Cristiano Oliveira", "channel_id": "UC66qTkwGt0VOzejqDmzQyjg"},
-        {"name": "A Dupla", "channel_id": "UCRbfE8wK0_f5BPXtH424G_Q"},
-        {"name": "JB Filho Repórter", "channel_id": "UCkPxmeuHR2EJR8DJpX8utMQ"},
-        {"name": "Leonardo Meneghetti", "channel_id": "UCZqLwvgBgcSV5onlSrxkjQQ"},
-        {"name": "Marinho Saldanha", "channel_id": "UC7a6C6H12xIAYZUKa_f9GKQ"},
+        {"name": "xxxxxxx", "channel_id": "xxxxxxxxxxx"},
     ]
 
     try:
