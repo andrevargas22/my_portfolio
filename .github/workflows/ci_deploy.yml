@@ -89,9 +89,12 @@ jobs:
             --cpu 1 \
             --timeout 60 \
             --min-instances 0 \
+            --max-instances 1 \
             --concurrency 80 \
             --allow-unauthenticated \
             --port 8080 \
+            --cpu-throttling \
+            --no-cpu-boost \
             --set-env-vars "\
               MNIST_ENDPOINT=${{ env.MNIST_ENDPOINT }},\
               MAPBOX_ACCESS_TOKEN=${{ env.MAPBOX_ACCESS_TOKEN }},\
