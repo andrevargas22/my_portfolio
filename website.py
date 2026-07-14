@@ -190,22 +190,19 @@ def websub_callback():
     GET: Hub Challenge verification
     POST: Receives notifications of new videos
     
-    CURRENTLY DISABLED - Returns 503 to pause subscriptions during vacation
+    Validates videos and dispatches processing to GitHub Actions.
     """
-    # Temporarily disabled - uncomment below to re-enable
-    return "WebSub endpoint temporarily disabled", 503
+    result = handle_websub_callback(
+        request_method=request.method,
+        request_args=request.args,
+        request_data=request.get_data(as_text=False),
+        request_headers=request.headers,
+    )
+
+    if isinstance(result, tuple):
+        return result
     
-    # result = handle_websub_callback(
-    #     request_method=request.method,
-    #     request_args=request.args,
-    #     request_data=request.get_data(as_text=False),
-    #     request_headers=request.headers,
-    # )
-    #
-    # if isinstance(result, tuple):
-    #     return result
-    # 
-    # return result
+    return result
 
 
 @app.route("/websub/health", methods=["GET"])
