@@ -1,8 +1,8 @@
 """
 WebSub notification handler for YouTube video processing.
 
-This module receives YouTube WebSub notifications, validates videos,
-applies content filters, and dispatches processing to GitHub Actions.
+This module receives YouTube WebSub notifications and dispatches
+them to GitHub Actions for processing.
 """
 
 import csv
@@ -91,7 +91,7 @@ class PipelineLogger:
             video_id: YouTube video ID
             channel: Channel name
             title: Video title
-            status: Status code (e.g., 'pipeline_start', 'download_success')
+            status: Status code (e.g., 'notification_received', 'dispatch_sent')
             info: Optional additional information
             
         Returns:
@@ -151,7 +151,13 @@ def log_pipeline_event(video_id: str, channel: str, title: str, status: str, inf
 
 def parse_youtube_notification(xml_data):
     """
-    Parses the XML notification from YouTube WebSub.
+    Parse XML notification from YouTube WebSub.
+    
+    Args:
+        xml_data: Raw XML bytes from WebSub POST request
+        
+    Returns:
+        dict: Video metadata (video_id, title, url, channel, published) or None on error
     """
     try:
         # Parse the XML
@@ -405,7 +411,7 @@ def trigger_video_processing_workflow(video_data):
         return
 
     repo_owner = "andrevargas22"
-    repo_name = "grenalbot"
+    repo_name = "Colorado_IA"
     token = _get_dispatch_token()
     if not token:
         return
