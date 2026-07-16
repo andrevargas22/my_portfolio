@@ -428,7 +428,7 @@ def trigger_video_processing_workflow(video_data):
     }
     
     payload = {
-        "event_type": "test_download",
+        "event_type": "process-video",
         "client_payload": client_payload,
     }
 
