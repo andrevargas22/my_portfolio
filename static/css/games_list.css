@@ -1,186 +1,214 @@
 /*
- * Personal Website - Games List
+ * Personal Website — Finished Games
  * Author: André Vargas
- * Description: Styles for the completed games portfolio page
+ * Description: A cover gallery in the ink "type specimen" system. No per-category
+ * tag colours (No Rainbow Rule): covers are grayscale at rest, colour on hover;
+ * the UI stays two-tone. Vanilla filter + native <dialog> lightbox. Shared
+ * primitives (.statement) come from tokens.css. See DESIGN.md.
  */
 
-/* ############################## VARIABLES ############################## */
-:root {
-  --bg-color: #FFFAF0;
-  --text-color: rgb(75, 72, 72);
-  --border-color: #413e3e;
-  --nav-spacing: 30px;
-  
-  /* Tag Colors */
-  --tag-pc: #4a90e2;            /* Blue */
-  --tag-switch: #2ecc71;        /* Green */
-  --tag-ps1: #9b59b6;           /* Purple */
-  --tag-ps2: #8e44ad;           /* Dark Purple */
-  --tag-nes: #3498db;           /* Light Blue */
-  --tag-snes: #2980b9;          /* Medium Blue */
-  --tag-n64: #1abc9c;           /* Turquoise */
-  --tag-gb: #16a085;            /* Dark Turquoise */
-  --tag-gba: #27ae60;           /* Emerald */
-  --tag-gc: #3498db;            /* Sky Blue */
-  --tag-mega: #2c3e50;          /* Navy Blue */
-  --tag-ds3: #34495e;           /* Dark Navy */
-  --tag-ds: #7f8c8d;            /* Gray */
-
-  /* Game Type Tag Colors */
-  --tag-action: #e74c3c;        /* Red */
-  --tag-adventure: #c0392b;     /* Dark Red */
-  --tag-rpg: #e67e22;           /* Orange */
-  --tag-platformer: #d35400;    /* Dark Orange */
-  --tag-puzzle: #f1c40f;        /* Yellow */
-  --tag-fighting: #f39c12;      /* Golden */
-  --tag-racing: #ff5252;        /* Coral Red */
-  --tag-fps: #ff4081;           /* Pink */
-  --tag-sports: #e91e63;        /* Deep Pink */
-  --tag-strategy: #d81b60;      /* Dark Pink */
-  --tag-simulation: #c2185b;    /* Rose */
-  --tag-shooter: #f50057;       /* Bright Pink */
-  --tag-party: #ff6d00;         /* Deep Orange */
-  --tag-metroidvania: #ff3d00;  /* Red Orange */
-  --tag-beat-em-up: #dd2c00;    /* Deep Red */
-  --tag-run-gun: #ff5722;       /* Light Red */
-  --tag-dplat: #9980FA;         /* Purple Blue */
-
-  /* Status Tags */
-  --tag-beaten: #95a5a6;        /* Gray */
-  
-  /* Top 10 Badge */
-  --tag-top-badge: #FFD700;     /* Gold */
-}
-
-/* ############################## BASE STYLES ############################## */
+/* ############################## PAGE THEME (scoped) ############################## */
 body {
-  width: 100%;
-  height: 100%;
-  background: var(--bg-color); 
+  background: var(--field);
+  color: var(--ink);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-/* ############################## NAVBAR ############################## */
-.navbar-nav {
-  margin-left: auto;
-}
+.games a { color: inherit; text-decoration: none; }
 
-.navbar-nav > li {
-  margin: 0 var(--nav-spacing);
-}
-
-/* ############################## PORTFOLIO ############################## */
-.portfolio-menu {
-  text-align: center;
-}
-
-.portfolio-menu ul li {
-  display: inline-block;
-  margin: 0;
-  list-style: none;
-  padding: 10px 15px;
-  cursor: pointer;
-  -webkit-transition: all 05s ease;
-  -moz-transition: all 05s ease;
-  -ms-transition: all 05s ease;
-  -o-transition: all 05s ease;
-  transition: all .5s ease;
-}
-
-.portfolio-item {
+/* ############################## FILTERS ############################## */
+.filters {
   display: flex;
   flex-wrap: wrap;
+  gap: var(--s-sm);
+  padding: clamp(1.5rem, 4vh, 2.5rem) clamp(1.25rem, 5vw, 4rem) 0;
+  border-top: 1px solid var(--hair);
 }
 
-.portfolio-item img {
+.filter {
+  font-family: var(--font);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--ink-muted);
+  background: transparent;
+  border: 1px solid var(--hair);
+  border-radius: var(--r-sm);
+  padding: 0.7rem 1.1rem;   /* ≥44px touch target */
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease),
+              border-color var(--dur-fast) var(--ease),
+              background-color var(--dur-fast) var(--ease);
+}
+.filter:hover { color: var(--ink); border-color: var(--ink-muted); }
+.filter.is-active {          /* selected by inversion — no colour */
+  background: var(--ink);
+  color: var(--field);
+  border-color: var(--ink);
+}
+.filter:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+/* ############################## GALLERY GRID ############################## */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(clamp(140px, 20vw, 178px), 1fr));
+  gap: clamp(var(--s-md), 2vw, var(--s-lg));
+  padding: clamp(1.5rem, 4vh, 2.5rem) clamp(1.25rem, 5vw, 4rem) clamp(3rem, 8vh, 5rem);
+}
+
+.game {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-sm);
+}
+
+.game__open {
+  position: relative;
+  display: block;
   width: 100%;
-  height: 200px;
+  aspect-ratio: 3 / 4;
+  padding: 0;
+  border: 1px solid var(--hair);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: var(--field-deep);
+  cursor: pointer;
+}
+.game__open:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+.game__cover {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   display: block;
-  margin: 0 auto;
+  filter: grayscale(1);
+  transition: filter 0.35s ease, transform 0.45s var(--ease);
+}
+.game__open:hover .game__cover,
+.game__open:focus-visible .game__cover {
+  filter: grayscale(0);
+  transform: scale(1.04);
 }
 
-.portfolio-item .item {
-  margin-bottom: 10px;
+.game__badge {                /* Top-10 — the one standout, by inversion */
+  position: absolute;
+  top: var(--s-sm);
+  left: var(--s-sm);
+  background: var(--ink);
+  color: var(--field);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--r-sm);
 }
 
-.image-info {
+.game__cap {
   display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  margin-top: 3px;
+  flex-direction: column;
+  gap: 2px;
+}
+.game__title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--ink);
+}
+.game__year { color: var(--ink-muted); font-weight: 500; }
+.game__meta {
+  font-size: 0.75rem;
+  color: var(--ink-muted);
 }
 
-.image-container {
-  text-align: center;
-  margin-bottom: 10px;
+.games__empty {
+  padding: clamp(2rem, 6vh, 4rem) clamp(1.25rem, 5vw, 4rem);
+  font-size: clamp(1.4rem, 3.4vw, 2.6rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: var(--ink-muted);
 }
 
-.image-description {
-  font-size: 12px;
-  color: var(--text-color);
-  margin-bottom: 5px;
+/* ############################## LIGHTBOX (native dialog) ############################## */
+.lightbox {
+  margin: auto;
+  border: 1px solid var(--hair);
+  border-radius: var(--r-md);
+  background: var(--field-deep);
+  color: var(--ink);
+  padding: clamp(1rem, 3vw, 2rem);
+  max-width: min(92vw, 720px);
+  overflow: visible;
+}
+.lightbox::backdrop {
+  background: oklch(0.12 0.008 270 / 0.8);
+  backdrop-filter: blur(4px);
 }
 
-.item {
-  border-top: 1px solid var(--border-color);
-  padding-top: 10px;
-  margin-top: 10px;
+.lightbox__stage { margin: 0; }
+.lightbox__img {
+  display: block;
+  width: 100%;
+  max-height: 72vh;
+  object-fit: contain;
+  border-radius: var(--r-sm);
 }
-
-/* ############################## TAGS ############################## */
-.tags {
+.lightbox__cap {
   display: flex;
-  justify-content: center;
-  gap: 5px;
-  margin: 5px 0;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--s-sm);
+  margin-top: var(--s-md);
+}
+.lightbox__title { font-size: 1.0625rem; font-weight: 600; color: var(--ink); }
+.lightbox__sub { font-size: 0.9375rem; color: var(--ink-muted); }
+
+.lightbox__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  color: var(--field);
+  background: var(--ink);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease);
+}
+.lightbox__nav svg { width: 20px; height: 20px; }
+.lightbox__nav:hover { background: var(--ink-muted); }
+.lightbox__prev { left: -22px; }
+.lightbox__next { right: -22px; }
+.lightbox__nav:focus-visible,
+.lightbox__close:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+.lightbox__close {
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  font-family: var(--font);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--field);
+  background: var(--ink);
+  border: none;
+  border-radius: var(--r-sm);
+  padding: 10px 16px;
+  cursor: pointer;
 }
 
-.tag {
-  color: white;
-  padding: 3px 7px;
-  border-radius: 3px;
-  font-size: 10px;
+/* ############################## RESPONSIVE / MOTION ############################## */
+@media (max-width: 600px) {
+  .lightbox__prev { left: 6px; }
+  .lightbox__next { right: 6px; }
+  .lightbox__nav { background: oklch(0.185 0.008 270 / 0.7); color: var(--ink); }
 }
 
-/* Console Platform Tags */
-.tag.pc { background-color: var(--tag-pc); }
-.tag.switch { background-color: var(--tag-switch); }
-.tag.ps1 { background-color: var(--tag-ps1); }
-.tag.ps2 { background-color: var(--tag-ps2); }
-.tag.nes { background-color: var(--tag-nes); }
-.tag.snes { background-color: var(--tag-snes); }
-.tag.n64 { background-color: var(--tag-n64); }
-.tag.gb { background-color: var(--tag-gb); }
-.tag.gba { background-color: var(--tag-gba); }
-.tag.gc { background-color: var(--tag-gc); }
-.tag.mega { background-color: var(--tag-mega); }
-.tag.ds3 { background-color: var(--tag-ds3); }
-
-/* Game Genre/Type Tags */
-.tag.action { background-color: var(--tag-action); }
-.tag.adventure { background-color: var(--tag-adventure); }
-.tag.rpg { background-color: var(--tag-rpg); }
-.tag.platformer { background-color: var(--tag-platformer); }
-.tag.puzzle { background-color: var(--tag-puzzle); }
-.tag.fighting { background-color: var(--tag-fighting); }
-.tag.racing { background-color: var(--tag-racing); }
-.tag.fps { background-color: var(--tag-fps); }
-.tag.sports { background-color: var(--tag-sports); }
-.tag.strategy { background-color: var(--tag-strategy); }
-.tag.simulation { background-color: var(--tag-simulation); }
-.tag.shooter { background-color: var(--tag-shooter); }
-.tag.party { background-color: var(--tag-party); }
-.tag.metroidvania { background-color: var(--tag-metroidvania); }
-.tag.beat-em-up { background-color: var(--tag-beat-em-up); }
-.tag.run-and-gun { background-color: var(--tag-run-gun); }  
-.tag.dplat { background-color: var(--tag-dplat); }
-
-/* Status Tags */
-.tag.beaten { background-color: var(--tag-beaten); }
-
-/* Top 10 Badge */
-.tag.top-badge { 
-  background-color: var(--tag-top-badge); 
-  color: #000;
-  font-weight: bold;
+@media (prefers-reduced-motion: reduce) {
+  .game__cover { transition: filter 0.2s ease; }
+  .game__open:hover .game__cover,
+  .game__open:focus-visible .game__cover { transform: none; }
 }

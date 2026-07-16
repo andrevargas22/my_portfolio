@@ -1,36 +1,75 @@
 <!--
     Personal Website - Home Page
-    Description: Landing page featuring a video background showcase with personal introduction
-    and social media links. Uses Flask templating for includes and static assets.
+    Description: Landing page — a monochromatic oxblood "type specimen". One typeface
+    at scale carries the page; the work is a bold typographic index; interaction is
+    by inversion. No mono, no eyebrows, no dashboard chrome. See DESIGN.md.
 -->
-    
+
 {% extends 'base/layout.html' %}
-{% block title %}André Vargas - Portfolio{% endblock %}
+{% block title %}André Vargas — Machine Learning Engineer{% endblock %}
 {% block head_extra %}
-  <meta name="description" content="André Vargas - Machine Learning Engineer Portfolio and Personal Website">
+  <meta name="description" content="André Vargas — machine learning & MLOps engineer, Brasília. Most machine learning never ships; his does — production credit-risk models, MLOps pipelines, and every demo on this site, built himself.">
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}">
 {% endblock %}
 {% block content %}
 
-    <!-- Hero Section -->
-    <section class="showcase">
-      <div class="video-container">
-        <video src="{{ url_for('static', filename='images/videos/video.mp4') }}" autoplay muted loop></video>
-      </div>
+<main class="landing">
 
-      <div class="content">
-        <h1>Welcome!</h1>
-        <p>Hi, I'm André, a Machine Learning Engineer from Brazil. This is the place where you can find some of my projects, articles, and more. 
-          Feel free to explore and get in touch!</p>
-        
-        <!-- Social Links -->
-        <div class="social">
-          <a href="https://github.com/andrevargas22"><i class="fab fa-github fa-3x"></i></a>
-          <a href="https://www.linkedin.com/in/andrevargas22/"><i class="fab fa-linkedin fa-3x"></i></a>
-          <a href="https://medium.com/@andrevargas22/"><i class="fab fa-medium fa-3x"></i></a>
-        </div>
-      </div>
-    </section>
+  <!-- ============================= STATEMENT ============================= -->
+  <section class="statement">
+    <p class="statement__meta reveal" style="--i:0">
+      Machine learning &amp; MLOps engineer, based in Brasília.
+    </p>
+
+    <h1 class="statement__line">
+      <span class="reveal" style="--i:1">Most machine learning</span>
+      <span class="reveal" style="--i:2">never ships.</span>
+      <span class="reveal statement__turn" style="--i:3">Mine does.</span>
+    </h1>
+
+    <div class="statement__foot reveal" style="--i:4">
+      <a class="cta" href="https://www.linkedin.com/in/andrevargas22/" target="_blank" rel="noopener">Get in touch</a>
+      <a class="plainlink" href="{{ url_for('static', filename='Resume_Andre_Vargas.pdf') }}" target="_blank" rel="noopener">Résumé</a>
+    </div>
+  </section>
+
+  <!-- ============================== INDEX =============================== -->
+  <nav class="index" aria-label="Selected work">
+    <a class="index__item" href="/mnist_api">
+      <span class="index__name">A convolutional network you can draw into</span>
+      <span class="index__aside">3D visualiser, built from scratch</span>
+    </a>
+    <a class="index__item" href="/about">
+      <span class="index__name">The route here — hardware to production ML</span>
+      <span class="index__aside">The timeline</span>
+    </a>
+    <a class="index__item" href="/blog">
+      <span class="index__name">Things I've written down</span>
+      <span class="index__aside">Publications</span>
+    </a>
+    <a class="index__item" href="/map">
+      <span class="index__name">Everywhere I've been, mapped</span>
+      <span class="index__aside">Interactive map</span>
+    </a>
+    <a class="index__item" href="/games">
+      <span class="index__name">Every game I've finished, catalogued</span>
+      <span class="index__aside">The archive</span>
+    </a>
+  </nav>
+
+  <!-- ============================= COLOPHON ============================= -->
+  <footer class="colophon">
+    <p class="colophon__now">
+      Currently ML Engineer Specialist at Grupo Casas Bahia. Before that, credit-risk
+      models for Banco do Brasil, CI/CD and MLOps pipelines, and cloud migration at scale.
+    </p>
+    <ul class="colophon__links" aria-label="Elsewhere">
+      <li><a href="https://github.com/andrevargas22" target="_blank" rel="noopener">GitHub</a></li>
+      <li><a href="https://www.linkedin.com/in/andrevargas22/" target="_blank" rel="noopener">LinkedIn</a></li>
+      <li><a href="https://medium.com/@andrevargas22/" target="_blank" rel="noopener">Medium</a></li>
+    </ul>
+  </footer>
+
+</main>
 
 {% endblock %}
-

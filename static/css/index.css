@@ -1,142 +1,66 @@
 /*
- * Personal Website - Index Page Styles
+ * Personal Website — Landing Page
  * Author: André Vargas
- * Description: Main styling for the landing page featuring a video background,
- * animated content overlay, and social media links. Uses CSS variables for
- * consistent theming.
+ * Description: A monochromatic oxblood type specimen. One typeface at scale carries
+ * the page; the work is a bold typographic index; interaction is by inversion.
+ * Consumes the shared token layer (tokens.css). The drenched theme is scoped HERE so
+ * the not-yet-migrated pages keep their own styling. See DESIGN.md.
  */
 
-/* ############################## IMPORTS & VARIABLES ############################## */
-/* Font imports for typography */
-@import 'https://fonts.googleapis.com/css?family=Roboto';
-@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap");
-
-/* Theme color variables for consistent styling */
-:root {
-  --primary-color: #3a4052;
-  --secondary-color: #9aa1aac7;
-  --accent-color: #ff6347;
-  --overlay-color: rgba(0, 0, 0, 0.6);
-  --font-primary: "Open Sans", sans-serif;
-  --section-spacing: 25px;
-  --nav-spacing: 30px;
+/* ############################## PAGE THEME (scoped to landing) ############################## */
+body {
+  background: var(--field);
+  color: var(--ink);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-/* ############################## BASE STYLES ############################## */
-/* Reset and base styling for all elements */
-* {
-  box-sizing: border-box;
+.landing a { color: inherit; text-decoration: none; }
+
+/* Statement, CTA, plain link, the load reveal, and the .index list now live in
+ * tokens.css (shared across pages). */
+
+/* ############################## COLOPHON ############################## */
+.colophon {
+  background: var(--field-deep);
+  padding: clamp(2.5rem, 6vh, 4rem) clamp(1.25rem, 5vw, 4rem);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: end;
+  gap: var(--s-lg) var(--s-2xl);
+}
+
+.colophon__now {
+  margin: 0;
+  max-width: 52ch;
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  color: var(--ink-muted);
+  text-wrap: pretty;
+}
+
+.colophon__links {
+  display: flex;
+  gap: var(--s-lg);
+  list-style: none;
   margin: 0;
   padding: 0;
 }
 
-body {
-  font-family: var(--font-primary);
-  line-height: 1.5;
-  color: var(--secondary-color);
-  background-color: #FFFAF0;
+.colophon__links a {
+  font-size: 1.0625rem;
+  font-weight: 500;
+  color: var(--ink);
+  padding-bottom: 2px;
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--dur-fast) var(--ease);
 }
+.colophon__links a:hover,
+.colophon__links a:focus-visible { border-bottom-color: var(--ink); }
 
-a {
-  text-decoration: none;
-  color: var(--accent-color);
-  transition: color 0.3s ease;
-}
-
-/* ############################## NAVBAR ############################## */
-/* Navigation menu styling */
-.navbar-nav {
-  margin-left: auto;
-}
-
-.navbar-nav > li {
-  margin: 0 var(--nav-spacing);
-}
-
-/* ############################## SHOWCASE SECTION ############################## */
-/* Main heading style */
-.showcase {
-  position: relative;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 0 20px;
-  color: var(--secondary-color);
-}
-
-.showcase h1 {
-  font-weight: 300;
-  font-size: clamp(2rem, 5vw, 3rem);
-  line-height: 1.2;
-  margin-bottom: 15px;
-}
-
-/* ############################## VIDEO BACKGROUND ############################## */
-/* Video container and overlay styling */
-.video-container {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  background: var(--primary-color) no-repeat center/cover;
-}
-
-.video-container video {
-  min-width: 100%;
-  min-height: 100%;
-  object-fit: cover;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.video-container:after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: var(--overlay-color);
-}
-
-/* ############################## CONTENT OVERLAY ############################## */
-/* Main content styling */
-.content {
-  z-index: 10;
-  color: var(--secondary-color);
-}
-
-.content p {
-  font-size: 1.5rem;
-  max-width: 800px;
-  margin: 0 auto var(--section-spacing);
-}
-
-/* ############################## SOCIAL MEDIA ############################## */
-/* Social media links styling */
-.social {
-  margin-top: var(--section-spacing);
-}
-
-.social a {
-  margin: 0 10px;
-  color: var(--secondary-color);
-  transition: color 0.3s;
-}
-
-.social a:hover {
-  color: var(--accent-color);
-}
-
-/* Add responsive design */
-@media (max-width: 768px) {
-  .content p {
-    font-size: 1.2rem;
-    padding: 0 20px;
-  }
-  
-  .navbar-nav > li {
-    margin: 0 calc(var(--nav-spacing) / 2);
-  }
+/* ############################## RESPONSIVE ############################## */
+@media (max-width: 720px) {
+  .colophon { align-items: flex-start; }
 }

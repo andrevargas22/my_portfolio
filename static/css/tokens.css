@@ -1,0 +1,258 @@
+/*
+ * Personal Website — Design Tokens (shared)
+ * Author: André Vargas
+ * Description: The single normative token layer for the whole site. A monochromatic
+ * oxblood "type specimen" system — one drenched hue family, one typeface (Bricolage
+ * Grotesque), interaction by inversion. Loaded globally in base/layout.html BEFORE
+ * any page-specific CSS. See DESIGN.md.
+ */
+
+/* ############################## TOKENS ############################## */
+:root {
+  /* Drenched ink-black field — near-neutral (printed ink, not cool dev-graphite) */
+  --field: oklch(0.185 0.008 270);      /* black ink ground */
+  --field-deep: oklch(0.14 0.008 270);  /* footer / alternating band */
+  --field-raise: oklch(0.25 0.01 270);  /* hover wash, dropdown surface */
+  --hair: oklch(0.35 0.01 270);         /* hairline rules on the field */
+
+  /* Ink — near-white paper, faint cool */
+  --ink: oklch(0.95 0.005 250);         /* primary type */
+  --ink-muted: oklch(0.72 0.01 260);    /* secondary type */
+
+  /* Type — one family, extreme weight/size contrast carries the page */
+  --font: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+
+  /* Radius — minimal; the specimen is mostly edgeless */
+  --r-sm: 3px;
+  --r-md: 6px;
+
+  /* Spacing */
+  --s-xs: 4px;
+  --s-sm: 8px;
+  --s-md: 16px;
+  --s-lg: 24px;
+  --s-xl: 48px;
+  --s-2xl: 96px;
+
+  /* Motion */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);   /* ease-out-expo-ish */
+  --dur-fast: 200ms;
+  --dur-reveal: 700ms;
+
+  /* Z-index scale */
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-modal: 1050;
+}
+
+::selection {
+  background: var(--ink);
+  color: var(--field);
+}
+
+/* ############################## SHARED PRIMITIVES ############################## */
+/* Class-based, token-driven components reused across migrated pages. Harmless on
+ * not-yet-migrated pages (they don't use these classes). The body theme itself
+ * (field background) stays scoped per page so cream pages aren't affected. */
+
+/* The Statement — signature hero, used by every migrated page */
+.statement {
+  min-height: calc(100vh - 90px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(1.5rem, 4vh, 2.75rem);
+  padding: clamp(2rem, 6vh, 4rem) clamp(1.25rem, 5vw, 4rem) clamp(3rem, 8vh, 5rem);
+}
+
+.statement--short { min-height: auto; padding-bottom: clamp(2rem, 5vh, 3rem); }
+
+.statement__meta {
+  font-size: clamp(1rem, 1.6vw, 1.1875rem);
+  font-weight: 500;
+  color: var(--ink-muted);
+  max-width: 40ch;
+  margin: 0;
+}
+
+.statement__line {
+  margin: 0;
+  font-weight: 600;
+  font-size: clamp(2.75rem, 8.5vw, 5.75rem);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  max-width: 16ch;
+  text-wrap: balance;
+}
+
+.statement__line span { display: block; color: var(--ink-muted); }
+.statement__line .statement__turn { color: var(--ink); font-weight: 800; }
+
+.statement__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(1.25rem, 3vw, 2rem);
+  margin-top: var(--s-md);
+}
+
+/* Inverted CTA — stands out by flipping field/ink, no second colour */
+.cta {
+  display: inline-block;
+  background: var(--ink);
+  color: var(--field);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  padding: 0.7em 1.4em;
+  border-radius: var(--r-sm);
+  transition: transform var(--dur-fast) var(--ease),
+              background-color var(--dur-fast) var(--ease);
+}
+.cta:hover { transform: translateY(-2px); background: var(--ink-muted); }
+.cta:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+
+.plainlink {
+  font-size: 1.0625rem;
+  font-weight: 500;
+  color: var(--ink);
+  padding-bottom: 2px;
+  border-bottom: 1px solid var(--hair);
+  transition: border-color var(--dur-fast) var(--ease);
+}
+.plainlink:hover,
+.plainlink:focus-visible { border-bottom-color: var(--ink); outline: none; }
+
+/* Load reveal — token-driven, not gated on scroll/JS */
+.reveal {
+  opacity: 0;
+  transform: translateY(0.5em);
+  animation: rise var(--dur-reveal) var(--ease) forwards;
+  animation-delay: calc(80ms + var(--i, 0) * 110ms);
+}
+@keyframes rise { to { opacity: 1; transform: none; } }
+
+@media (max-width: 720px) {
+  .statement__line { max-width: none; letter-spacing: -0.03em; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal { animation: none; opacity: 1; transform: none; }
+  .cta:hover { transform: none; }
+}
+
+/* Index — the site's "list of things" pattern (work, publications). Rows invert on hover. */
+.index { border-top: 1px solid var(--hair); }
+
+.index__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--s-lg);
+  padding: clamp(1.1rem, 3vw, 2rem) clamp(1.25rem, 5vw, 4rem);
+  border-bottom: 1px solid var(--hair);
+  transition: background-color var(--dur-fast) var(--ease),
+              color var(--dur-fast) var(--ease);
+}
+
+.index__name {
+  font-size: clamp(1.4rem, 3.4vw, 2.6rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.index__aside {
+  flex: none;
+  align-self: center;
+  font-size: clamp(0.875rem, 1.3vw, 1rem);
+  font-weight: 500;
+  color: var(--ink-muted);
+  text-align: right;
+  transition: color var(--dur-fast) var(--ease), opacity var(--dur-fast) var(--ease);
+}
+
+.index__item:hover,
+.index__item:focus-visible {
+  background: var(--ink);
+  color: var(--field);
+  outline: none;
+}
+.index__item:hover .index__name,
+.index__item:focus-visible .index__name {
+  transform: translateX(clamp(6px, 1.5vw, 16px));
+}
+.index__item:hover .index__aside,
+.index__item:focus-visible .index__aside {
+  color: var(--field);
+  opacity: 0.65;
+}
+
+@media (max-width: 720px) {
+  .index__item { flex-direction: column; align-items: flex-start; gap: var(--s-xs); }
+  .index__aside { align-self: flex-start; text-align: left; }
+  .index__item:hover .index__name,
+  .index__item:focus-visible .index__name { transform: translateX(6px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .index__item:hover .index__name,
+  .index__item:focus-visible .index__name { transform: none; }
+}
+
+/* ############################## QUIET NAV ############################## */
+/* The specimen wants near-zero chrome. Nav sits transparent on the field. */
+.navbar.bg-dark {
+  background-color: transparent !important;
+  padding: var(--s-lg) clamp(1.25rem, 5vw, 4rem);
+}
+
+.navbar .navbar-brand {
+  font-family: var(--font);
+  font-weight: 700;
+  font-size: 1.0625rem;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.navbar-dark .navbar-nav .nav-link {
+  font-family: var(--font);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  color: var(--ink-muted);
+  padding-top: 0.6rem;      /* ≥44px touch target */
+  padding-bottom: 0.6rem;
+  transition: color var(--dur-fast) var(--ease);
+}
+
+.navbar-dark .navbar-nav .nav-link:hover,
+.navbar-dark .navbar-nav .nav-link:focus,
+.navbar-dark .navbar-nav .show > .nav-link {
+  color: var(--ink);
+}
+
+/* Dropdowns → field-raise surfaces, same family */
+.navbar .dropdown-menu {
+  background-color: var(--field-raise);
+  border: 1px solid var(--hair);
+  border-radius: var(--r-md);
+  padding: var(--s-xs);
+}
+
+.navbar .dropdown-item {
+  font-family: var(--font);
+  font-size: 0.9375rem;
+  color: var(--ink-muted);
+  border-radius: var(--r-sm);
+  padding: 0.5rem 0.75rem;
+  transition: background-color var(--dur-fast) var(--ease),
+              color var(--dur-fast) var(--ease);
+}
+
+.navbar .dropdown-item:hover,
+.navbar .dropdown-item:focus {
+  background-color: var(--field);
+  color: var(--ink);
+}
+
+.navbar-toggler { border-color: var(--hair); }
