@@ -1,87 +1,46 @@
 /*
- * Personal Website - Blog Page Styles
+ * Personal Website — Publications
  * Author: André Vargas
- * Description: Styling for blog posts and articles, including typography,
- * code blocks, images, and responsive design considerations.
+ * Description: Articles as a typographic index (the .index component lives in
+ * tokens.css). This file only carries the scoped body theme, the feed-state
+ * (error/empty) styling, and the footer. See DESIGN.md.
  */
 
-/* ############################## VARIABLES ############################## */
-:root {
-  --bg-color: #FFFAF0;
-  --text-color: #666;
-  --code-bg: #f5f5f5;
-  --code-border: #e1e1e8;
-  --code-text: #d63384;
-  --nav-spacing: 30px;
-  --content-spacing: 15px;
-  --font-size-base: 15px;
-  --font-size-article: 18px;
-  --font-size-caption: 14px;
-}
-
-/* ############################## BASE STYLES ############################## */
+/* ############################## PAGE THEME (scoped) ############################## */
 body {
-  background: var(--bg-color);
-  font-size: var(--font-size-base);
-  height: 100%;
-  width: 100%;
+  background: var(--field);
+  color: var(--ink);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-/* ############################## NAVBAR ############################## */
-.navbar-nav {
-  margin-left: auto;
+.publications a { color: inherit; text-decoration: none; }
+
+/* ############################## FEED STATE (error / empty) ############################## */
+.feed-state {
+  padding: clamp(2.5rem, 8vh, 5rem) clamp(1.25rem, 5vw, 4rem);
+  border-top: 1px solid var(--hair);
+  max-width: 60ch;
 }
 
-.navbar-nav > li {
-  margin: 0 var(--nav-spacing);
+.feed-state__msg {
+  font-size: clamp(1.4rem, 3.4vw, 2.6rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  margin: 0;
 }
 
-/* ############################## TYPOGRAPHY ############################## */
-.text {
-  text-align: justify;
+.feed-state__sub {
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  color: var(--ink-muted);
+  margin: var(--s-md) 0 var(--s-xl);
+  text-wrap: pretty;
 }
 
-.list-group-item {
-  font-size: var(--font-size-article);
-  background-color: var(--bg-color);
-  border: none;
-  padding: var(--content-spacing);
-  margin-bottom: 10px;
-  transition: background-color 0.3s ease;
-}
-
-/* ############################## ARTICLE COMPONENTS ############################## */
-.article-content img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-  margin: 0 auto;
-}
-
-.article-content figcaption {
-  font-size: var(--font-size-caption);
-  color: var(--text-color);
-  text-align: center;
-  margin-top: 5px;
-}
-
-/* ############################## CODE BLOCK STYLING ############################## */
-.article-content pre {
-  background-color: var(--code-bg);
-  padding: var(--content-spacing);
-  border-radius: 5px;
-  overflow-x: auto;
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 14px;
-  border: 1px solid var(--code-border);
-  margin-bottom: 15px;
-}
-
-.article-content code {
-  background-color: var(--code-bg);
-  padding: 2px 4px;
-  border-radius: 3px;
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 14px;
-  color: var(--code-text);
+/* ############################## FOOT ############################## */
+.publications__foot {
+  padding: clamp(2rem, 5vh, 3rem) clamp(1.25rem, 5vw, 4rem);
 }

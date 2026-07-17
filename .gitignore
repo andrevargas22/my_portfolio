@@ -14,3 +14,7 @@ test_notification.xml
 
 # Scripts
 add_game.py
+
+# Design tooling (used to author the redesign; not needed to run/deploy the site)
+.claude/
+.impeccable/

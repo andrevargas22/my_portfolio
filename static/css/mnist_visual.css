@@ -1,198 +1,156 @@
-/* MNIST 3D Visualization Page Styles */
+/*
+ * Personal Website — MNIST Classifier
+ * Author: André Vargas
+ * Description: The Three.js CNN demo, framed in the ink "type specimen" system.
+ * Drawing canvas + 3D stage stay functionally black (the model expects a black
+ * field). Shared primitives (.statement, .cta) come from tokens.css. See DESIGN.md.
+ */
 
-/* Base styles */
+/* ############################## PAGE THEME (scoped) ############################## */
 body {
+  background: var(--field);
+  color: var(--ink);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.mnist__intro {
+  max-width: 62ch;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--ink-muted);
+  margin: var(--s-md) 0 0;
+  text-wrap: pretty;
+}
+.mnist__intro b { color: var(--ink); font-weight: 700; }
+
+/* ############################## DEMO ############################## */
+.demo {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.8fr) 1.2fr;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: start;
+  padding: clamp(1rem, 3vh, 2rem) clamp(1.25rem, 5vw, 4rem) clamp(2rem, 5vh, 3rem);
+  border-top: 1px solid var(--hair);
+}
+
+.demo__label {
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0 0 var(--s-md);
+}
+
+/* Drawing surface — functionally black (MNIST: white digit on black) */
+.draw-canvas {
+  display: block;
   width: 100%;
+  max-width: 280px;
+  aspect-ratio: 1 / 1;
+  background: #000;
+  border: 1px solid var(--hair);
+  border-radius: var(--r-md);
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.demo__controls {
+  display: flex;
+  gap: var(--s-md);
+  margin-top: var(--s-md);
+  max-width: 280px;
+}
+
+.ghostbtn {
+  font-family: var(--font);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--hair);
+  border-radius: var(--r-sm);
+  padding: 0.7em 1.4em;
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease),
+              border-color var(--dur-fast) var(--ease);
+}
+.ghostbtn:hover { background: var(--field-raise); border-color: var(--ink-muted); }
+.ghostbtn:focus-visible,
+.cta:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+.demo__loading { margin-top: var(--s-md); color: var(--ink-muted); font-style: italic; }
+
+/* 3D stage — Three.js renders here */
+.viz-stage {
+  width: 100%;
+  min-height: 320px;
   height: 100%;
-  background: #FFFAF0;
+  background: #000;
+  border: 1px solid var(--hair);
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+.viz-stage canvas { display: block; width: 100% !important; height: 100% !important; }
+
+/* ############################## RESULTS ############################## */
+.results {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.8fr) 1.2fr;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  padding: 0 clamp(1.25rem, 5vw, 4rem) clamp(2rem, 5vh, 3rem);
 }
 
-/* Navbar */
-.navbar-nav {
-  margin-left: auto;
+.panel {
+  background: var(--field-deep);
+  border: 1px solid var(--hair);
+  border-radius: var(--r-md);
+  padding: var(--s-lg);
+}
+.panel__title {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  margin: 0 0 var(--s-md);
+  color: var(--ink);
 }
 
-.navbar-nav > li {
-  margin: 0 30px;
+/* JS-injected prediction rows */
+#top-3-list-bottom > * {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--hair);
+  color: var(--ink);
 }
+#top-3-list-bottom > *:last-child { border-bottom: none; }
 
-/* Canvas styling */
-#canvas {
-    background-color: #000;
-    border-radius: 4px;
-    display: block;
-    margin: 0 auto;
-    touch-action: none; /* Prevent scrolling on touch devices */
+.feature-maps { width: 100%; overflow-x: auto; }
+
+/* ############################## PIPELINE ############################## */
+.pipeline {
+  padding: clamp(2rem, 6vh, 4rem) clamp(1.25rem, 5vw, 4rem) clamp(3rem, 8vh, 5rem);
+  border-top: 1px solid var(--hair);
+  background: var(--field-deep);
 }
-
-#canvas:active {
-    cursor: grabbing;
+.pipeline__title {
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  margin: 0 0 var(--s-md);
 }
-
-/* Prediction Panel */
-#prediction-panel {
-    background-color: #f8f9fa;
+.pipeline__text {
+  max-width: 64ch;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--ink-muted);
+  margin: 0 0 var(--s-xl);
+  text-wrap: pretty;
 }
+.mermaid { display: flex; justify-content: center; }
 
-#predicted-digit {
-    font-weight: bold;
-    color: #0d6efd;
-    margin: 0;
-}
-
-#confidence {
-    font-size: 0.9rem;
-}
-
-#top-3-list {
-    font-size: 0.85rem;
-}
-
-.top-3-item {
-    padding: 0.25rem 0;
-    border-bottom: 1px solid #dee2e6;
-}
-
-.top-3-item:last-child {
-    border-bottom: none;
-}
-
-/* 3D Visualization Container */
-#visualization-container {
-    position: relative;
-    border-radius: 4px;
-    overflow: hidden;
-}
-
-#visualization-container canvas {
-    display: block;
-    width: 100% !important;
-    height: 100% !important;
-}
-
-/* Network Info Panel */
-#network-info {
-    font-family: 'Courier New', monospace;
-    font-size: 0.85rem;
-}
-
-/* Loading Indicator */
-#loading-indicator {
-    color: #6c757d;
-}
-
-/* Button Styles */
-#btn-clear,
-#btn-visualize {
-    min-width: 100px;
-    margin: 0 0.25rem;
-}
-
-/* Feature Maps Container */
-#feature-maps-container {
-    width: 100%;
-    overflow-x: auto;
-}
-
-/* Responsive Design */
-@media (max-width: 1200px) {
-    /* Tablets - reduce spacing */
-    #feature-maps-container svg {
-        width: 40px !important;
-    }
-}
-
-@media (max-width: 768px) {
-    /* Mobile - Stack vertically */
-    #canvas {
-        width: 100%;
-        max-width: 280px;
-        height: 280px;
-    }
-
-    #visualization-container {
-        height: 300px;
-        margin-top: 2rem;
-    }
-
-    .col-md-4,
-    .col-md-8 {
-        margin-bottom: 1rem;
-    }
-    
-    /* Feature maps - scroll horizontally on mobile */
-    #feature-maps-container {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-    
-    #feature-maps-container > div {
-        flex-wrap: nowrap !important;
-        min-width: max-content;
-    }
-    
-    /* Reduce arrow size on mobile */
-    #feature-maps-container svg {
-        width: 30px !important;
-        height: 60px !important;
-    }
-    
-    /* Smaller canvas sizes for feature maps */
-    #feature-maps-container canvas {
-        width: 100px !important;
-        height: 100px !important;
-    }
-    
-    /* Stack predictions vertically on mobile */
-    #prediction-panel-bottom {
-        margin-bottom: 1rem;
-    }
-}
-
-@media (max-width: 576px) {
-    /* Small phones - further optimizations */
-    h5 {
-        font-size: 1rem;
-    }
-    
-    #canvas {
-        max-width: 240px;
-        height: 240px;
-    }
-    
-    #visualization-container {
-        height: 240px;
-    }
-    
-    /* Even smaller feature map canvases */
-    #feature-maps-container canvas {
-        width: 80px !important;
-        height: 80px !important;
-    }
-    
-    /* Compact buttons */
-    #btn-clear,
-    #btn-visualize {
-        min-width: 80px;
-        font-size: 0.85rem;
-    }
-    
-    /* Reduce padding */
-    .container {
-        padding-left: 10px;
-        padding-right: 10px;
-    }
-}
-
-/* Instructions styling */
-p b {
-    color: #212529;
-}
-
-ul {
-    margin-top: 0.5rem;
-}
-
-ul li {
-    margin-bottom: 0.5rem;
+/* ############################## RESPONSIVE ############################## */
+@media (max-width: 820px) {
+  .demo, .results { grid-template-columns: 1fr; }
+  .demo__draw { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .viz-stage { min-height: 300px; }
 }

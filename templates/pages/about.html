@@ -1,180 +1,133 @@
 <!--
     Personal Website - About Page
-    Description: Professional background, experience timeline, and personal information
-    with downloadable resume.
+    Description: Professional background and a vertical career register (reverse
+    chronological), set in the ink "type specimen" system. Static — no timeline JS.
+    See DESIGN.md.
 -->
-    
+
 {% extends 'base/layout.html' %}
-{% block title %}About - André Vargas{% endblock %}
+{% block title %}About — André Vargas{% endblock %}
 {% block head_extra %}
-    <meta name="description" content="About André Vargas - Machine Learning Engineer, experience, and professional journey">
+    <meta name="description" content="About André Vargas — from mechatronics and hardware to production machine learning and MLOps. Mostly self-taught. Career at Grupo Casas Bahia, Banco do Brasil, Falconi, SENAI.">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/about.css') }}">
 {% endblock %}
 {% block content %}
 
-    <div class="container">
+<main class="about">
 
-        <!-- Page Header -->
-        <div class="row">
-            <div class="col-lg-12 text-center my-2">
-                <h4 class="border-bottom border-dark p-2">About me</h4>
-            </div>
-        </div>
+  <!-- ============================= STATEMENT ============================= -->
+  <section class="statement statement--short">
+    <p class="statement__meta reveal" style="--i:0">
+      About — André Vargas, machine learning &amp; MLOps engineer in Brasília.
+    </p>
+    <h1 class="statement__line">
+      <span class="reveal" style="--i:1">Mechatronics. Hardware. Data.</span>
+      <span class="reveal" style="--i:2">Then machine learning —</span>
+      <span class="reveal statement__turn" style="--i:3">most of it self-taught.</span>
+    </h1>
+  </section>
 
-        <div class="row">
+  <!-- =============================== BIO =============================== -->
+  <section class="bio">
+    <div class="bio__text">
+      <p>
+        I'm a machine learning engineer at Grupo Casas Bahia, one of Brazil's largest
+        retailers. My path started in mechatronics engineering at Universidade de Brasília
+        — with an exchange year at Cardiff University — and a first job building hardware:
+        IoT, industrial automation, and embedded firmware.
+      </p>
+      <p>
+        A fascination with data pulled me toward data science, and then toward MLOps —
+        building and deploying ML systems, designing cloud architectures, writing CI/CD
+        pipelines, and shipping production models and APIs.
+      </p>
+      <p>
+        I'm largely self-taught, and I like it that way. I built this site from scratch —
+        HTML, CSS, and JavaScript, all learned on my own. With the resources we have today,
+        I think you can learn just about anything you decide to.
+      </p>
+      <p class="bio__aside">
+        Outside work: my wife Maria, our dogs Bibi and Quico, the drums, and a slightly
+        excessive catalogue of finished games.
+      </p>
 
-            <!-- Text Column -->
-            <div class="col-lg-8">
-                <div class="text">
-                    <p>
-                        Hello and welcome to my site! My name is André Vargas, I am a Machine Learning Engineer currently working at Grupo Casas Bahia, 
-                        one of Brazil's largest retailers.
-                        <br><br>
-                        My journey in tech began with a degree in Mechatronics Engineering from Universidade de Brasília, I also spent one year studying at 
-                        Cardiff University (UK). My first professional job was as a Hardware Engineer, focusing on IoT, industrial automation and digital transformation. 
-                        After a few years, my fascination with data and its potential to drive innovation led me to pivot towards Data Science and Machine Learning. 
-                        <br><br>
-                        After gaining experience as a Data Scientist, I became deeply interested in MLOps. I’ve since developed expertise in building and deploying ML 
-                        and MLOps solutions, designing cloud architectures, implementing CI/CD pipelines, and creating production-ready models and APIs.
-                        <br><br>
-                        I am passionate about studying and consider myself self-taught in many areas. Despite not being a web designer by trade, I built this website from scratch, 
-                        incorporating cool features using HTML, CSS, and JavaScript, all of which I learned on my own. With all the available resources we have today, 
-                        I truly believe we can learn anything we set our minds to.
-                        <br><br>
-                        Outside of work, I share my life with my amazing wife, Maria, and our dogs, Bibi and Quico. I also love playing the drums and I love video games, 
-                        I even made a list of games I've already finished in my "Other Projects" section, which I personally think is pretty cool! Feel free to
-                        get in touch, I'm always open to new opportunities and collaborations!
-                    </p>
-                </div>
-            </div>
-
-            <!-- Image Column -->
-            <div class="col-lg-4 text-center">
-                <img src="static/images/about.png" alt="About Section img" class="img-fluid about-img">
-            </div>
-        </div>
-    </div>
-    
-    <!-- Download Resume Button -->
-    <div class="row justify-content-center">
-        <div class="col-12 text-center">
-            <a href="{{ url_for('static', filename='Resume_Andre_Vargas.pdf') }}" class="btn btn-primary btn-resume" download="Andre_Resume.pdf">Download my Resumé!</a>
-        </div>
+      <div class="statement__foot">
+        <a class="cta" href="https://www.linkedin.com/in/andrevargas22/" target="_blank" rel="noopener">Get in touch</a>
+        <a class="plainlink" href="{{ url_for('static', filename='Resume_Andre_Vargas.pdf') }}" download="Andre_Vargas_Resume.pdf">Download résumé</a>
+      </div>
     </div>
 
-    <!-- Horizontal Timeline -->
-    <div class="container experience">
-        <div class="row">
-            <div class="col-12">
-                <h4>Timeline:</h4>
-                <section class="cd-horizontal-timeline container">
-                    <div class="timeline">
-                        <div class="events-wrapper">
-                            <div class="events">
-                                <ol>
-                                    <li>
-                                        <a href="#0" data-date="01/01/2015">
-                                        </a>
-                                    </li>
+    <figure class="bio__portrait">
+      <img src="{{ url_for('static', filename='images/about.png') }}"
+           alt="André Vargas" loading="lazy">
+    </figure>
+  </section>
 
-                                    <li>
-                                        <a href="#0" data-date="01/01/2014">
-                                        </a>
-                                    </li>
+  <!-- ============================= TIMELINE ============================= -->
+  <section class="register" aria-labelledby="register-heading">
+    <div class="register__head">
+      <h2 id="register-heading" class="register__title">The route here</h2>
+      <span class="register__hint" aria-hidden="true">scroll&nbsp;→</span>
+    </div>
 
-                                    <li>
-                                        <a href="#0" data-date="01/01/2013">
-                                        </a>
-                                    </li>
+    <div class="timeline" tabindex="0" role="region" aria-label="Career timeline — scroll horizontally">
+      <ol class="timeline__track">
+        <li class="tl">
+          <span class="tl__year">2011 — 2017</span>
+          <h3 class="tl__org">Universidade de Brasília</h3>
+          <p class="tl__role">BSc, Mechatronics Engineering</p>
+          <p class="tl__desc">Where it started — with an exchange year at Cardiff University, UK.</p>
+        </li>
 
-                                    <li>
-                                        <a href="#0" data-date="01/01/2012">
-                                        </a>
-                                    </li>
+        <li class="tl">
+          <span class="tl__year">2018 — 2022</span>
+          <h3 class="tl__org">SENAI Institute of Technology</h3>
+          <p class="tl__role">Hardware Engineer</p>
+          <p class="tl__desc">Electronics and automation solutions for multiple industry sectors.</p>
+          <ul class="tl__points">
+            <li>Electronics, microcontrollers, and embedded firmware.</li>
+            <li>IoT, industrial automation, Industry 4.0, and digital transformation.</li>
+          </ul>
+        </li>
 
-                                    <li>
-                                        <a href="#0" data-date="01/01/2011" class="selected">
-                                        </a>
-                                    </li>
+        <li class="tl">
+          <span class="tl__year">2022 — 2023</span>
+          <h3 class="tl__org">Falconi</h3>
+          <p class="tl__role">Machine Learning Engineer &amp; Data Scientist</p>
+          <p class="tl__desc">Consulting — delivering ML systems fast, securely, and at scale.</p>
+          <ul class="tl__points">
+            <li>Cloud architectures for ML systems; models deployed to production with MLOps and CI/CD best practices.</li>
+            <li>Helped build Falconi's MLOps stack and deployed its MLflow server on GCP.</li>
+            <li>Supervised and unsupervised models, plus internal libraries and templates to accelerate delivery.</li>
+          </ul>
+        </li>
 
-                                </ol>
-                                <span class="filling-line" aria-hidden="true"></span>
-                            </div> <!-- .events -->
-                        </div> <!-- .events-wrapper -->
-                    </div> <!-- .timeline -->
+        <li class="tl">
+          <span class="tl__year">2024</span>
+          <h3 class="tl__org">Banco do Brasil <span class="tl__via">via Stefanini</span></h3>
+          <p class="tl__role">Senior Data Scientist</p>
+          <p class="tl__desc">Machine learning inside a highly regulated banking environment.</p>
+          <ul class="tl__points">
+            <li>Credit-risk models estimating probability of default, supporting portfolio management and regulatory compliance.</li>
+            <li>Managerial market-projection models to forecast financial trends for senior stakeholders.</li>
+          </ul>
+        </li>
 
-                    <div class="events-content">
-                        <ol>
-                            <li data-date="01/01/2015">
-                                <h5>Universidade de Brasília</h5>
-                                <img src="static/images/icons/unb.png" alt="UNB Logo" class="img-fluid" style="max-width: 100px;">
-                                <em>2011 - 2017</em>
-                                <p><strong>Mechatronics Engineering</strong><br>
-                                    Got my Bachelor's degree in Mechatronics Engineering, with one year of exchange at Cardiff University, UK.
-                                </p>   
-                            </li>
-                    
-                            <li data-date="01/01/2014">
-                                <h5>SENAI</h5> 
-                                <img src="static/images/icons/senai.png" alt="SENAI Logo" class="img-fluid" style="max-width: 100px;">
-                                <em>May 2018 - February 2022</em>
-                                <p><strong>Hardware Engineer</strong><br>
-                                    I developed projects and technological solutions meeting the demands of various industry sectors within the scope of the SENAI Institute of Technology: Electronics and Automation.
-                                    <br>• Electronics and Microcontrollers;
-                                    <br>• Internet of Things, Industrial Automation, Industry 4.0, Digital Transformation;
-                                    <br>• Hardware Design and Embedded Firmware Programming; 
-                                </p>   
-                            </li>
-                    
-                            <li data-date="01/01/2013">
-                                <h5>Falconi</h5>
-                                <img src="static/images/icons/falconi.png" alt="Falconi Logo" class="img-fluid" style="max-width: 100px;">
-                                <em>March 2022 - December 2023</em>
-                                <p><strong>Machine Learning Engineer</strong><br>
-                                    I worked in consulting projects, delivering valuable results for the business in a fast, secure, and scalable way by building Machine Learning systems.                                        
-                                    <br>• Cloud architecture solutions for Machine Learning Systems.
-                                    <br>• Implementation and deployment of models in production.
-                                    <br>• Usage of MLOps and CI/CD best practices.
-                                    <br>• Help to develop Falconi’s MLOps stack.
-                                    <br>• Deployed Falconi’s MLFlow Server on GCP.
-                                    <br>• Creation of digital assets (templates, libraries) to accelerate the progress of projects.
-                                </p>
-                                <p><strong>Data Scientist</strong><br>
-                                    I worked in consulting projects, delivering business-value results using data science and technology.
-                                    <br>• Development of supervised and unsupervised Machine Learning models for different business problems.
-                                    <br>• Coding of data apps and libraries to leverage work in projects.
-                                </p>
-                            </li>
-                    
-                            <li data-date="01/01/2012">
-                                <h5>Stefanini Brasil</h5>
-                                <img src="static/images/icons/stefanini.png" alt="Stefanini Logo" class="img-fluid" style="max-width: 100px;">   
-                                <em>January 2024 - July 2024</em>
-                                <p><strong>Senior Data Scientist</strong><br>
-                                    Worked as a Data Scientist contractor at Banco do Brasil, one of Latin America's largest financial institutions, developing machine learning solutions in a highly regulated banking environment.
-                                    <br>• Built credit risk models to estimate the probability of asset default, supporting decision-making in portfolio management and regulatory compliance.
-                                    <br>• Developed managerial market projection models to forecast financial trends, enabling strategic planning and business insights for senior stakeholders.</p>
-                            </li>
+        <li class="tl tl--now">
+          <span class="tl__year">2024 — now</span>
+          <h3 class="tl__org">Grupo Casas Bahia</h3>
+          <p class="tl__role">Machine Learning Engineer Specialist</p>
+          <p class="tl__desc">In the MLOps team at one of Brazil's largest retailers.</p>
+          <ul class="tl__points">
+            <li>Migrated analytical datasets and ML pipelines from Azure to GCP (3,500+ processes) in a company-wide modernisation.</li>
+            <li>Built an end-to-end CI/CD pipeline (Databricks + Airflow + GitHub Actions) for reproducible deployments.</li>
+            <li>Designed <em>Sauron</em>, a Databricks monitoring framework automating data-quality and drift dashboards across dev and prod.</li>
+          </ul>
+        </li>
+      </ol>
+    </div>
+  </section>
 
-                            <li class="selected" data-date="01/01/2011">
-                                <h5>Grupo Casas Bahia</h5>
-                                <img src="static/images/icons/gcb.jpg" alt="GCB Logo" class="img-fluid" style="max-width: 100px;">   
-                                <em>August 2024 - Present</em>
-                                <p><strong>Machine Learning Engineer Specialist</strong><br>
-                                    I am currently working in the MLOps team at Grupo Casas Bahia, one of Brazil's largest retail companies.
-                                    <br>• Supported the migration of analytical datasets and ML pipelines from Azure to GCP (3,500+ processes) within a company-wide modernisation effort, enhancing performance, cost, and governance foundations.
-                                    <br>• Engineered a new end-to-end CI/CD pipeline (Databricks + Airflow + GitHub Actions) for reproducible model and data deployments.
-                                    <br>• Designed and built "Sauron", an internal Databricks-based monitoring framework that automates creation, versioning, and deployment of data quality and drift dashboards across dev and prod via asset bundles, cutting manual setup time from hours to minutes and standardising governance.
-                                </p>
-                            </li>
-                        </ol>
-                    </div> <!-- .events-content -->
-                </section>
-            </div> <!-- end div experience -->
-        </div> <!-- end row experience -->
-    </div> <!-- end container experience -->
-    
-{% endblock %}
-{% block scripts_extra %}
-<script src="{{ url_for('static', filename='js/about.js') }}"></script>
+</main>
+
 {% endblock %}

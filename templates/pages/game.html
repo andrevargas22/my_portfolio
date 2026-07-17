@@ -1,89 +1,97 @@
 <!--
 	Personal Website - Games Archive
-	Description: Interactive gallery of completed video games with filtering
-	by platform and popup previews.
+	Description: Gallery of finished games in the ink "type specimen" system.
+	No per-category tag colours (No Rainbow Rule) — covers carry the colour,
+	grayscale at rest and colour on hover. Vanilla filter + native <dialog>
+	lightbox (no jQuery / Isotope / Magnific). See DESIGN.md.
 -->
-	
+
 {% extends 'base/layout.html' %}
-{% block title %}Finished Games - André Vargas{% endblock %}
+{% block title %}Finished Games — André Vargas{% endblock %}
 {% block head_extra %}
-    <meta name="description" content="Personal archive of completed video games with interactive filtering">
+    <meta name="description" content="André Vargas's personal archive of finished video games — credits rolled, 'The End' on screen. Filter by platform, browse the covers.">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/games_list.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.css" />
 {% endblock %}
 {% block content %}
 
-		<div class="container">
-			<!-- Page Header -->
-			<div class="row">
-				<div class="col-lg-12 text-center my-2">
-					<h4 class="border-bottom border-dark p-2">Finished Games Archive</h4>
-					<center>I've always loved video games since I was a child, so I decided to 
-						craft this personal list of videogames I ever finished 
-						(Effectively finished! Credits roll, The End on the screen). 
-						I used this as an experiment to create this interactive menu with HTML, CSS and JS.
-					</center>
-					<center><b>2026 entries:</b> A Juggler's Tale, Middle-Earth: Shadow of War, Papers Please, Tunic<br>
-					</center>
-				</div>
-			</div>
-			
-			<!-- Menu -->
-			<div class="portfolio-menu mt-2 mb-4">
-				<ul>
-					<li class="btn btn-outline-dark active" data-filter="*">All</li>
-					<li class="btn btn-outline-dark" data-filter=".top-10">🥇 Top 10</li>
-					<li class="btn btn-outline-dark" data-filter=".pc">PC</li>
-					<li class="btn btn-outline-dark" data-filter=".nes">NES</li>
-					<li class="btn btn-outline-dark" data-filter=".snes">SNES</li>
-					<li class="btn btn-outline-dark" data-filter=".n64">N64</li>
-					<li class="btn btn-outline-dark" data-filter=".switch">Switch</li>
-					<li class="btn btn-outline-dark" data-filter=".gc">NGC</li>
-					<li class="btn btn-outline-dark" data-filter=".gba">GBA</li>
-					<li class="btn btn-outline-dark" data-filter=".ds">DS</li>
-					<li class="btn btn-outline-dark" data-filter=".ds3">3DS</li>
-					<li class="btn btn-outline-dark" data-filter=".mega">Mega Drive</li>
-					<li class="btn btn-outline-dark" data-filter=".ps1">PS1</li>
-					<li class="btn btn-outline-dark" data-filter=".ps2">PS2</li>
-				</ul>
-			</div>
+<main class="games">
 
-			<!-- Items -->
-			<div class="portfolio-item row">
-				{% for letter in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' %}
-					{% with games = get_games_by_letter(letter) %}
-						{% if games %}
-							{% for game in games %}
-								<div class="item {{game.platform_id}} {% if game.top_10 %}top-10{% endif %} col-lg-3 col-md-4 col-6 col-sm" data-top-rank="{% if game.top_10 %}{{ game.top_10 }}{% else %}999{% endif %}">
-									<div class="image-container">
-										<p class="image-description">{{game.title}} ({{game.year}})</p>
-										<div class="tags">
-											{% if game.top_10 %}
-											<span class="tag top-badge">🥇 Top {{ game.top_10}}</span>
-											{% endif %}
-											<span class="tag {{game.platform_id}}">{{game.platform}}</span>
-											<span class="tag {{game.genre_id}}">{{game.genre}}</span>
-											{% if game.beaten %}
-											<span class="tag beaten">✔️ {{game.beaten}}</span>
-											{% endif %}
-										</div>
-										<a href="{{ url_for('static', filename='images/games/' + game.image) }}" class="fancylight popup-btn" data-fancybox-group="light" title="{{game.title}} ({{game.year}}) - {{game.platform}}">
-											<img class="img-fluid" src="{{ url_for('static', filename='images/games/' + game.image) }}" alt="{{game.title}} ({{game.year}})">
-										</a>
-									</div>
-								</div>
-							{% endfor %}
-						{% endif %}
-					{% endwith %}
-				{% endfor %}
-			</div>
-		</div>
-		
+  <!-- ============================= STATEMENT ============================= -->
+  <section class="statement statement--short">
+    <p class="statement__meta reveal" style="--i:0">
+      Finished games — credits rolled, "The End" on screen. The same completionism, off the clock.
+    </p>
+    <h1 class="statement__line">
+      <span class="reveal" style="--i:1">Every game I've finished —</span>
+      <span class="reveal statement__turn" style="--i:2">no exceptions.</span>
+    </h1>
+  </section>
+
+  <!-- ============================== FILTER ============================== -->
+  <div class="filters" role="group" aria-label="Filter games by platform">
+    <button class="filter is-active" data-filter="all" aria-pressed="true">All</button>
+    <button class="filter" data-filter="top" aria-pressed="false">Top 10</button>
+    <button class="filter" data-filter="pc" aria-pressed="false">PC</button>
+    <button class="filter" data-filter="nes" aria-pressed="false">NES</button>
+    <button class="filter" data-filter="snes" aria-pressed="false">SNES</button>
+    <button class="filter" data-filter="n64" aria-pressed="false">N64</button>
+    <button class="filter" data-filter="switch" aria-pressed="false">Switch</button>
+    <button class="filter" data-filter="gc" aria-pressed="false">GameCube</button>
+    <button class="filter" data-filter="gba" aria-pressed="false">GBA</button>
+    <button class="filter" data-filter="ds" aria-pressed="false">DS</button>
+    <button class="filter" data-filter="ds3" aria-pressed="false">3DS</button>
+    <button class="filter" data-filter="mega" aria-pressed="false">Mega Drive</button>
+    <button class="filter" data-filter="ps1" aria-pressed="false">PS1</button>
+    <button class="filter" data-filter="ps2" aria-pressed="false">PS2</button>
+  </div>
+
+  <!-- =============================== GRID =============================== -->
+  <div class="gallery">
+    {% for letter in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' %}
+      {% with games = get_games_by_letter(letter) %}
+        {% for game in games %}
+          <figure class="game {{ game.platform_id }}{% if game.top_10 %} is-top{% endif %}"
+                   data-rank="{% if game.top_10 %}{{ game.top_10 }}{% else %}999{% endif %}">
+            <button class="game__open"
+                    data-img="{{ url_for('static', filename='images/games/' + game.image) }}"
+                    data-title="{{ game.title }} ({{ game.year }})"
+                    data-sub="{{ game.platform }} · {{ game.genre }}"
+                    aria-label="View cover of {{ game.title }}">
+              <img class="game__cover" loading="lazy"
+                   src="{{ url_for('static', filename='images/games/' + game.image) }}"
+                   alt="{{ game.title }} ({{ game.year }}) — {{ game.platform }}">
+              {% if game.top_10 %}<span class="game__badge">Top {{ game.top_10 }}</span>{% endif %}
+            </button>
+            <figcaption class="game__cap">
+              <span class="game__title">{{ game.title }} <span class="game__year">{{ game.year }}</span></span>
+              <span class="game__meta">{{ game.platform }} · {{ game.genre }}</span>
+            </figcaption>
+          </figure>
+        {% endfor %}
+      {% endwith %}
+    {% endfor %}
+  </div>
+
+  <p class="games__empty" hidden>Nothing finished on that platform… yet.</p>
+
+</main>
+
+<!-- ============================= LIGHTBOX ============================= -->
+<dialog class="lightbox" aria-label="Game cover viewer">
+  <button class="lightbox__nav lightbox__prev" aria-label="Previous">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <figure class="lightbox__stage">
+    <img class="lightbox__img" alt="">
+    <figcaption class="lightbox__cap"><span class="lightbox__title"></span><span class="lightbox__sub"></span></figcaption>
+  </figure>
+  <button class="lightbox__nav lightbox__next" aria-label="Next">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+  </button>
+  <button class="lightbox__close" aria-label="Close">Close</button>
+</dialog>
+
 {% endblock %}
 {% block scripts_extra %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js"></script>
 <script src="{{ url_for('static', filename='js/game_list.js') }}"></script>
 {% endblock %}
- 
