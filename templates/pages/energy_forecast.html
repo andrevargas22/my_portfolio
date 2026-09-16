@@ -8,7 +8,7 @@
 {% extends 'base/layout.html' %}
 {% block title %}BR Energy Consumption Forecast - André Vargas{% endblock %}
 {% block head_extra %}
-    <meta name="description" content="Monthly forecast of Brazilian electric energy consumption by subsystem, powered by H2O AutoML and ONS open data.">
+    <meta name="description" content="Monthly forecast of electric energy consumption in Brazil's Southeast (SE) subsystem, powered by H2O AutoML and ONS open data.">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/energy_forecast.css') }}">
     <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
 {% endblock %}
@@ -23,8 +23,9 @@
                 <center>
                     <p>
                         An end-to-end AutoML pipeline that trains an AutoML model on historical ONS open data
-                        and produces monthly forecasts of electric energy consumption across Brazil's four
-                        subsystems (N, NE, S, SE) and the national grid (SIN).
+                        and produces monthly forecasts of electric energy consumption for Brazil's Southeast (SE)
+                        subsystem: the country's largest, covering São Paulo, Rio de Janeiro, Minas Gerais and
+                        Espírito Santo.
                         Updated automatically on the 1st of each month via GitHub Actions.
                     </p>
                 </center>
@@ -66,9 +67,16 @@
                     <div class="card-body">
                         <h6 class="card-title">Recent Activity</h6>
                         <ul class="list-unstyled small mb-0 activity-log">
+                            {% set badge_class = {
+                                'retrain': 'bg-warning text-dark',
+                                'extract': 'bg-info text-dark',
+                                'skip': 'bg-light text-dark border',
+                                'drift_check': 'bg-primary',
+                                'error': 'bg-danger',
+                            } %}
                             {% for event in activity_log %}
                             <li class="d-flex align-items-baseline gap-2 py-1">
-                                <span class="badge {{ 'bg-warning text-dark' if event.type == 'retrain' else 'bg-secondary' }}">
+                                <span class="badge {{ badge_class.get(event.type, 'bg-secondary') }}">
                                     {{ event.type }}
                                 </span>
                                 <span class="text-muted">{{ event.date }}</span>
