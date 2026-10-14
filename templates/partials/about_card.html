@@ -1,0 +1,22 @@
+<!-- Shared identity card for the About page sidebar layouts. -->
+<div class="idcard">
+    <img src="static/images/about.png" alt="André Vargas" class="idcard-avatar">
+    <h1>André Vargas</h1>
+    <div class="idcard-role">Machine Learning Engineer</div>
+    <div class="idcard-company">@ Telefónica</div>
+    <div class="idcard-meta"><i class="fas fa-map-marker-alt" aria-hidden="true"></i>Brazil</div>
+    <div class="about-social">
+        <a href="https://github.com/andrevargas22" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github" aria-hidden="true"></i></a>
+        <a href="https://www.linkedin.com/in/andrevargas22/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin" aria-hidden="true"></i></a>
+        <a href="https://medium.com/@andrevargas22/" target="_blank" rel="noopener" aria-label="Medium"><i class="fab fa-medium" aria-hidden="true"></i></a>
+    </div>
+    <a href="{{ url_for('static', filename='Resume_Andre_Vargas.pdf') }}" class="btn btn-primary btn-resume" download="Andre_Resume.pdf">Download my Resumé!</a>
+    <div class="idcard-tags-label">Focus areas</div>
+    <div class="idcard-tags">
+        <span class="idcard-tag">MLOps</span>
+        <span class="idcard-tag">LLMOps</span>
+        <span class="idcard-tag">AIOps</span>
+        <span class="idcard-tag">Cloud</span>
+        <span class="idcard-tag">CI/CD</span>
+    </div>
+</div>

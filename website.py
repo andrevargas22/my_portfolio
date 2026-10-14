@@ -10,7 +10,7 @@ Author: André Vargas
 # Imports
 import os
 import logging
-from flask import Flask, render_template, request, g
+from flask import Flask, render_template, request, g, redirect, url_for
 import secrets
 
 # Production functions
@@ -88,8 +88,8 @@ def add_security_headers(response):
 
     response.headers["Origin-Agent-Cluster"] = "?1"
 
-    # Cache static assets
-    if request.path.startswith('/static/'):
+    # Cache static assets (skip in debug so local changes show without a hard refresh)
+    if request.path.startswith('/static/') and not app.debug:
         response.cache_control.max_age = 31536000  # 1 year
         response.cache_control.public = True
 
@@ -100,23 +100,18 @@ def add_security_headers(response):
 @app.route("/")
 def home():
     """
-    Renders the homepage.
+    Renders the homepage (profile, bio, and experience timeline).
 
     Returns:
-        Template: The index.html template for the homepage.
+        Template: The index.html landing page.
     """
     return render_template("pages/index.html")
 
 
 @app.route("/about")
 def about():
-    """
-    Renders the 'About' page.
-
-    Returns:
-        Template: The about.html template for the About section.
-    """
-    return render_template("pages/about.html")
+    """Permanent redirect for the old /about URL to the landing page."""
+    return redirect(url_for("home"), code=301)
 
 
 @app.route("/blog")
