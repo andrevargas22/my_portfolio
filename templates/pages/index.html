@@ -12,11 +12,7 @@
 {% endblock %}
 {% block content %}
 
-    <!-- Fullscreen background video -->
-    <div class="bg-video" aria-hidden="true">
-        <video src="{{ url_for('static', filename='images/videos/video.mp4') }}" autoplay muted loop playsinline></video>
-    </div>
-    <div class="bg-video-overlay" aria-hidden="true"></div>
+    {% include 'partials/bg_video.html' %}
 
     <div class="about-main cards-dark">
     <div class="container">
