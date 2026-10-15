@@ -1,214 +1,293 @@
-/* MNIST 3D Visualization Page Styles */
+/*
+ * MNIST 3D Visualization Page Styles
+ * Dark theme matching the landing/blog: flat dark background, teal accents,
+ * dark translucent cards and panels, light text.
+ */
 
-/* Base styles */
+/* ############################## BASE ############################## */
 body {
   width: 100%;
-  height: 100%;
-  background: #FFFAF0;
+  min-height: 100vh;
+  background: transparent;
+  color: #d7dee0;
 }
 
-/* Canvas styling */
+/* ############################## BACKGROUND (static still of the landing video) ############################## */
+.bg-still {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background: #0f191e center / cover no-repeat;
+}
+.bg-still-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: rgba(15, 25, 30, 0.82);
+}
+
+/* ############################## PAGE TITLE ############################## */
+.page-title {
+  color: #eef3f3;
+  border-bottom: 2px solid rgba(64, 224, 208, 0.25) !important;
+}
+
+/* Body prose */
+p b {
+  color: #eef3f3;
+}
+
+.container ul {
+  margin-top: 0.5rem;
+}
+
+.container ul li {
+  margin-bottom: 0.5rem;
+}
+
+/* ############################## DRAWING CANVAS ############################## */
 #canvas {
-    background-color: #000;
-    border-radius: 4px;
-    display: block;
-    margin: 0 auto;
-    touch-action: none; /* Prevent scrolling on touch devices */
+  background-color: #000;
+  border: 2px solid rgba(64, 224, 208, 0.35);
+  border-radius: 4px;
+  display: block;
+  margin: 0 auto;
+  touch-action: none; /* Prevent scrolling on touch devices */
 }
 
 #canvas:active {
-    cursor: grabbing;
+  cursor: grabbing;
 }
 
-/* Prediction Panel */
-#prediction-panel {
-    background-color: #f8f9fa;
+/* ############################## BUTTONS ############################## */
+#btn-clear,
+#btn-visualize {
+  min-width: 100px;
+  margin: 0 0.25rem;
+}
+
+#btn-visualize.btn-primary {
+  background-color: #40e0d0;
+  border-color: #40e0d0;
+  color: #0f191e;
+  font-weight: 600;
+}
+#btn-visualize.btn-primary:hover,
+#btn-visualize.btn-primary:focus {
+  background-color: #9ff3ea;
+  border-color: #9ff3ea;
+  color: #0f191e;
+}
+
+#btn-clear.btn-secondary {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #d7dee0;
+}
+#btn-clear.btn-secondary:hover,
+#btn-clear.btn-secondary:focus {
+  background-color: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #eef3f3;
+}
+
+/* ############################## PREDICTION PANEL ############################## */
+.mnist-panel {
+  background: rgba(20, 30, 38, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-radius: 12px;
+  color: #d7dee0;
+}
+
+.mnist-panel h6 {
+  color: #eef3f3;
 }
 
 #predicted-digit {
-    font-weight: bold;
-    color: #0d6efd;
-    margin: 0;
+  font-weight: bold;
+  color: #40e0d0;
+  margin: 0;
 }
 
 #confidence {
-    font-size: 0.9rem;
+  font-size: 0.9rem;
 }
 
-#top-3-list {
-    font-size: 0.85rem;
+#top-3-list-bottom {
+  font-size: 0.85rem;
 }
 
 .top-3-item {
-    padding: 0.25rem 0;
-    border-bottom: 1px solid #dee2e6;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
 }
 
 .top-3-item:last-child {
-    border-bottom: none;
+  border-bottom: none;
 }
 
-/* 3D Visualization Container */
+/* Progress track on the dark panel */
+.mnist-panel .progress {
+  background-color: rgba(255, 255, 255, 0.10);
+}
+
+/* ############################## 3D VISUALIZATION ############################## */
 #visualization-container {
-    position: relative;
-    border-radius: 4px;
-    overflow: hidden;
+  position: relative;
+  border: 2px solid rgba(64, 224, 208, 0.35);
+  border-radius: 4px;
+  overflow: hidden;
+  background: #000;
 }
 
 #visualization-container canvas {
-    display: block;
-    width: 100% !important;
-    height: 100% !important;
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 /* Network Info Panel */
 #network-info {
-    font-family: 'Courier New', monospace;
-    font-size: 0.85rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  color: #cfd8dc;
 }
 
-/* Loading Indicator */
+/* ############################## LOADING INDICATOR ############################## */
 #loading-indicator {
-    color: #6c757d;
+  color: #9fb0b3;
+}
+#loading-indicator .spinner-border {
+  color: #40e0d0 !important;
 }
 
-/* Button Styles */
-#btn-clear,
-#btn-visualize {
-    min-width: 100px;
-    margin: 0 0.25rem;
-}
-
-/* Feature Maps Container */
+/* ############################## FEATURE MAPS ############################## */
 #feature-maps-container {
-    width: 100%;
-    overflow-x: auto;
+  width: 100%;
+  overflow-x: auto;
 }
 
-/* Responsive Design */
-@media (max-width: 1200px) {
-    /* Tablets - reduce spacing */
-    #feature-maps-container svg {
-        width: 40px !important;
-    }
-}
-
-@media (max-width: 768px) {
-    /* Mobile - Stack vertically */
-    #canvas {
-        width: 100%;
-        max-width: 280px;
-        height: 280px;
-    }
-
-    #visualization-container {
-        height: 300px;
-        margin-top: 2rem;
-    }
-
-    .col-md-4,
-    .col-md-8 {
-        margin-bottom: 1rem;
-    }
-    
-    /* Feature maps - scroll horizontally on mobile */
-    #feature-maps-container {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-    
-    #feature-maps-container > div {
-        flex-wrap: nowrap !important;
-        min-width: max-content;
-    }
-    
-    /* Reduce arrow size on mobile */
-    #feature-maps-container svg {
-        width: 30px !important;
-        height: 60px !important;
-    }
-    
-    /* Smaller canvas sizes for feature maps */
-    #feature-maps-container canvas {
-        width: 100px !important;
-        height: 100px !important;
-    }
-    
-    /* Stack predictions vertically on mobile */
-    #prediction-panel-bottom {
-        margin-bottom: 1rem;
-    }
-}
-
-@media (max-width: 576px) {
-    /* Small phones - further optimizations */
-    h5 {
-        font-size: 1rem;
-    }
-    
-    #canvas {
-        max-width: 240px;
-        height: 240px;
-    }
-    
-    #visualization-container {
-        height: 240px;
-    }
-    
-    /* Even smaller feature map canvases */
-    #feature-maps-container canvas {
-        width: 80px !important;
-        height: 80px !important;
-    }
-    
-    /* Compact buttons */
-    #btn-clear,
-    #btn-visualize {
-        min-width: 80px;
-        font-size: 0.85rem;
-    }
-    
-    /* Reduce padding */
-    .container {
-        padding-left: 10px;
-        padding-right: 10px;
-    }
-}
-
-/* Info cards */
+/* ############################## INFO CARDS ############################## */
 .card {
-    border: 1px solid #dee2e6;
-    border-radius: 6px;
+  background: rgba(20, 30, 38, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 12px;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.card:hover {
+  border-color: rgba(64, 224, 208, 0.30);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
 }
 
 .card-title {
-    font-weight: 600;
-    font-size: 0.95rem;
-    color: #333;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #eef3f3;
+}
+
+.card-title i {
+  color: #40e0d0 !important;
 }
 
 .card-text {
-    color: #555;
-    line-height: 1.5;
+  color: #cfd8dc;
+  line-height: 1.5;
 }
 
 .card-text code {
-    background: #f1f1f1;
-    padding: 1px 5px;
-    border-radius: 3px;
-    font-size: 0.85em;
-    color: #c7254e;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 0.85em;
+  color: #8ff0e6;
 }
 
-/* Instructions styling */
-p b {
-    color: #212529;
+/* ############################## RESPONSIVE ############################## */
+@media (max-width: 1200px) {
+  /* Tablets - reduce spacing */
+  #feature-maps-container svg {
+    width: 40px !important;
+  }
 }
 
-.container ul {
-    margin-top: 0.5rem;
+@media (max-width: 768px) {
+  /* Mobile - Stack vertically */
+  #canvas {
+    width: 100%;
+    max-width: 280px;
+    height: 280px;
+  }
+
+  #visualization-container {
+    height: 300px;
+    margin-top: 2rem;
+  }
+
+  .col-md-4,
+  .col-md-8 {
+    margin-bottom: 1rem;
+  }
+
+  /* Feature maps - scroll horizontally on mobile */
+  #feature-maps-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #feature-maps-container > div {
+    flex-wrap: nowrap !important;
+    min-width: max-content;
+  }
+
+  /* Reduce arrow size on mobile */
+  #feature-maps-container svg {
+    width: 30px !important;
+    height: 60px !important;
+  }
+
+  /* Smaller canvas sizes for feature maps */
+  #feature-maps-container canvas {
+    width: 100px !important;
+    height: 100px !important;
+  }
+
+  /* Stack predictions vertically on mobile */
+  #prediction-panel-bottom {
+    margin-bottom: 1rem;
+  }
 }
 
-.container ul li {
-    margin-bottom: 0.5rem;
+@media (max-width: 576px) {
+  /* Small phones - further optimizations */
+  h5 {
+    font-size: 1rem;
+  }
+
+  #canvas {
+    max-width: 240px;
+    height: 240px;
+  }
+
+  #visualization-container {
+    height: 240px;
+  }
+
+  /* Even smaller feature map canvases */
+  #feature-maps-container canvas {
+    width: 80px !important;
+    height: 80px !important;
+  }
+
+  /* Compact buttons */
+  #btn-clear,
+  #btn-visualize {
+    min-width: 80px;
+    font-size: 0.85rem;
+  }
+
+  /* Reduce padding */
+  .container {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
 }
