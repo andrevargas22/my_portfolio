@@ -394,7 +394,7 @@
       "genre_id": "rpg",
       "beaten": 2025,
       "image": "Final Fantasy VII.jpg",
-      "top_10": 5
+      "top_10": 4
     },
     {
       "title": "GTA San Andreas",
@@ -482,7 +482,7 @@
       "genre_id": "metroidvania",
       "beaten": 2018,
       "image": "Hollow Knight.avif",
-      "top_10": 4
+      "top_10": 5
     },
     {
       "title": "Hollow Knight: Silksong",
@@ -559,7 +559,7 @@
       "genre_id": "adventure",
       "beaten": 2017,
       "image": "Life is Strange.jpg",
-      "top_10": 9
+      "top_10": null
     },
     {
       "title": "Life is Strange: Before the Storm",
@@ -878,7 +878,7 @@
       "genre_id": "rpg",
       "beaten": 2023,
       "image": "Pokémon (Gen 1) FireRed.jpg",
-      "top_10": null
+      "top_10": 10
     },
     {
       "title": "Pokémon (Gen 2 Nuzlocke) SoulSilver",
@@ -988,7 +988,7 @@
       "genre_id": "puzzle",
       "beaten": 2026,
       "image": "Portal 2.webp",
-      "top_10": null
+      "top_10": 8
     },
     {
       "title": "Portal Stories: Mel",
@@ -1054,7 +1054,7 @@
       "genre_id": "strategy",
       "beaten": null,
       "image": "Shining Force I.jpg",
-      "top_10": 8
+      "top_10": 9
     },
     {
       "title": "Shining Force II",
@@ -1285,7 +1285,7 @@
       "genre_id": "platformer",
       "beaten": null,
       "image": "Super Mario World.jpg",
-      "top_10": 10
+      "top_10": null
     },
     {
       "title": "Super Meat Boy",
