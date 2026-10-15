@@ -6,9 +6,8 @@
 
 /* ############################## VARIABLES ############################## */
 :root {
-  --bg-color: #FFFAF0;
-  --text-color: rgb(75, 72, 72);
-  --border-color: #413e3e;
+  --text-color: #d7dee0;
+  --border-color: rgba(255, 255, 255, 0.10);
   --nav-spacing: 30px;
   
   /* Tag Colors */
@@ -55,13 +54,48 @@
 /* ############################## BASE STYLES ############################## */
 body {
   width: 100%;
-  height: 100%;
-  background: var(--bg-color); 
+  min-height: 100vh;
+  background: transparent;
+  color: var(--text-color);
+}
+
+/* ############################## BACKGROUND (static still of the landing video) ############################## */
+.bg-still {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background: #0f191e center / cover no-repeat;
+}
+.bg-still-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: rgba(15, 25, 30, 0.82);
+}
+
+/* ############################## PAGE TITLE ############################## */
+.page-title {
+  color: #eef3f3;
+  border-bottom: 2px solid rgba(64, 224, 208, 0.25) !important;
 }
 
 /* ############################## PORTFOLIO ############################## */
 .portfolio-menu {
   text-align: center;
+}
+
+/* Filter buttons (overriding Bootstrap's btn-outline-dark for the dark theme) */
+.portfolio-menu .btn-outline-dark {
+  color: #d7dee0;
+  border-color: rgba(255, 255, 255, 0.25);
+  margin: 3px;
+}
+.portfolio-menu .btn-outline-dark:hover,
+.portfolio-menu .btn-outline-dark:focus,
+.portfolio-menu .btn-outline-dark.active {
+  color: #0f191e;
+  background-color: #40e0d0;
+  border-color: #40e0d0;
 }
 
 .portfolio-menu ul li {
