@@ -175,17 +175,6 @@ def mnist():
     return render_template("pages/mnist_visual.html", mnist_endpoint=mnist_endpoint)
 
 
-@app.route("/google_calendar_agent")
-def google_calendar_agent():
-    """
-    Renders the Google Calendar Agent mockup page.
-
-    Returns:
-        Template: The google_calendar_agent.html template.
-    """
-    return render_template("pages/google_calendar_agent.html")
-
-
 ############################## TESTING FEATURES ##############################
 #### Energy Consumption Forecast:
 @app.route("/energy_forecast")
