@@ -319,7 +319,7 @@ function initializeMap() {
                 <div class="map-popup">
                     <img src="/static/images/map/${place.photo}" alt="${place.location}" style="width: 200px; height: 150px; object-fit: cover; border-radius: 8px;">
                     <h6 style="margin-top: 10px; margin-bottom: 5px; text-align: center;">${place.location}</h6>
-                    <p style="margin: 0; text-align: center; color: #666; font-size: 14px;">${place.country}</p>
+                    <p style="margin: 0; text-align: center; color: #9fb0b3; font-size: 14px;">${place.country}</p>
                 </div>
             `;
 

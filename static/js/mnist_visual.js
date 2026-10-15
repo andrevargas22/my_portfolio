@@ -451,7 +451,9 @@ class CNNVisualizer3D {
         
         // Scene center (will be calculated after building layers)
         this.sceneCenter = new THREE.Vector3(0, 0, 0);
-        
+        // Screen-space pan offset, lets you reach the edges of the network when zoomed in
+        this.panOffset = new THREE.Vector3(0, 0, 0);
+
         this.init();
     }
     
@@ -496,40 +498,58 @@ class CNNVisualizer3D {
      */
     setupBasicControls() {
         this.isDragging = false;
+        this.isPanning = false;
         this.previousMousePosition = { x: 0, y: 0 };
         this.rotation = { x: 0.15, y: 0.1 }; // Initial rotation (slightly tilted for better depth view)
-        
+
         this.renderer.domElement.addEventListener('mousedown', (e) => {
-            this.isDragging = true;
+            // Right button, middle button or Shift + left button pans; plain left button rotates
+            this.isPanning = (e.button === 2 || e.button === 1 || e.shiftKey);
+            this.isDragging = !this.isPanning;
             this.previousMousePosition = { x: e.clientX, y: e.clientY };
         });
-        
+
         this.renderer.domElement.addEventListener('mousemove', (e) => {
-            if (!this.isDragging) return;
-            
+            if (!this.isDragging && !this.isPanning) return;
+
             const deltaX = e.clientX - this.previousMousePosition.x;
             const deltaY = e.clientY - this.previousMousePosition.y;
-            
-            this.rotation.y += deltaX * 0.01;
-            this.rotation.x += deltaY * 0.01;
-            
-            // Clamp vertical rotation
-            this.rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, this.rotation.x));
-            
+
+            if (this.isPanning) {
+                this.panCamera(deltaX, deltaY);
+            } else {
+                this.rotation.y += deltaX * 0.01;
+                this.rotation.x += deltaY * 0.01;
+
+                // Clamp vertical rotation
+                this.rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, this.rotation.x));
+            }
+
             // Update camera position
             this.updateCameraPosition();
-            
+
             this.previousMousePosition = { x: e.clientX, y: e.clientY };
         });
-        
+
         this.renderer.domElement.addEventListener('mouseup', () => {
             this.isDragging = false;
+            this.isPanning = false;
         });
-        
+
         this.renderer.domElement.addEventListener('mouseleave', () => {
             this.isDragging = false;
+            this.isPanning = false;
         });
-        
+
+        // Prevent the context menu so right-click drag can pan
+        this.renderer.domElement.addEventListener('contextmenu', (e) => e.preventDefault());
+
+        // Double-click recenters the view (clears any pan offset)
+        this.renderer.domElement.addEventListener('dblclick', () => {
+            this.panOffset.set(0, 0, 0);
+            this.updateCameraPosition();
+        });
+
         // Zoom with mouse wheel
         this.renderer.domElement.addEventListener('wheel', (e) => {
             e.preventDefault();
@@ -537,17 +557,34 @@ class CNNVisualizer3D {
             this.config.cameraDistance = Math.max(15, Math.min(80, this.config.cameraDistance));
             this.updateCameraPosition();
         });
-        
+
         // Initial camera position
         this.updateCameraPosition();
     }
-    
+
+    /**
+     * Pan the view in screen space by shifting the orbit target.
+     * Scaled by the camera distance so the drag feels the same at any zoom level.
+     */
+    panCamera(deltaX, deltaY) {
+        this.camera.updateMatrixWorld();
+        const panScale = this.config.cameraDistance * 0.0016;
+        const right = new THREE.Vector3().setFromMatrixColumn(this.camera.matrixWorld, 0);
+        const up = new THREE.Vector3().setFromMatrixColumn(this.camera.matrixWorld, 1);
+        this.panOffset.addScaledVector(right, -deltaX * panScale);
+        this.panOffset.addScaledVector(up, deltaY * panScale);
+    }
+
     updateCameraPosition() {
         const distance = this.config.cameraDistance;
-        this.camera.position.x = this.sceneCenter.x + distance * Math.sin(this.rotation.y) * Math.cos(this.rotation.x);
-        this.camera.position.y = this.sceneCenter.y + distance * Math.sin(this.rotation.x);
-        this.camera.position.z = this.sceneCenter.z + distance * Math.cos(this.rotation.y) * Math.cos(this.rotation.x);
-        this.camera.lookAt(this.sceneCenter);
+        // Orbit around the scene center shifted by the current pan offset
+        const cx = this.sceneCenter.x + this.panOffset.x;
+        const cy = this.sceneCenter.y + this.panOffset.y;
+        const cz = this.sceneCenter.z + this.panOffset.z;
+        this.camera.position.x = cx + distance * Math.sin(this.rotation.y) * Math.cos(this.rotation.x);
+        this.camera.position.y = cy + distance * Math.sin(this.rotation.x);
+        this.camera.position.z = cz + distance * Math.cos(this.rotation.y) * Math.cos(this.rotation.x);
+        this.camera.lookAt(cx, cy, cz);
     }
     
     /**
@@ -1489,7 +1526,7 @@ function renderFeatureMapPreviews(layers) {
     
     const inputTitle = document.createElement('div');
     inputTitle.textContent = 'Input';
-    inputTitle.style.cssText = 'color: #333; margin-bottom: 8px; font-size: 14px; font-weight: bold;';
+    inputTitle.style.cssText = 'color: #d7dee0; margin-bottom: 8px; font-size: 14px; font-weight: bold;';
     inputGroup.appendChild(inputTitle);
     
     // Create single input canvas with activation heatmap (like 3D visualization)
@@ -1559,10 +1596,10 @@ function renderFeatureMapPreviews(layers) {
         <svg width="60" height="80" viewBox="0 0 60 80" style="margin-top: 28px;">
             <defs>
                 <marker id="arrowhead-input" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
-                    <polygon points="0 0, 7 3, 0 6" fill="#333" />
+                    <polygon points="0 0, 7 3, 0 6" fill="#8aa0a5" />
                 </marker>
             </defs>
-            <line x1="5" y1="40" x2="52" y2="40" stroke="#333" stroke-width="2" marker-end="url(#arrowhead-input)" />
+            <line x1="5" y1="40" x2="52" y2="40" stroke="#8aa0a5" stroke-width="2" marker-end="url(#arrowhead-input)" />
         </svg>
     `;
     wrapper.appendChild(inputArrow);
@@ -1586,7 +1623,7 @@ function renderFeatureMapPreviews(layers) {
             layerName = layer.name.replace('_', '');
         }
         title.textContent = layerName;
-        title.style.cssText = 'color: #333; margin-bottom: 8px; font-size: 14px; font-weight: bold;';
+        title.style.cssText = 'color: #d7dee0; margin-bottom: 8px; font-size: 14px; font-weight: bold;';
         layerGroup.appendChild(title);
         
         // Create averaged feature map from all channels
@@ -1601,10 +1638,10 @@ function renderFeatureMapPreviews(layers) {
                 <svg width="60" height="80" viewBox="0 0 60 80" style="margin-top: 28px;">
                     <defs>
                         <marker id="arrowhead-${idx}" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
-                            <polygon points="0 0, 7 3, 0 6" fill="#333" />
+                            <polygon points="0 0, 7 3, 0 6" fill="#8aa0a5" />
                         </marker>
                     </defs>
-                    <line x1="5" y1="40" x2="52" y2="40" stroke="#333" stroke-width="2" marker-end="url(#arrowhead-${idx})" />
+                    <line x1="5" y1="40" x2="52" y2="40" stroke="#8aa0a5" stroke-width="2" marker-end="url(#arrowhead-${idx})" />
                 </svg>
             `;
             wrapper.appendChild(arrow);

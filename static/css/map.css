@@ -6,8 +6,6 @@
 
 /* ############################## VARIABLES ############################## */
 :root {
-  --bg-color: #FFFAF0;
-  --border-color: #000;
   --nav-spacing: 30px;
   --header-font: 'Montserrat', sans-serif;
   --base-font-size: 15px;
@@ -19,21 +17,31 @@
 body {
   font-size: var(--base-font-size);
   width: 100%;
-  height: 100%;
-  background: var(--bg-color);
+  min-height: 100vh;
+  background: transparent;
+  color: #d7dee0;
   margin: 0;
   padding: 0;
 }
 
-/* ############################## HEADER ############################## */
-.header-title {
-  text-align: center;
-  font-family: var(--header-font);
-  font-size: var(--title-font-size);
-  font-weight: bold;
-  border-bottom: 2px solid var(--border-color);
-  padding-bottom: 10px;
-  margin-top: 20px;
+/* ############################## BACKGROUND (static still of the landing video) ############################## */
+.bg-still {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background: #0f191e center / cover no-repeat;
+}
+.bg-still-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: rgba(15, 25, 30, 0.82);
+}
+
+/* ############################## PAGE TITLE ############################## */
+.page-title {
+  color: #eef3f3;
+  border-bottom: 2px solid rgba(64, 224, 208, 0.25) !important;
 }
 
 /* ############################## MAP CONTAINER ############################## */
@@ -45,7 +53,8 @@ body {
 
 #map {
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
 }
 
 /* ############################## MAP POPUPS ############################## */
@@ -61,19 +70,54 @@ body {
 
 .map-popup h6 {
   font-weight: bold;
-  color: #333;
+  color: #eef3f3;
   margin: 10px 0 5px 0;
 }
 
 .map-popup p {
-  color: #666;
+  color: #9fb0b3;
   font-size: 14px;
   margin: 0;
 }
 
+/* Dark Mapbox popup bubble to match the theme.
+   !important is needed because mapbox-gl.css loads after this file and would
+   otherwise win with the same specificity, keeping the bubble white. */
+.mapboxgl-popup-content {
+  background: #14202a !important;
+  color: #d7dee0;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+.mapboxgl-popup-close-button {
+  color: #9fb0b3 !important;
+}
+.mapboxgl-popup-close-button:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #eef3f3 !important;
+}
+/* Tip (pointer triangle) colored to match the dark bubble, per anchor side */
+.mapboxgl-popup-anchor-top .mapboxgl-popup-tip,
+.mapboxgl-popup-anchor-top-left .mapboxgl-popup-tip,
+.mapboxgl-popup-anchor-top-right .mapboxgl-popup-tip {
+  border-bottom-color: #14202a !important;
+}
+.mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip,
+.mapboxgl-popup-anchor-bottom-left .mapboxgl-popup-tip,
+.mapboxgl-popup-anchor-bottom-right .mapboxgl-popup-tip {
+  border-top-color: #14202a !important;
+}
+.mapboxgl-popup-anchor-left .mapboxgl-popup-tip {
+  border-right-color: #14202a !important;
+}
+.mapboxgl-popup-anchor-right .mapboxgl-popup-tip {
+  border-left-color: #14202a !important;
+}
+
 /* ############################## LOADING INDICATOR ############################## */
 #loading-indicator {
-  color: #666;
+  color: #9fb0b3;
   font-style: italic;
 }
 

@@ -45,6 +45,17 @@
       "top_10": null
     },
     {
+      "title": "Aperture Desk Job",
+      "year": 2022,
+      "platform": "PC",
+      "platform_id": "pc",
+      "genre": "Adventure",
+      "genre_id": "adventure",
+      "beaten": 2026,
+      "image": "Aperture Desk Job.webp",
+      "top_10": null
+    },
+    {
       "title": "Batman Arkham Asylum",
       "year": 2009,
       "platform": "PC",
@@ -383,7 +394,7 @@
       "genre_id": "rpg",
       "beaten": 2025,
       "image": "Final Fantasy VII.jpg",
-      "top_10": 5
+      "top_10": 4
     },
     {
       "title": "GTA San Andreas",
@@ -471,7 +482,7 @@
       "genre_id": "metroidvania",
       "beaten": 2018,
       "image": "Hollow Knight.avif",
-      "top_10": 4
+      "top_10": 5
     },
     {
       "title": "Hollow Knight: Silksong",
@@ -548,7 +559,7 @@
       "genre_id": "adventure",
       "beaten": 2017,
       "image": "Life is Strange.jpg",
-      "top_10": 9
+      "top_10": null
     },
     {
       "title": "Life is Strange: Before the Storm",
@@ -625,6 +636,17 @@
       "genre_id": "action",
       "beaten": 2018,
       "image": "Mark of the Ninja.jpg",
+      "top_10": null
+    },
+    {
+      "title": "Marvel Super Heroes vs Street Fighter",
+      "year": 1997,
+      "platform": "Nintendo Switch",
+      "platform_id": "switch",
+      "genre": "Fighting",
+      "genre_id": "fighting",
+      "beaten": 2026,
+      "image": "Marvel Super Heroes vs Street Fighter.jpg",
       "top_10": null
     },
     {
@@ -856,7 +878,7 @@
       "genre_id": "rpg",
       "beaten": 2023,
       "image": "Pokémon (Gen 1) FireRed.jpg",
-      "top_10": null
+      "top_10": 10
     },
     {
       "title": "Pokémon (Gen 2 Nuzlocke) SoulSilver",
@@ -947,6 +969,50 @@
       "top_10": null
     },
     {
+      "title": "Portal",
+      "year": 2007,
+      "platform": "PC",
+      "platform_id": "pc",
+      "genre": "Puzzle",
+      "genre_id": "puzzle",
+      "beaten": 2026,
+      "image": "Portal.jpg",
+      "top_10": null
+    },
+    {
+      "title": "Portal 2",
+      "year": 2011,
+      "platform": "PC",
+      "platform_id": "pc",
+      "genre": "Puzzle",
+      "genre_id": "puzzle",
+      "beaten": 2026,
+      "image": "Portal 2.webp",
+      "top_10": 8
+    },
+    {
+      "title": "Portal Stories: Mel",
+      "year": 2015,
+      "platform": "PC",
+      "platform_id": "pc",
+      "genre": "Puzzle",
+      "genre_id": "puzzle",
+      "beaten": 2026,
+      "image": "Portal Stories: Mel.webp",
+      "top_10": null
+    },
+    {
+      "title": "Portal: Revolution",
+      "year": 2024,
+      "platform": "PC",
+      "platform_id": "pc",
+      "genre": "Puzzle",
+      "genre_id": "puzzle",
+      "beaten": 2026,
+      "image": "Portal: Revolution.webp",
+      "top_10": null
+    },
+    {
       "title": "Power Rangers: The Fighting Edition",
       "year": 1995,
       "platform": "Super Nintendo",
@@ -988,7 +1054,7 @@
       "genre_id": "strategy",
       "beaten": null,
       "image": "Shining Force I.jpg",
-      "top_10": 8
+      "top_10": 9
     },
     {
       "title": "Shining Force II",
@@ -1219,7 +1285,7 @@
       "genre_id": "platformer",
       "beaten": null,
       "image": "Super Mario World.jpg",
-      "top_10": 10
+      "top_10": null
     },
     {
       "title": "Super Meat Boy",
@@ -1571,6 +1637,17 @@
       "genre_id": "beat-em-up",
       "beaten": null,
       "image": "X-Men Mutant Apocalypse.png",
+      "top_10": null
+    },
+    {
+      "title": "X-Men vs Street-Fighter",
+      "year": 1996,
+      "platform": "Nintendo Switch",
+      "platform_id": "switch",
+      "genre": "Fighting",
+      "genre_id": "fighting",
+      "beaten": 2026,
+      "image": "X-Men vs Street-Fighter.jpg",
       "top_10": null
     }
   ]

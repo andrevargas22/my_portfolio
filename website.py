@@ -10,11 +10,12 @@ Author: André Vargas
 # Imports
 import os
 import logging
-from flask import Flask, render_template, request, g
+from datetime import date
+from flask import Flask, render_template, request, g, redirect, url_for
 import secrets
 
 # Production functions
-from scripts.functions import fetch_articles, get_games_by_letter
+from scripts.functions import fetch_articles, get_games_by_letter, load_games
 
 # Testing functions
 from scripts.testing import handle_websub_callback, fetch_energy_forecast_data, fetch_energy_forecast_metadata, fetch_energy_activity_log
@@ -88,8 +89,8 @@ def add_security_headers(response):
 
     response.headers["Origin-Agent-Cluster"] = "?1"
 
-    # Cache static assets
-    if request.path.startswith('/static/'):
+    # Cache static assets (skip in debug so local changes show without a hard refresh)
+    if request.path.startswith('/static/') and not app.debug:
         response.cache_control.max_age = 31536000  # 1 year
         response.cache_control.public = True
 
@@ -100,23 +101,18 @@ def add_security_headers(response):
 @app.route("/")
 def home():
     """
-    Renders the homepage.
+    Renders the homepage (profile, bio, and experience timeline).
 
     Returns:
-        Template: The index.html template for the homepage.
+        Template: The index.html landing page.
     """
     return render_template("pages/index.html")
 
 
 @app.route("/about")
 def about():
-    """
-    Renders the 'About' page.
-
-    Returns:
-        Template: The about.html template for the About section.
-    """
-    return render_template("pages/about.html")
+    """Permanent redirect for the old /about URL to the landing page."""
+    return redirect(url_for("home"), code=301)
 
 
 @app.route("/blog")
@@ -163,9 +159,42 @@ def map_page():
 @app.route("/games")
 def games():
     """
-    Renders the finished games page.
+    Renders the finished games page: stats header, auto list of the games
+    finished this year, Top 10 shelf, and the searchable archive grid. All
+    derived from games.json at render time.
     """
-    return render_template("pages/game.html", get_games_by_letter=get_games_by_letter)
+    games_list = load_games()
+
+    platforms = {}
+    for game in games_list:
+        p = platforms.setdefault(game["platform_id"], {"id": game["platform_id"], "name": game["platform"], "count": 0})
+        p["count"] += 1
+    platforms = sorted(platforms.values(), key=lambda f: (-f["count"], f["name"]))
+
+    current_year = date.today().year
+    years = [game["year"] for game in games_list]
+    stats = {
+        "total": len(games_list),
+        "n_platforms": len(platforms),
+        "year_min": min(years) if years else 0,
+        "year_max": max(years) if years else 0,
+        "current_year": current_year,
+    }
+    recent = sorted(
+        (game for game in games_list if game.get("beaten") == current_year),
+        key=lambda game: game["title"],
+    )
+    top10 = sorted(
+        (game for game in games_list if game.get("top_10")),
+        key=lambda game: game["top_10"],
+    )
+    return render_template(
+        "pages/game.html",
+        get_games_by_letter=get_games_by_letter,
+        platforms=platforms,
+        total=len(games_list), top10_count=len(top10),
+        stats=stats, recent=recent, top10=top10,
+    )
 
 
 @app.route("/mnist_api")
@@ -178,17 +207,6 @@ def mnist():
     """
     mnist_endpoint = os.getenv("MNIST_ENDPOINT")
     return render_template("pages/mnist_visual.html", mnist_endpoint=mnist_endpoint)
-
-
-@app.route("/google_calendar_agent")
-def google_calendar_agent():
-    """
-    Renders the Google Calendar Agent mockup page.
-
-    Returns:
-        Template: The google_calendar_agent.html template.
-    """
-    return render_template("pages/google_calendar_agent.html")
 
 
 ############################## TESTING FEATURES ##############################

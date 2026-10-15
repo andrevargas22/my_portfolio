@@ -1,40 +1,91 @@
-/* Energy Consumption Forecast Page Styles */
+/*
+ * Energy Consumption Forecast Page Styles
+ * Dark theme matching the landing/blog: static still background, teal accents,
+ * dark translucent cards, light text.
+ */
 
+/* ############################## BASE ############################## */
 body {
-    background: #FFFAF0;
+    background: transparent;
+    color: #d7dee0;
+    min-height: 100vh;
 }
 
-/* Plot container */
+/* ############################## BACKGROUND (static still of the landing video) ############################## */
+.bg-still {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background: #0f191e center / cover no-repeat;
+}
+.bg-still-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: rgba(15, 25, 30, 0.82);
+}
+
+/* ############################## PAGE TITLE ############################## */
+.page-title {
+    color: #eef3f3;
+    border-bottom: 2px solid rgba(64, 224, 208, 0.25) !important;
+}
+
+p b {
+    color: #eef3f3;
+}
+
+/* ############################## PLOT ############################## */
 #forecast-plot {
     width: 100%;
     min-height: 520px;
+    background: #0f191e;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    overflow: hidden;
 }
 
 /* Unavailable state */
 #forecast-unavailable {
-    border: 1px dashed #ccc;
-    border-radius: 4px;
-    background: #f8f9fa;
+    border: 1px dashed rgba(255, 255, 255, 0.18);
+    border-radius: 8px;
+    background: rgba(20, 30, 38, 0.6);
+    color: #9fb0b3;
 }
 
-/* Info cards */
+/* ############################## INFO CARDS ############################## */
 .card {
-    border: 1px solid #dee2e6;
-    border-radius: 6px;
+    background: rgba(20, 30, 38, 0.78);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 12px;
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+.card:hover {
+    border-color: rgba(64, 224, 208, 0.30);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
 }
 
 .card-title {
     font-weight: 600;
     font-size: 0.95rem;
-    color: #333;
+    color: #eef3f3;
 }
 
 .card-text {
-    color: #555;
+    color: #cfd8dc;
     line-height: 1.5;
 }
 
-/* Recent activity log */
+.card-text a,
+.activity-log a {
+    color: #40e0d0;
+}
+.card-text a:hover,
+.activity-log a:hover {
+    color: #9ff3ea;
+}
+
+/* ############################## RECENT ACTIVITY ############################## */
 .activity-log {
     max-height: 220px;
     overflow-y: auto;
@@ -44,4 +95,20 @@ body {
     min-width: 4.5rem;
     text-align: center;
     font-weight: 500;
+}
+
+/* Keep the "light" badge readable on the dark card */
+.activity-log .badge.bg-light {
+    background-color: rgba(255, 255, 255, 0.12) !important;
+    color: #e7edf0 !important;
+    border-color: rgba(255, 255, 255, 0.20) !important;
+}
+
+/* Scrollbar on the activity list */
+.activity-log::-webkit-scrollbar {
+    width: 8px;
+}
+.activity-log::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
 }

@@ -20,11 +20,45 @@
 
 /* ############################## BASE STYLES ############################## */
 body {
-  background: var(--bg-color);
+  background: transparent;
   font-size: 15px;
   min-height: 100vh;
   width: 100%;
 }
+
+/* ############################## BACKGROUND VIDEO ############################## */
+.bg-video {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+  background: #0f191e;
+}
+.bg-video video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Respect reduced-motion: hide the looping video, keep the dark backdrop */
+@media (prefers-reduced-motion: reduce) {
+  .bg-video video { display: none; }
+}
+.bg-video-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: rgba(15, 25, 30, 0.82);
+}
+
+/* Center the page content vertically regardless of screen height */
+.about-main {
+  min-height: calc(100vh - 56px); /* viewport minus navbar */
+  display: flex;
+  align-items: center;
+  padding: 1.5rem 0;
+}
+.about-main > .container { width: 100%; }
 
 /* Typography */
 .text {
@@ -44,7 +78,7 @@ body {
 
 .experience h5 {
     color: var(--primary-color);
-    font-size: 22px;
+    font-size: 18px;
     text-transform: uppercase;
 }
 
@@ -57,11 +91,6 @@ body {
     text-decoration: none;
 }
 
-.experience img {
-    width: 20%;
-    float: right;
-}
-
 .experience .fa {
     color: var(--accent-color);
     font-size: 35px;
@@ -71,108 +100,93 @@ body {
     font-size: 30px;
 }
 
-/* ############################## TIMELINE ############################## */
-.cd-horizontal-timeline {
+/* ############################## TIMELINE (minimal, expandable) ############################## */
+.mtimeline {
+    max-width: 760px;
+    margin: 1em auto 3em;
     position: relative;
-    width: 100%;
-    margin: var(--section-spacing) auto;
-    overflow-x: hidden; /* Prevent horizontal overflow */
+    padding-left: 72px;
 }
 
-.cd-horizontal-timeline .timeline {
-    position: relative;
-    height: 100px;
-    width: 100%;
-    margin: 0 auto;
-}
-
-.cd-horizontal-timeline .events-wrapper {
-    position: relative;
-    height: 100%;
-    margin: 0 auto;
-    overflow: hidden;
-}
-
-.cd-horizontal-timeline .events {
+.mtimeline::before {
+    content: "";
     position: absolute;
-    z-index: 1;
-    left: 0;
-    top: 49px;
-    height: 2px;
-    width: 100%;
-    background: var(--timeline-color);
-    transition: transform 0.4s;
+    left: 27px;
+    top: 16px;
+    bottom: 16px;
+    width: 2px;
+    background: var(--primary-color);
+    opacity: .18;
 }
 
-.cd-horizontal-timeline .filling-line {
-    position: absolute;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    height: 100%;
-    width: 100%;
-    background-color: var(--primary-color);
-    transform: scaleX(0);
-    transform-origin: left center;
-    transition: transform 0.3s;
-}
+.mt-item { position: relative; margin-bottom: 1em; }
+.mt-item:last-child { margin-bottom: 0; }
 
-.cd-horizontal-timeline .events a {
+.mt-marker {
     position: absolute;
-    bottom: 0;
-    z-index: 2;
-    text-align: center;
-    font-size: 1.3rem;
-    padding-bottom: 15px;
-    color: var(--text-color);
-    transform: translateZ(0);
-}
-
-.cd-horizontal-timeline .events a::after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    bottom: -5px;
-    height: var(--timeline-dot-size);
-    width: var(--timeline-dot-size);
+    left: -72px;
+    top: 3px;
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
-    border: 2px solid var(--timeline-color);
-    background-color: #f8f8f8;
-    transition: background-color 0.3s, border-color 0.3s;
-}
-
-.cd-horizontal-timeline .events a.selected::after {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-}
-
-.cd-horizontal-timeline .events-content {
-    position: relative;
-    width: 100%;
-    margin: 2em 0;
-    transition: min-height 0.4s ease-in-out;
-}
-
-.cd-horizontal-timeline .events-content li {
-    position: absolute;
-    z-index: 1;
-    width: 100%;
-    left: 0;
-    top: 0;
-    transform: translateX(-100%);
-    padding: 0 5%;
-    opacity: 0;
+    background: #fff;
+    border: 2px solid var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     overflow: hidden;
-    animation-duration: 0.4s;
-    animation-timing-function: ease-in-out;
 }
 
-.cd-horizontal-timeline .events-content li.selected {
-    position: relative;
-    z-index: 2;
-    opacity: 1;
-    transform: translateX(0);
+.mt-marker img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Telefónica mark: blue "T" on a white circle, shown in full (not edge-cropped) */
+.mt-marker.tef { background: #fff; }
+.mt-marker.tef img { object-fit: contain; padding: 14%; }
+
+.mt-card {
+    border: 1px solid #ececec;
+    border-radius: 10px;
+    background: #fff;
+    transition: box-shadow .2s ease, border-color .2s ease;
 }
+
+.mt-card:hover { box-shadow: 0 3px 14px rgba(0,0,0,.06); }
+.mt-card.open { border-color: #dcdcdc; box-shadow: 0 3px 14px rgba(0,0,0,.06); }
+
+.mt-head {
+    display: flex;
+    align-items: center;
+    gap: .9em;
+    padding: .9em 1.1em;
+    cursor: pointer;
+    user-select: none;
+}
+
+.mt-head:focus-visible { outline: 2px solid var(--accent-color); outline-offset: 2px; border-radius: 10px; }
+.mt-head-main { flex: 1; min-width: 0; }
+.mt-company { margin: 0; line-height: 1.2; }
+.mt-role { font-size: .87rem; color: #777; margin-top: .1em; text-transform: none; }
+.mt-date { font-size: .8rem; color: #aaa; font-style: italic; white-space: nowrap; }
+.mt-chevron { color: var(--primary-color); flex-shrink: 0; transition: transform .35s cubic-bezier(.25, .8, .25, 1); font-size: .85rem; }
+.mt-card.open .mt-chevron { transform: rotate(180deg); }
+
+.mt-body {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition: grid-template-rows .4s cubic-bezier(.4, 0, .2, 1), opacity .35s ease;
+}
+.mt-card.open .mt-body { grid-template-rows: 1fr; opacity: 1; }
+.mt-body-inner {
+    overflow: hidden;
+    min-height: 0;
+    padding: 0 1.2em;
+}
+.mt-card.open .mt-body-inner { padding-bottom: 1.1em; }
+.mt-body-inner > p { margin: 0 0 .6em; color: var(--text-color); }
+.mt-body-inner > p.mt-about { color: #888; font-size: .92rem; }
+.mt-body-inner ul { margin: 0; padding-left: 1.1em; color: var(--text-color); }
+.mt-body-inner li { margin-bottom: .28em; line-height: 1.45; }
 
 /* ############################## BUTTONS ############################## */
 .btn-primary {
@@ -196,48 +210,156 @@ body {
 
 .btn-resume {
     margin: 20px auto; /* Add some margin to center the button */
+    font-size: 14px;
 }
 
 .row.justify-content-center {
     margin: 0; /* Reset margin */
 }
 
-/* ############################## IMAGES ############################## */
-.about-img {
-    border-radius: 50%; 
-    width: 450px; 
-    height: 450px; 
-    object-fit: cover; 
-    margin-left: 20px;
+/* ############################## SOCIAL LINKS ############################## */
+.about-social { display: flex; justify-content: center; gap: 1.1rem; margin-bottom: 1.1em; }
+.about-social a { color: var(--primary-color); font-size: 1.55rem; transition: color .2s ease, transform .2s ease; }
+.about-social a:hover { color: var(--primary-hover); transform: translateY(-2px); }
+
+/* ############################## IDENTITY CARD (sidebar layout) ############################## */
+.idcard {
+    background: #fff;
+    border: 1px solid #ececec;
+    border-radius: 14px;
+    padding: 1.6em 1.4em;
+    text-align: center;
+    box-shadow: 0 2px 14px rgba(0,0,0,.05);
+    position: sticky;
+    top: 20px;
+}
+
+.idcard-avatar {
+    width: 274px;
+    height: 274px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.idcard h1 { font-size: 1.5rem; margin: 0 0 .1em; color: var(--text-color); }
+.idcard-role { color: var(--primary-color); font-weight: 600; }
+.idcard-company { color: #666; font-size: .92rem; margin-bottom: .4em; }
+.idcard-meta { color: #999; font-size: .85rem; margin-bottom: 1em; }
+.idcard-meta i { margin-right: .3em; }
+.idcard .about-social { margin-bottom: 1.1em; }
+.idcard .btn-resume { display: inline-block; margin: 0 0 1.2em; }
+.idcard-tags-label { font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; color: #aaa; margin-bottom: .5em; }
+.idcard-tags { display: flex; flex-wrap: wrap; gap: .4em; justify-content: center; }
+.idcard-tag {
+    font-size: .74rem;
+    background: rgba(0,128,128,.09);
+    color: var(--primary-hover);
+    padding: .22em .7em;
+    border-radius: 999px;
+}
+
+/* Bio within the main/content column of the sidebar layouts */
+.main-bio { margin-bottom: 1.5em; }
+.main-bio .lead-line { font-size: 1.05rem; color: var(--text-color); margin-bottom: 1em; }
+.main-bio p { text-align: left; margin-bottom: 1em; }
+.main-bio p:last-child { margin-bottom: 0; }
+
+/* Bio rendered as a panel, matching the identity and timeline cards */
+.bio-panel {
+    background: #fff;
+    border: 1px solid #ececec;
+    border-radius: 12px;
+    padding: 1.4em 1.6em;
+    box-shadow: 0 2px 12px rgba(0,0,0,.05);
+    margin-bottom: 1.8em;
+}
+.bio-panel .lead-line {
+    font-size: 1.05rem;
+    color: var(--primary-color);
+    font-weight: 600;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: .8em;
+    margin-bottom: .9em;
+}
+
+/* Keep the timeline flush-left inside a content column (no auto-centering) */
+.about-col .mtimeline { margin-left: 0; margin-right: 0; max-width: none; }
+
+/* Full-height identity card: stretches down the column, content centered vertically */
+.about-card-fill .idcard {
+    position: static;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+@media (max-width: 991.98px) {
+    /* When columns stack, let the card size to its content again */
+    .about-card-fill .idcard { justify-content: flex-start; }
+}
+
+/* Consistent section heading used to structure the content column */
+.section-head {
+    font-size: .95rem;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--primary-color);
+    font-weight: 700;
+    margin: 0 0 1.2em;
+    padding-bottom: .4em;
+    border-bottom: 2px solid rgba(0,128,128,.15);
 }
 
 /* ############################## RESPONSIVE ############################## */
-@media only screen and (max-width: 768px) {
-    .cd-horizontal-timeline .events-wrapper {
-        width: 100%;
-        margin: 0 auto;
-    }
-
-    .cd-horizontal-timeline .events {
-        width: 100%;
-    }
-
-    .cd-horizontal-timeline .events a {
-        font-size: 1rem;
-    }
-
-    .cd-horizontal-timeline .events-content li {
-        padding: 0 2%;
-    }
-
-    .cd-horizontal-timeline .filling-line {
-        width: 100%;
-    }
-
-    .about-img {
-        width: 300px;
-        height: 300px;
-        margin: 20px auto;
-        display: block;
-    }
+/* Stacked columns: the identity card stops being sticky */
+@media only screen and (max-width: 991.98px) {
+    .idcard { position: static; margin-bottom: 1.5em; }
 }
+
+@media only screen and (max-width: 768px) {
+    .mtimeline { padding-left: 54px; }
+    .mtimeline::before { left: 20px; }
+    .mt-marker { left: -54px; width: 42px; height: 42px; }
+    .mt-date { display: none; }
+}
+
+/* ############################## CARD THEME: DARK ############################## */
+.cards-dark .idcard,
+.cards-dark .bio-panel,
+.cards-dark .mt-card {
+    background: rgba(20, 30, 38, 0.78);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+}
+.cards-dark .mt-card:hover,
+.cards-dark .mt-card.open { border-color: rgba(64, 224, 208, 0.35); }
+.cards-dark .mt-marker { background: #16222b; }
+.cards-dark .mt-marker.tef { background: #fff; }
+
+/* Dark theme text colors */
+.cards-dark .idcard h1 { color: #eef3f3; }
+.cards-dark .idcard-role,
+.cards-dark .mt-company,
+.cards-dark .section-head,
+.cards-dark .bio-panel .lead-line { color: var(--accent-color); }
+.cards-dark .main-bio p,
+.cards-dark .mt-body-inner > p,
+.cards-dark .mt-body-inner li,
+.cards-dark .mt-role { color: #d7dee0; }
+.cards-dark .idcard-company,
+.cards-dark .idcard-meta,
+.cards-dark .mt-date,
+.cards-dark .mt-body-inner > p.mt-about { color: #9fb0b3; }
+.cards-dark .idcard-tags-label { color: #7f9296; }
+.cards-dark .idcard-tag { background: rgba(64, 224, 208, 0.14); color: #8ff0e6; }
+.cards-dark .about-social a { color: var(--accent-color); }
+.cards-dark .about-social a:hover { color: #9ff3ea; }
+.cards-dark .mt-chevron { color: var(--accent-color); }
+.cards-dark .bio-panel .lead-line { border-bottom-color: rgba(255, 255, 255, 0.12); }
+.cards-dark .section-head { border-bottom-color: rgba(64, 224, 208, 0.25); }
