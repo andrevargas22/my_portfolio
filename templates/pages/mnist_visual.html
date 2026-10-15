@@ -13,11 +13,15 @@
 {% endblock %}
 {% block content %}
 
+		<!-- Static still of the landing background video (keeps the theme without a moving video behind the 3D canvas) -->
+		<div class="bg-still" aria-hidden="true" style="background-image: url('{{ url_for('static', filename='images/videos/video_poster.jpg') }}');"></div>
+		<div class="bg-still-overlay" aria-hidden="true"></div>
+
 		<div class="container">
 			<!-- Page Header -->
 			<div class="row">
 				<div class="col-lg-12 text-center my-2">
-					<h4 class="border-bottom border-dark p-2">MNIST Classifier API</h4>
+					<h4 class="border-bottom p-2 page-title">MNIST Classifier API</h4>
 					<center>
 						<p>
 							An end-to-end MLOps pipeline showcasing model training, versioning with MLFlow, CI/CD deployment to Google Cloud Run, and interactive 3D visualization of CNN activations.
@@ -31,7 +35,8 @@
 				<div class="col-12">
 					<p>
 						<b>Instructions</b>: Draw a digit and click "Predict!" to query the deployed model endpoint. 
-						The API returns predictions and layer activations, visualized in real-time 3D (use mouse to rotate/zoom).
+						The API returns predictions and layer activations, visualized in real-time 3D
+						(drag to rotate, scroll to zoom, right-click or Shift and drag to pan, double-click to recenter).
 					</p>
 				</div>
 			</div>
@@ -42,7 +47,7 @@
 				<div class="col-md-4 col-12 mb-3 mb-md-0">
 					<h5 class="text-center">Draw a Digit</h5>
 					<div class="d-flex justify-content-center">
-						<canvas id='canvas' width='280' height='280' style='border: 2px solid #333; cursor: crosshair;'></canvas>
+						<canvas id='canvas' width='280' height='280' style='cursor: crosshair;'></canvas>
 					</div>
 					
 					<!-- Control Buttons -->
@@ -63,7 +68,7 @@
 				<!-- 3D Visualization Column -->
 				<div class="col-md-8 col-12">
 					<h5 class="text-center">Neural Network Activations</h5>
-					<div id="visualization-container" style="width: 100%; height: 280px; border: 2px solid #333; background: #000;">
+					<div id="visualization-container" style="width: 100%; height: 280px;">
 						<!-- Three.js canvas will be inserted here -->
 					</div>
 				</div>
@@ -73,7 +78,7 @@
 			<div class="row mt-4">
 				<!-- Left side: Top 3 Predictions -->
 				<div class="col-md-4 col-12 mb-3 mb-md-0">
-					<div id="prediction-panel-bottom" class="p-3 border rounded" style="display:none; background: #f8f9fa;">
+					<div id="prediction-panel-bottom" class="p-3 rounded mnist-panel" style="display:none;">
 						<h6>Top 3 Predictions:</h6>
 						<div id="top-3-list-bottom"></div>
 					</div>
@@ -101,7 +106,7 @@
 							<p class="card-text small">
 								A CNN trained in TensorFlow/Keras logs its hyperparameters, metrics and the model
 								artifact itself to the same shared MLflow server used by my other projects. The API
-								never ships a bundled model file — it pulls whatever version is currently aliased
+								never ships a bundled model file. It pulls whatever version is currently aliased
 								<code>champion</code> in the Model Registry at startup.
 							</p>
 						</div>
@@ -112,8 +117,8 @@
 						<div class="card-body">
 							<h6 class="card-title"><i class="fas fa-server text-muted me-1"></i>Inference API</h6>
 							<p class="card-text small">
-								FastAPI service on Cloud Run. Each request goes through staged error handling —
-								decode, preprocess, predict, extract activations — so a failure in one stage (say,
+								FastAPI service on Cloud Run. Each request goes through staged error handling
+								(decode, preprocess, predict, extract activations), so a failure in one stage (say,
 								activation extraction) degrades gracefully instead of losing the prediction. A
 								<code>/health</code> endpoint reports whether the model actually loaded.
 							</p>
@@ -126,7 +131,7 @@
 							<h6 class="card-title"><i class="fas fa-code-branch text-muted me-1"></i>CI/CD</h6>
 							<p class="card-text small">
 								GitHub Actions builds a Docker image on every push to main, pushes it to Artifact
-								Registry, and deploys straight to Cloud Run — no manual deploy step between
+								Registry, and deploys straight to Cloud Run, with no manual deploy step between
 								committing code and it being live.
 							</p>
 						</div>
@@ -148,21 +153,21 @@
 					
 					<!-- Mermaid Architecture Diagram -->
 					<div class="mermaid" style="display: flex; justify-content: center; margin: 30px 0;">
-						%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#2d3748','primaryTextColor':'#fff','primaryBorderColor':'#2d3748','lineColor':'#2d3748','secondaryColor':'#2d3748','tertiaryColor':'#2d3748'}}}%%
+						%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#1a2630','primaryTextColor':'#eef3f3','primaryBorderColor':'#40e0d0','lineColor':'#8aa0a5','secondaryColor':'#1a2630','tertiaryColor':'#1a2630','fontSize':'14px'}}}%%
 						graph LR
-							subgraph train["<span style='color:#000'>🔬 Training Environment</span>"]
+							subgraph train["<span style='color:#eef3f3'>🔬 Training Environment</span>"]
 								T1[MNIST Dataset]
 								T2[Training Script]
 								T3[MLFlow Model Registry]
 							end
-							
-							subgraph ui["<span style='color:#000'>👤 User Interface</span>"]
+
+							subgraph ui["<span style='color:#eef3f3'>👤 User Interface</span>"]
 								A[User]
 								B[Interactive Canvas]
 								C[3D Visualization]
 							end
-							
-							subgraph prod["<span style='color:#000'>🚀 Production Environment</span>"]
+
+							subgraph prod["<span style='color:#eef3f3'>🚀 Production Environment</span>"]
 								D[FastAPI Service]
 								E[Google Cloud Run]
 							end
@@ -176,9 +181,9 @@
 							D -->|Docker Container| E
 							E -.->|Predictions + Activations| C
 							
-							style train fill:#fecaca,stroke:#ef4444,stroke-width:3px
-							style ui fill:#fed7aa,stroke:#ed8936,stroke-width:3px
-							style prod fill:#bfdbfe,stroke:#4299e1,stroke-width:3px
+							style train fill:#241a1d,stroke:#ef4444,stroke-width:2px
+							style ui fill:#26201a,stroke:#ed8936,stroke-width:2px
+							style prod fill:#162430,stroke:#4299e1,stroke-width:2px
 							
 							classDef trainStyle fill:#ef4444,stroke:#dc2626,stroke-width:2px,color:#fff
 							classDef uiStyle fill:#ed8936,stroke:#c05621,stroke-width:2px,color:#fff

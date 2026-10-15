@@ -1,36 +1,44 @@
 <!--
-    Personal Website - Home Page
-    Description: Landing page featuring a video background showcase with personal introduction
-    and social media links. Uses Flask templating for includes and static assets.
+    Personal Website - Landing / Home Page
+    Description: Fullscreen video background with an identity card, bio, and a minimal
+    click-to-expand experience timeline (dark theme).
 -->
-    
+
 {% extends 'base/layout.html' %}
-{% block title %}André Vargas - Portfolio{% endblock %}
+{% block title %}André Vargas - Machine Learning Engineer{% endblock %}
 {% block head_extra %}
-  <meta name="description" content="André Vargas - Machine Learning Engineer Portfolio and Personal Website">
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}">
+    <meta name="description" content="André Vargas - Machine Learning Engineer specialising in MLOps, LLMOps and AIOps. Projects, experience, and professional journey.">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/about.css') }}">
 {% endblock %}
 {% block content %}
 
-    <!-- Hero Section -->
-    <section class="showcase">
-      <div class="video-container">
-        <video src="{{ url_for('static', filename='images/videos/video.mp4') }}" autoplay muted loop></video>
-      </div>
+    {% include 'partials/bg_video.html' %}
 
-      <div class="content">
-        <h1>Welcome!</h1>
-        <p>Hi, I'm André, a Machine Learning Engineer from Brazil. This is the place where you can find some of my projects, articles, and more. 
-          Feel free to explore and get in touch!</p>
-        
-        <!-- Social Links -->
-        <div class="social">
-          <a href="https://github.com/andrevargas22"><i class="fab fa-github fa-3x"></i></a>
-          <a href="https://www.linkedin.com/in/andrevargas22/"><i class="fab fa-linkedin fa-3x"></i></a>
-          <a href="https://medium.com/@andrevargas22/"><i class="fab fa-medium fa-3x"></i></a>
+    <div class="about-main cards-dark">
+    <div class="container">
+
+        <div class="row">
+
+            <!-- Identity card (full-height, vertically centered) -->
+            <div class="col-lg-4 mb-3 d-flex about-card-fill">
+                {% include 'partials/about_card.html' %}
+            </div>
+
+            <!-- Main: bio + timeline -->
+            <div class="col-lg-8 about-col">
+                <div class="main-bio bio-panel">
+                    {% include 'partials/about_bio.html' %}
+                </div>
+                <div class="experience">
+                    <div class="section-head">Experience</div>
+                    {% include 'partials/about_timeline.html' %}
+                </div>
+            </div>
         </div>
-      </div>
-    </section>
+    </div>
+    </div>
 
 {% endblock %}
-
+{% block scripts_extra %}
+<script src="{{ url_for('static', filename='js/about_timeline.js') }}"></script>
+{% endblock %}

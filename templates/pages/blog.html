@@ -12,18 +12,48 @@
 {% endblock %}
 {% block content %}
 
+		{% include 'partials/bg_video.html' %}
+
 		<div class="container">
 
 			<!-- Page Header -->
 			<div class="row">
 				<div class="col-lg-12 text-center my-2">
-					<h4 class="border-bottom border-dark p-2">Publications</h4>
+					<h4 class="border-bottom p-2 blog-title">Publications</h4>
 				</div>
 			</div>
 
-			<!-- Publications List -->
+			<!-- Academic Publications -->
 			<div class="row">
-				<div class="col-lg-12 my-4">
+				<div class="col-lg-12 mt-4">
+					<h5 class="section-subtitle">Academic</h5>
+					<ul class="list-group">
+						<li class="list-group-item">
+							<a href="#easyglic-usb-charger" class="article-title" data-toggle="easyglic-usb-charger">Design and Prototyping of a Portable USB Charger for Easyglic</a>
+							<p class="text-muted">Undergraduate thesis (Mechatronics Engineering), Universidade de Bras&iacute;lia &middot; 2017</p>
+							<div id="easyglic-usb-charger" class="article-content" style="display: none;">
+								<p>This undergraduate thesis covers the design and prototyping of a portable USB charger for the Easyglic project, a non-invasive device for hypoglycemia detection. After characterizing the LiPo battery used by the device, the work was split into two stages: the electronic design, built to the component manufacturers' specifications and validated through tests of the final circuit, and the mechanical design, where similar products were studied to produce an ergonomic 3D-printed enclosure. The results show that the prototype met the proposed requirements.</p>
+								<p class="paper-authors"><strong>Silva Junior, A. R. V.</strong> &middot; Advisor: Carvalho, J. L. A.; Co-advisor: Rosa, S. S. R. F. &middot; Universidade de Bras&iacute;lia, 2017.</p>
+								<a href="https://bdm.unb.br/handle/10483/19286" target="_blank" rel="noopener">View record (BDM/UnB)</a> &middot; <a href="https://www.bdm.unb.br/bitstream/10483/19286/1/2017_AndreRicardoVargasdaSilvaJunior.pdf" target="_blank" rel="noopener">Full text (PDF, in Portuguese)</a>
+							</div>
+						</li>
+						<li class="list-group-item">
+							<a href="#hexapod-modular-robot" class="article-title" data-toggle="hexapod-modular-robot">Kinematics of a Hexapod Modular Robot</a>
+							<p class="text-muted">ABCM Symposium Series in Mechatronics, v. 6, p. 485-496 &middot; 2014</p>
+							<div id="hexapod-modular-robot" class="article-content" style="display: none;">
+								<p>This article is about the Erekobot Alpha, a modular robot with a hexapod locomotion system built from seventeen identical modules: a spine of five rigid modules plus two per leg. Each leg executes a constant, previously-defined trajectory. The research concluded that the robot is capable of walking forward and back on plain surfaces, and kinematic simulations based on the movement equations were compared against the real robot's leg movements.</p>
+								<p class="paper-authors">Gon&ccedil;alves, L. L. C.; <strong>Silva Junior, A. R. V.</strong>; Torres, A. C. F.; Sousa, A. C. C.; Mota, I. C.; Beggs, A. M.; Koike, C. M. C. C.; Viana, D. M. &middot; Universidade de Bras&iacute;lia, 2014.</p>
+								<a href="https://abcm.org.br/upload/files/PI_III_12.pdf" target="_blank" rel="noopener">View paper (PDF)</a>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<!-- Articles (Medium feed) -->
+			<div class="row">
+				<div class="col-lg-12 mb-4">
+					<h5 class="section-subtitle">Articles</h5>
 					{% if feed_error %}
 					<!-- Error handling for feed timeout/failures -->
 					<div class="alert alert-warning" role="alert">
