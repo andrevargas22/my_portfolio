@@ -45,6 +45,17 @@
       "top_10": null
     },
     {
+      "title": "Aperture Desk Job",
+      "year": 2022,
+      "platform": "PC",
+      "platform_id": "pc",
+      "genre": "Adventure",
+      "genre_id": "adventure",
+      "beaten": 2026,
+      "image": "Aperture Desk Job.webp",
+      "top_10": null
+    },
+    {
       "title": "Batman Arkham Asylum",
       "year": 2009,
       "platform": "PC",
@@ -628,6 +639,17 @@
       "top_10": null
     },
     {
+      "title": "Marvel Super Heroes vs Street Fighter",
+      "year": 1997,
+      "platform": "Nintendo Switch",
+      "platform_id": "switch",
+      "genre": "Fighting",
+      "genre_id": "fighting",
+      "beaten": 2026,
+      "image": "Marvel Super Heroes vs Street Fighter.jpg",
+      "top_10": null
+    },
+    {
       "title": "Mega Man",
       "year": 1987,
       "platform": "NES",
@@ -944,6 +966,50 @@
       "genre_id": "fighting",
       "beaten": null,
       "image": "Pokémon Stadium 2.jpg",
+      "top_10": null
+    },
+    {
+      "title": "Portal",
+      "year": 2007,
+      "platform": "PC",
+      "platform_id": "pc",
+      "genre": "Puzzle",
+      "genre_id": "puzzle",
+      "beaten": 2026,
+      "image": "Portal.jpg",
+      "top_10": null
+    },
+    {
+      "title": "Portal 2",
+      "year": 2011,
+      "platform": "PC",
+      "platform_id": "pc",
+      "genre": "Puzzle",
+      "genre_id": "puzzle",
+      "beaten": 2026,
+      "image": "Portal 2.webp",
+      "top_10": null
+    },
+    {
+      "title": "Portal Stories: Mel",
+      "year": 2015,
+      "platform": "PC",
+      "platform_id": "pc",
+      "genre": "Puzzle",
+      "genre_id": "puzzle",
+      "beaten": 2026,
+      "image": "Portal Stories: Mel.webp",
+      "top_10": null
+    },
+    {
+      "title": "Portal: Revolution",
+      "year": 2024,
+      "platform": "PC",
+      "platform_id": "pc",
+      "genre": "Puzzle",
+      "genre_id": "puzzle",
+      "beaten": 2026,
+      "image": "Portal: Revolution.webp",
       "top_10": null
     },
     {
@@ -1571,6 +1637,17 @@
       "genre_id": "beat-em-up",
       "beaten": null,
       "image": "X-Men Mutant Apocalypse.png",
+      "top_10": null
+    },
+    {
+      "title": "X-Men vs Street-Fighter",
+      "year": 1996,
+      "platform": "Nintendo Switch",
+      "platform_id": "switch",
+      "genre": "Fighting",
+      "genre_id": "fighting",
+      "beaten": 2026,
+      "image": "X-Men vs Street-Fighter.jpg",
       "top_10": null
     }
   ]
