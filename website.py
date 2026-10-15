@@ -10,11 +10,12 @@ Author: André Vargas
 # Imports
 import os
 import logging
+from datetime import date
 from flask import Flask, render_template, request, g, redirect, url_for
 import secrets
 
 # Production functions
-from scripts.functions import fetch_articles, get_games_by_letter
+from scripts.functions import fetch_articles, get_games_by_letter, load_games
 
 # Testing functions
 from scripts.testing import handle_websub_callback, fetch_energy_forecast_data, fetch_energy_forecast_metadata, fetch_energy_activity_log
@@ -158,9 +159,42 @@ def map_page():
 @app.route("/games")
 def games():
     """
-    Renders the finished games page.
+    Renders the finished games page: stats header, auto list of the games
+    finished this year, Top 10 shelf, and the searchable archive grid. All
+    derived from games.json at render time.
     """
-    return render_template("pages/game.html", get_games_by_letter=get_games_by_letter)
+    games_list = load_games()
+
+    platforms = {}
+    for game in games_list:
+        p = platforms.setdefault(game["platform_id"], {"id": game["platform_id"], "name": game["platform"], "count": 0})
+        p["count"] += 1
+    platforms = sorted(platforms.values(), key=lambda f: (-f["count"], f["name"]))
+
+    current_year = date.today().year
+    years = [game["year"] for game in games_list]
+    stats = {
+        "total": len(games_list),
+        "n_platforms": len(platforms),
+        "year_min": min(years) if years else 0,
+        "year_max": max(years) if years else 0,
+        "current_year": current_year,
+    }
+    recent = sorted(
+        (game for game in games_list if game.get("beaten") == current_year),
+        key=lambda game: game["title"],
+    )
+    top10 = sorted(
+        (game for game in games_list if game.get("top_10")),
+        key=lambda game: game["top_10"],
+    )
+    return render_template(
+        "pages/game.html",
+        get_games_by_letter=get_games_by_letter,
+        platforms=platforms,
+        total=len(games_list), top10_count=len(top10),
+        stats=stats, recent=recent, top10=top10,
+    )
 
 
 @app.route("/mnist_api")
