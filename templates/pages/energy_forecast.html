@@ -14,12 +14,16 @@
 {% endblock %}
 {% block content %}
 
+    <!-- Static still of the landing background video (consistent theme without a moving video) -->
+    <div class="bg-still" aria-hidden="true" style="background-image: url('{{ url_for('static', filename='images/videos/video_poster.jpg') }}');"></div>
+    <div class="bg-still-overlay" aria-hidden="true"></div>
+
     <div class="container">
 
         <!-- Page Header -->
         <div class="row">
             <div class="col-lg-12 text-center my-2">
-                <h4 class="border-bottom border-dark p-2">Brazilian Energy Consumption Forecast</h4>
+                <h4 class="border-bottom p-2 page-title">Brazilian Energy Consumption Forecast</h4>
                 <center>
                     <p>
                         An end-to-end AutoML pipeline that trains an AutoML model on historical ONS open data
@@ -109,7 +113,7 @@
                         <h6 class="card-title">Model</h6>
                         <p class="card-text small">
                             {% if metadata %}
-                                H2O AutoML — best model: <b>{{ metadata.model_type }}</b> with {{ metadata.n_features }} engineered features
+                                H2O AutoML best model: <b>{{ metadata.model_type }}</b> with {{ metadata.n_features }} engineered features
                                 (temporal, lag, rolling, ratios). Test MAPE: <b>{{ metadata.test_mape }}%</b>.
                                 {% if metadata.current_month_mape is not none and metadata.current_month_days > 0 %}
                                     Current month MAPE ({{ metadata.current_month_days }} day{{ 's' if metadata.current_month_days != 1 }}): <b>{{ metadata.current_month_mape }}%</b>.
@@ -145,12 +149,73 @@
 <script nonce="{{ g.csp_nonce }}">
     (function () {
         const fig = {{ figure_data | tojson }};
+
+        // --- Dark theme overlay (layout only; series colors and title text are left untouched) ---
+        const TEXT = "#d7dee0", TICK = "#9fb0b3", HEAD = "#eef3f3";
+        const GRID = "rgba(255,255,255,0.08)", ZERO = "rgba(255,255,255,0.15)", LINE = "rgba(255,255,255,0.20)";
+        const merge = (base, extra) => Object.assign({}, base, extra);
+
+        const layout = fig.layout = fig.layout || {};
+        // Solid flat panel so the busy video still behind the page does not compete with the chart
+        layout.paper_bgcolor = "#0f191e";
+        layout.plot_bgcolor = "#0f191e";
+        layout.font = merge(layout.font, { color: TEXT });
+        layout.legend = merge(layout.legend, {
+            bgcolor: "rgba(20,30,38,0.6)",
+            bordercolor: "rgba(255,255,255,0.12)",
+            font: merge((layout.legend || {}).font, { color: TEXT }),
+        });
+        layout.hoverlabel = merge(layout.hoverlabel, {
+            bgcolor: "#14202a",
+            bordercolor: "rgba(255,255,255,0.15)",
+            font: merge((layout.hoverlabel || {}).font, { color: HEAD }),
+        });
+        layout.modebar = merge(layout.modebar, {
+            bgcolor: "rgba(0,0,0,0)", color: TICK, activecolor: "#40e0d0",
+        });
+
+        function themeAxis(ax) {
+            if (!ax) return;
+            ax.gridcolor = GRID;
+            ax.zerolinecolor = ZERO;
+            ax.linecolor = LINE;
+            ax.tickfont = merge(ax.tickfont, { color: TICK });
+            if (typeof ax.title === "string") ax.title = { text: ax.title };
+            if (ax.title && typeof ax.title === "object") ax.title.font = merge(ax.title.font, { color: TEXT });
+            if (ax.rangeslider) ax.rangeslider = merge(ax.rangeslider, {
+                bgcolor: "rgba(255,255,255,0.04)", bordercolor: "rgba(255,255,255,0.12)",
+            });
+            if (ax.rangeselector) ax.rangeselector = merge(ax.rangeselector, {
+                bgcolor: "rgba(20,30,38,0.8)", bordercolor: "rgba(255,255,255,0.15)",
+                activecolor: "rgba(64,224,208,0.35)", font: merge((ax.rangeselector || {}).font, { color: TEXT }),
+            });
+        }
+        // Theme every x/y axis present (xaxis, yaxis, xaxis2, ...)
+        Object.keys(layout).forEach((k) => { if (/^[xy]axis\d*$/.test(k)) themeAxis(layout[k]); });
+
+        // Safety net: lighten only near-black series lines so they stay visible on the dark
+        // background. Self-deactivates once the source figure uses a dark-friendly color.
+        function luminance(hex) {
+            const m = /^#?([0-9a-f]{6})$/i.exec(hex) || /^#?([0-9a-f]{3})$/i.exec(hex);
+            if (!m) return null;
+            let h = m[1];
+            if (h.length === 3) h = h.split("").map((c) => c + c).join("");
+            const r = parseInt(h.slice(0, 2), 16), g = parseInt(h.slice(2, 4), 16), b = parseInt(h.slice(4, 6), 16);
+            return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+        }
+        (fig.data || []).forEach((t) => {
+            if (t.line && typeof t.line.color === "string") {
+                const L = luminance(t.line.color);
+                if (L !== null && L < 0.25) t.line.color = "#e7edf0";
+            }
+        });
+
         const config = {
             responsive: true,
             displaylogo: false,
             modeBarButtonsToRemove: ["select2d", "lasso2d"],
         };
-        Plotly.newPlot("forecast-plot", fig.data, fig.layout, config);
+        Plotly.newPlot("forecast-plot", fig.data, layout, config);
     })();
 </script>
 {% endif %}
