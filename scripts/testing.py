@@ -1,8 +1,10 @@
 """
-WebSub notification handler for YouTube video processing.
+Functions for features still in testing phase. Once a feature is validated in
+production, its functions graduate to a dedicated module in scripts/.
 
-This module receives YouTube WebSub notifications and dispatches
-them to GitHub Actions for processing.
+Currently here:
+- WebSub notification handler for YouTube video processing
+- RAG Assistant proxy (chat backed by the private rag-assistant Cloud Run service)
 """
 
 import csv
@@ -544,50 +546,91 @@ def handle_websub_callback(
     return "Method not allowed", 405
 
 
-# ==================== Energy Forecast ====================
+# ==================== RAG Assistant Proxy ====================
 
-_GCS_BUCKET = "energy_consumption_automl"
-_GCS_BLOB   = "forecast_plot.json"
+# ID tokens do Google valem 1h; renovamos com folga de 15min
+_RAG_TOKEN_CACHE = {"token": None, "expires_at": 0.0}
 
 
-def fetch_energy_forecast_data() -> dict | None:
-    """Download the latest energy forecast Plotly JSON from GCS."""
-    import json as _json
-    from google.cloud import storage as _gcs
+def _get_rag_id_token(audience: str) -> str | None:
+    """
+    Fetch (and cache) a Google-signed ID token to invoke the private RAG service.
+
+    Uses the Application Default Credentials chain: on Cloud Run the token comes
+    from the metadata server (site-sa identity); locally it comes from the key
+    file pointed to by GOOGLE_APPLICATION_CREDENTIALS.
+
+    Args:
+        audience: The RAG service base URL (tokens are minted for one audience only).
+
+    Returns:
+        str: The ID token, or None if it could not be obtained.
+    """
+    import google.auth.transport.requests
+    from google.oauth2 import id_token as google_id_token
+
+    now = time.time()
+    if _RAG_TOKEN_CACHE["token"] and now < _RAG_TOKEN_CACHE["expires_at"]:
+        return _RAG_TOKEN_CACHE["token"]
 
     try:
-        client = _gcs.Client()
-        blob = client.bucket(_GCS_BUCKET).blob(_GCS_BLOB)
-        return _json.loads(blob.download_as_text(encoding="utf-8"))
+        token = google_id_token.fetch_id_token(
+            google.auth.transport.requests.Request(), audience
+        )
+        _RAG_TOKEN_CACHE["token"] = token
+        _RAG_TOKEN_CACHE["expires_at"] = now + 45 * 60
+        return token
     except Exception as exc:
-        logging.warning(f"[EnergyForecast] Could not fetch forecast from GCS: {exc}")
+        logging.error(f"[RAG] Could not fetch ID token: {exc}")
         return None
 
 
-def fetch_energy_forecast_metadata() -> dict | None:
-    """Download the forecast metadata JSON from GCS."""
-    import json as _json
-    from google.cloud import storage as _gcs
+def ask_rag_assistant(message: str) -> tuple[dict, int]:
+    """
+    Forward a chat message to the private RAG assistant service.
+
+    Thin proxy by design: validation, guardrails and cost control live in the
+    rag-assistant repo. This function only authenticates and relays.
+
+    Args:
+        message: The visitor's question (already superficially validated).
+
+    Returns:
+        tuple: (response payload dict, HTTP status code)
+    """
+    base_url = os.getenv("RAG_SERVICE_URL", "").rstrip("/")
+    if not base_url:
+        logging.error("[RAG] RAG_SERVICE_URL not configured")
+        return {"error": "Assistente indisponível no momento."}, 503
+
+    headers = {"Content-Type": "application/json"}
+
+    # Dev local (http://localhost:8081) dispensa token; em produção o serviço
+    # é privado e exige ID token com audience = URL do serviço
+    if base_url.startswith("https://"):
+        token = _get_rag_id_token(base_url)
+        if not token:
+            return {"error": "Assistente indisponível no momento."}, 503
+        headers["Authorization"] = f"Bearer {token}"
 
     try:
-        client = _gcs.Client()
-        blob = client.bucket(_GCS_BUCKET).blob("forecast_metadata.json")
-        return _json.loads(blob.download_as_text(encoding="utf-8"))
-    except Exception as exc:
-        logging.warning(f"[EnergyForecast] Could not fetch metadata from GCS: {exc}")
-        return None
+        response = requests.post(
+            f"{base_url}/v1/chat",
+            json={"message": message},
+            headers=headers,
+            timeout=30,
+        )
+    except requests.RequestException as exc:
+        logging.error(f"[RAG] Request to assistant failed: {exc}")
+        return {"error": "Assistente indisponível no momento."}, 503
 
+    if response.status_code in (200, 400):
+        # 200 = resposta; 400 = erro de validação do serviço, repassado como veio
+        try:
+            return response.json(), response.status_code
+        except ValueError:
+            logging.error("[RAG] Assistant returned non-JSON response")
+            return {"error": "Assistente indisponível no momento."}, 503
 
-def fetch_energy_activity_log() -> list | None:
-    """Download the pipeline activity log JSON from GCS (most recent last)."""
-    import json as _json
-    from google.cloud import storage as _gcs
-
-    try:
-        client = _gcs.Client()
-        blob = client.bucket(_GCS_BUCKET).blob("activity_log.json")
-        events = _json.loads(blob.download_as_text(encoding="utf-8"))
-        return list(reversed(events))
-    except Exception as exc:
-        logging.warning(f"[EnergyForecast] Could not fetch activity log from GCS: {exc}")
-        return None
+    logging.error(f"[RAG] Assistant returned {response.status_code}: {response.text[:200]}")
+    return {"error": "Assistente indisponível no momento."}, 503

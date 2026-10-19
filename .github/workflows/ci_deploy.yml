@@ -55,6 +55,7 @@ jobs:
       TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
       LOG_GIST_ID: ${{ secrets.LOG_GIST_ID }}
       GH_PAT: ${{ secrets.GH_PAT }}
+      RAG_SERVICE_URL: https://rag-assistant-p6kayhv22a-uc.a.run.app
       
     steps:
       - name: Checkout
@@ -108,4 +109,5 @@ jobs:
               TELEGRAM_BOT_TOKEN=${{ env.TELEGRAM_BOT_TOKEN }},\
               TELEGRAM_CHAT_ID=${{ env.TELEGRAM_CHAT_ID }},\
               LOG_GIST_ID=${{ env.LOG_GIST_ID }},\
-              GH_PAT=${{ env.GH_PAT }}"
+              GH_PAT=${{ env.GH_PAT }},\
+              RAG_SERVICE_URL=${{ env.RAG_SERVICE_URL }}"

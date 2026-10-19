@@ -15,10 +15,12 @@ from flask import Flask, render_template, request, g, redirect, url_for
 import secrets
 
 # Production functions
-from scripts.functions import fetch_articles, get_games_by_letter, load_games
+from scripts.articles import fetch_articles
+from scripts.games import get_games_by_letter, load_games
+from scripts.energy import fetch_energy_forecast_data, fetch_energy_forecast_metadata, fetch_energy_activity_log
 
 # Testing functions
-from scripts.testing import handle_websub_callback, fetch_energy_forecast_data, fetch_energy_forecast_metadata, fetch_energy_activity_log
+from scripts.testing import handle_websub_callback, ask_rag_assistant
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -209,8 +211,6 @@ def mnist():
     return render_template("pages/mnist_visual.html", mnist_endpoint=mnist_endpoint)
 
 
-############################## TESTING FEATURES ##############################
-#### Energy Consumption Forecast:
 @app.route("/energy_forecast")
 def energy_forecast():
     """
@@ -225,6 +225,29 @@ def energy_forecast():
         "pages/energy_forecast.html",
         figure_data=figure_data, metadata=metadata, activity_log=activity_log,
     )
+
+
+############################## TESTING FEATURES ##############################
+#### RAG Assistant (chat proxy):
+@app.route("/api/chat", methods=["POST"])
+def api_chat():
+    """
+    Thin proxy to the private rag-assistant service on Cloud Run.
+
+    The browser can't hold credentials, so this route authenticates on its
+    behalf (ID token da site-sa) and relays the message. Business logic,
+    guardrails and cost control live in the website-RAG-assistant repo.
+    """
+    data = request.get_json(silent=True)
+    if not data or not isinstance(data.get("message"), str):
+        return {"error": "Expected JSON body with a 'message' string."}, 400
+
+    message = data["message"].strip()
+    if not message or len(message) > 2000:
+        return {"error": "Message must be between 1 and 2000 characters."}, 400
+
+    payload, status_code = ask_rag_assistant(message)
+    return payload, status_code
 
 
 #### WebSub Callback:
