@@ -46,18 +46,6 @@ jobs:
       SERVICE_ACCOUNT: site-sa
       SERVICE_NAME: website
       MNIST_ENDPOINT: ${{ secrets.MNIST_API_ENDPOINT }}
-      MAPBOX_ACCESS_TOKEN: ${{ secrets.MAPBOX_ACCESS_TOKEN }}
-      WEBHOOK_HMAC_SECRET: ${{ secrets.WEBHOOK_HMAC_SECRET }}
-      GRENALBOT_ID: ${{ secrets.GRENALBOT_ID }}
-      GRENALBOT_INSTALLATION_ID: ${{ secrets.GRENALBOT_INSTALLATION_ID }}
-      GRENALBOT_PRIVATE_KEY: ${{ secrets.GRENALBOT_PRIVATE_KEY }}
-      YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
-      GCS_BUCKET_NAME: ${{ secrets.GCS_BUCKET_NAME }}
-      YOUTUBE_COOKIES_B64: ${{ secrets.YOUTUBE_COOKIES_B64 }}
-      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-      LOG_GIST_ID: ${{ secrets.LOG_GIST_ID }}
-      GH_PAT: ${{ secrets.GH_PAT }}
       RAG_SERVICE_URL: https://rag-assistant-p6kayhv22a-uc.a.run.app
       
     steps:
@@ -102,16 +90,5 @@ jobs:
             --no-cpu-boost \
             --set-env-vars "\
               MNIST_ENDPOINT=${{ env.MNIST_ENDPOINT }},\
-              MAPBOX_ACCESS_TOKEN=${{ env.MAPBOX_ACCESS_TOKEN }},\
-              WEBHOOK_HMAC_SECRET=${{ env.WEBHOOK_HMAC_SECRET }},\
-              GRENALBOT_ID=${{ env.GRENALBOT_ID }},\
-              GRENALBOT_INSTALLATION_ID=${{ env.GRENALBOT_INSTALLATION_ID }},\
-              GRENALBOT_PRIVATE_KEY=${{ env.GRENALBOT_PRIVATE_KEY }},\
-              YOUTUBE_API_KEY=${{ env.YOUTUBE_API_KEY }},\
-              GCS_BUCKET_NAME=${{ env.GCS_BUCKET_NAME }},\
-              YOUTUBE_COOKIES_B64=${{ env.YOUTUBE_COOKIES_B64 }},\
-              TELEGRAM_BOT_TOKEN=${{ env.TELEGRAM_BOT_TOKEN }},\
-              TELEGRAM_CHAT_ID=${{ env.TELEGRAM_CHAT_ID }},\
-              LOG_GIST_ID=${{ env.LOG_GIST_ID }},\
-              GH_PAT=${{ env.GH_PAT }},\
-              RAG_SERVICE_URL=${{ env.RAG_SERVICE_URL }}"
+              RAG_SERVICE_URL=${{ env.RAG_SERVICE_URL }}" \
+            --set-secrets "MAPBOX_ACCESS_TOKEN=mapbox-access-token:latest"
